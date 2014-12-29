@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Pioneer</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_out">Sign out</string>
+    <string name="hint_login">Your pioneer account</string>
+    <string name="hint_password">Password of account</string>
+    <string name="sign_up">Sign up</string>
+
+    <string name="title_me">我的</string>
+    <string name="title_login">登录</string>
+</resources>

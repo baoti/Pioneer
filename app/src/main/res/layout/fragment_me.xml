@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:gravity="center_horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/app_toolbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimaryDark" />
+
+    <Button
+        android:id="@+id/btn_go_home"
+        android:text="Go home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_close_app"
+        android:text="Close app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btn_sign_in"
+        android:text="登录"
+        style="@style/Widget.Button.SignIn"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_account_info"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        app:contentPadding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+                <TextView
+                    android:text="Avatar:"/>
+
+                <ImageView
+                    android:id="@+id/iv_avatar"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerInside"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:text="Account:"/>
+
+                <TextView
+                    android:id="@+id/tv_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <View style="@style/Widget.Separator" />
+
+            <TableRow>
+                <TextView
+                    android:text="Name:" />
+
+                <TextView
+                    android:id="@+id/tv_name" />
+            </TableRow>
+
+            <View style="@style/Widget.Separator" />
+
+            <TableRow>
+                <TextView
+                    android:text="Fans:"/>
+
+                <TextView
+                    android:id="@+id/tv_fans"
+                    android:text="粉丝"/>
+            </TableRow>
+
+            <View style="@style/Widget.Separator" />
+
+            <TableRow>
+                <TextView
+                    android:text="Following:"/>
+
+                <TextView
+                    android:id="@+id/tv_following"
+                    android:text="关注"
+                    />
+            </TableRow>
+
+        </TableLayout>
+    </android.support.v7.widget.CardView>
+
+
+    <Button
+        android:id="@+id/btn_sign_out"
+        android:layout_marginTop="10dp"
+        android:text="退出当前账号"
+        style="@style/Widget.Button.SignOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

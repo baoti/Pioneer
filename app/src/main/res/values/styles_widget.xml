@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget"/>
+
+    <!-- 分隔线 -->
+    <style name="Widget.Separator">
+        <item name="android:background">@color/separator</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+    </style>
+
+    <!-- 设置相关界面的分隔线 -->
+    <style name="Widget.Separator.Preference">
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+
+    <style name="Widget.Button" />
+
+    <style name="Widget.Button.SignIn">
+
+    </style>
+
+    <style name="Widget.Button.SignOut">
+
+    </style>
+
+    <style name="Widget.Button.SignUp">
+
+    </style>
+</resources>
