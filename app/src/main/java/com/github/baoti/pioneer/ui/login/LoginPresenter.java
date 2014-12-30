@@ -121,7 +121,7 @@ public class LoginPresenter extends Presenter<ILoginView> implements SafeAsyncTa
     }
 
     @Override
-    public void onStopped(SafeAsyncTask task, boolean cancelled, Exception exception, Object result) {
+    public void onStopped(SafeAsyncTask task) {
         if (this.task == task) {
             this.task = null;
         }

@@ -128,7 +128,7 @@ public abstract class SafeAsyncTask<Params, Progress, Result>
         stopped = true;
         running = false;
         if (lifecycleListener != null) {
-            lifecycleListener.onStopped(this, cancelled, exception, result);
+            lifecycleListener.onStopped(this);
         }
     }
 
@@ -145,6 +145,7 @@ public abstract class SafeAsyncTask<Params, Progress, Result>
             return;
         }
         Timber.v("onCancel [%s]", this);
+        resultOrException = null;
         onStopped(true, null, null);
         onCancel();
     }
@@ -178,6 +179,6 @@ public abstract class SafeAsyncTask<Params, Progress, Result>
 
     public interface LifecycleListener {
         void onStarted(SafeAsyncTask task);
-        void onStopped(SafeAsyncTask task, boolean cancelled, Exception exception, Object result);
+        void onStopped(SafeAsyncTask task);
     }
 }
