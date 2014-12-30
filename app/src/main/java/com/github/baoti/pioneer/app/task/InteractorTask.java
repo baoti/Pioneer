@@ -19,9 +19,8 @@ public class InteractorTask<Progress, Result> extends SafeAsyncTask<Void, Progre
     }
 
     public InteractorTask(DeferredInteractor<Result> interactor,
-                          boolean subscribe,
-                          LifecycleListener listener) {
-        super(subscribe, listener);
+                          boolean subscribe) {
+        super(subscribe);
         this.deferredInteractor = interactor;
     }
 

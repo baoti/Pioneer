@@ -67,7 +67,7 @@ public class LoginPresenter extends Presenter<ILoginView> implements SafeAsyncTa
             return;
         }
         if (task == null) {
-            task = new InteractorTask<Void, Account>(deferredInteractor, false, this) {
+            task = new InteractorTask<Void, Account>(deferredInteractor, false) {
                 @Override
                 protected void onException(Exception exception) {
                     handleSignInException(exception);
@@ -78,6 +78,7 @@ public class LoginPresenter extends Presenter<ILoginView> implements SafeAsyncTa
                     handleSignInSuccess(account);
                 }
             };
+            task.setLifecycleListener(this);
             task.executeOnDefaultThreadPool();
         }
     }
@@ -120,7 +121,7 @@ public class LoginPresenter extends Presenter<ILoginView> implements SafeAsyncTa
     }
 
     @Override
-    public void onStopped(SafeAsyncTask task) {
+    public void onStopped(SafeAsyncTask task, boolean cancelled, Exception exception, Object result) {
         if (this.task == task) {
             this.task = null;
         }

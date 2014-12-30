@@ -67,6 +67,9 @@ public class MeFragment extends FragmentView<IMeView, MePresenter> implements IM
     @InjectView(R.id.btn_sign_in)
     Button signIn;
 
+    @InjectView(R.id.btn_sign_out)
+    Button signOut;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_me, container, false);
@@ -137,11 +140,13 @@ public class MeFragment extends FragmentView<IMeView, MePresenter> implements IM
     @Override
     public void showAccountInfo() {
         accountInfo.setVisibility(View.VISIBLE);
+        signOut.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideAccountInfo() {
         accountInfo.setVisibility(View.GONE);
+        signOut.setVisibility(View.GONE);
     }
 
     @Override

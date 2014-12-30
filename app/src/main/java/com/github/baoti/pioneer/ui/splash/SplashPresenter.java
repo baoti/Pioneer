@@ -181,7 +181,7 @@ public class SplashPresenter extends Presenter<ISplashView> {
         private long startTime;
 
         public InitializeTask() {
-            super(true, null);
+            super(true);
         }
 
         @Override
