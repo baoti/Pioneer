@@ -8,7 +8,9 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit.Endpoint;
 import retrofit.Endpoints;
+import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.client.Client;
 import retrofit.client.OkClient;
 
@@ -33,10 +35,21 @@ public class ApiModule {
     }
 
     @Provides @Singleton
-    RestAdapter provideRestAdapter(Endpoint endpoint, Client client) {
+    ErrorHandler provideErrorHandler() {
+        return new ErrorHandler() {
+            @Override
+            public Throwable handleError(RetrofitError cause) {
+                return new ApiException(cause);
+            }
+        };
+    }
+
+    @Provides @Singleton
+    RestAdapter provideRestAdapter(Endpoint endpoint, Client client, ErrorHandler errorHandler) {
         return new RestAdapter.Builder() //
                 .setClient(client) //
                 .setEndpoint(endpoint) //
+                .setErrorHandler(errorHandler)
                 .build();
     }
 

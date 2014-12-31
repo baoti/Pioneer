@@ -10,5 +10,6 @@ import retrofit.http.Query;
  */
 public interface AccountApi {
     @POST("/account/login")
-    ApiResponse<Account> login(@Query("account") String accountId, @Query("pwd") String password);
+    ApiResponse<Account> login(@Query("account") String accountId, @Query("pwd") String password)
+            throws ApiException;
 }

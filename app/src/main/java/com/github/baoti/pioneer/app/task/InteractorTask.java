@@ -3,8 +3,6 @@ package com.github.baoti.pioneer.app.task;
 import com.github.baoti.pioneer.biz.exception.BizException;
 import com.github.baoti.pioneer.biz.interactor.DeferredInteractor;
 
-import retrofit.RetrofitError;
-
 /**
  * 后台交互任务
  *
@@ -26,10 +24,6 @@ public class InteractorTask<Progress, Result> extends SafeAsyncTask<Void, Progre
 
     @Override
     protected Result doTask(Void... params) throws BizException {
-        try {
-            return deferredInteractor.interact();
-        } catch (RetrofitError error) {
-            throw new BizException(error.getLocalizedMessage(), error);
-        }
+        return deferredInteractor.interact();
     }
 }

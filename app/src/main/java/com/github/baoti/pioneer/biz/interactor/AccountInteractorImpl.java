@@ -4,14 +4,13 @@ import com.github.baoti.pioneer.biz.Passwords;
 import com.github.baoti.pioneer.biz.exception.BizException;
 import com.github.baoti.pioneer.biz.exception.ValidationException;
 import com.github.baoti.pioneer.data.api.AccountApi;
+import com.github.baoti.pioneer.data.api.ApiException;
 import com.github.baoti.pioneer.data.api.ApiResponse;
 import com.github.baoti.pioneer.data.prefs.AccountPrefs;
 import com.github.baoti.pioneer.entity.Account;
 import com.github.baoti.pioneer.event.AccountChangedEvent;
 import com.github.baoti.pioneer.event.EventPoster;
 import com.github.baoti.pioneer.misc.util.Texts;
-
-import retrofit.RetrofitError;
 
 /**
  * Created by liuyedong on 14-12-22.
@@ -50,7 +49,10 @@ public class AccountInteractorImpl implements AccountInteractor {
                 try {
                     ApiResponse<Account> response = accountApi.login(accountId, finalPassword);
                     cachedAccount = response.checkedPayload();
-                } catch (RetrofitError e) {
+                } catch (ApiException e) {
+                    if (e.hasResponse()) {
+                        throw e;
+                    }
                     cachedAccount = Account.ANONYMOUS;
                 }
                 accountPrefs.saveAccount(cachedAccount.getAccountId(), true);
