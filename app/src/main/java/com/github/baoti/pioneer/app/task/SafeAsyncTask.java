@@ -15,9 +15,10 @@ import timber.log.Timber;
  * Created by liuyedong on 14-12-19.
  */
 public abstract class SafeAsyncTask<Params, Progress, Result>
-        extends AsyncTask<Params, Progress, SafeAsyncTask.ResultOrException<Result>> {
+        extends AsyncTask<Params, Progress, Tasks.ResultOrException<Result>>
+        implements Tasks.SafeTask<Result> {
     private final boolean subscribe;
-    private LifecycleListener lifecycleListener;
+    private Tasks.LifecycleListener lifecycleListener;
 
     /**
      * 用于订阅通知
@@ -36,7 +37,7 @@ public abstract class SafeAsyncTask<Params, Progress, Result>
     /**
      * 缓存运行结果
      */
-    private ResultOrException<Result> resultOrException;
+    private Tasks.ResultOrException<Result> resultOrException;
 
     public SafeAsyncTask() {
         this(false);
@@ -48,7 +49,7 @@ public abstract class SafeAsyncTask<Params, Progress, Result>
     }
 
     public <Task extends SafeAsyncTask> Task setLifecycleListener(
-            LifecycleListener lifecycleListener) {
+            Tasks.LifecycleListener lifecycleListener) {
         this.lifecycleListener = lifecycleListener;
         //noinspection unchecked
         return (Task) this;
@@ -59,18 +60,22 @@ public abstract class SafeAsyncTask<Params, Progress, Result>
         Tasks.executeOnDefaultThreadPool(this, params);
     }
 
+    @Override
     public boolean isRunning() {
         return running;
     }
 
+    @Override
     public boolean hasResultOrException() {
         return resultOrException != null;
     }
 
+    @Override
     public Exception getException() {
         return resultOrException != null ? resultOrException.exception : null;
     }
 
+    @Override
     public Result getResult() {
         return resultOrException != null ? resultOrException.result : null;
     }
@@ -94,7 +99,7 @@ public abstract class SafeAsyncTask<Params, Progress, Result>
 
     @SuppressWarnings("unchecked")
     @Override
-    protected final ResultOrException doInBackground(Params... params) {
+    protected final Tasks.ResultOrException doInBackground(Params... params) {
         try {
             if (subscribe) {
                 appBus.register(this);
@@ -102,14 +107,14 @@ public abstract class SafeAsyncTask<Params, Progress, Result>
             try {
                 Timber.v("doTask [%s]", this);
                 Result result = doTask(params);
-                return new ResultOrException(result, null);
+                return new Tasks.ResultOrException(result, null);
             } finally {
                 if (subscribe) {
                     appBus.unregister(this);
                 }
             }
         } catch (Exception e){
-            return new ResultOrException(null, e);
+            return new Tasks.ResultOrException(null, e);
         }
     }
 
@@ -124,7 +129,7 @@ public abstract class SafeAsyncTask<Params, Progress, Result>
         onStart();
     }
 
-    private void onStopped(boolean cancelled, Exception exception, Result result) {
+    private void onStopped() {
         stopped = true;
         running = false;
         if (lifecycleListener != null) {
@@ -134,7 +139,7 @@ public abstract class SafeAsyncTask<Params, Progress, Result>
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
-    protected final void onCancelled(ResultOrException<Result> e) {
+    protected final void onCancelled(Tasks.ResultOrException<Result> e) {
         super.onCancelled(e);
     }
 
@@ -146,18 +151,18 @@ public abstract class SafeAsyncTask<Params, Progress, Result>
         }
         Timber.v("onCancel [%s]", this);
         resultOrException = null;
-        onStopped(true, null, null);
+        onStopped();
         onCancel();
     }
 
     @Override
-    protected final void onPostExecute(ResultOrException<Result> e) {
+    protected final void onPostExecute(Tasks.ResultOrException<Result> e) {
         super.onPostExecute(e);
         if (stopped) {
             return;
         }
         resultOrException = e;
-        onStopped(false, e.exception, e.result);
+        onStopped();
         if (e.exception != null) {
             Timber.v("onException [%s] - [%s]", this, e.exception);
             onException(e.exception);
@@ -165,20 +170,5 @@ public abstract class SafeAsyncTask<Params, Progress, Result>
             Timber.v("onSuccess [%s] - [%s]", this, e.result);
             onSuccess(e.result);
         }
-    }
-
-    static class ResultOrException<Result> {
-        final Result result;
-        final Exception exception;
-
-        private ResultOrException(Result result, Exception exception) {
-            this.result = result;
-            this.exception = exception;
-        }
-    }
-
-    public interface LifecycleListener {
-        void onStarted(SafeAsyncTask task);
-        void onStopped(SafeAsyncTask task);
     }
 }

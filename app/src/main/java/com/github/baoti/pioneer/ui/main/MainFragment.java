@@ -14,6 +14,7 @@ import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.ui.common.FragmentView;
 import com.github.baoti.pioneer.ui.login.LoginDialogFragment;
 import com.github.baoti.pioneer.ui.me.MeFragment;
+import com.github.baoti.pioneer.ui.news.NewsListActivity;
 
 import javax.inject.Inject;
 
@@ -124,6 +125,10 @@ public class MainFragment extends FragmentView<IMainView, MainPresenter> impleme
 
     public void hideStopReport() {
         btnStopReport.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.btn_news) void navigateToNews() {
+        startActivity(NewsListActivity.intentToLaunch(getActivity()));
     }
 
     @OnClick(R.id.btn_me) void navigateToMe() {

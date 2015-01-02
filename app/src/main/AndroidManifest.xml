@@ -21,14 +21,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.main.MainActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.news.NewsListActivity" />
     </application>
 
 </manifest>

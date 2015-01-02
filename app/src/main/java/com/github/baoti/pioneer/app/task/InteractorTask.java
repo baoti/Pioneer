@@ -9,7 +9,7 @@ import com.github.baoti.pioneer.biz.interactor.DeferredInteractor;
  * Created by liuyedong on 14-12-25.
  */
 public class InteractorTask<Progress, Result> extends SafeAsyncTask<Void, Progress, Result> {
-    private final DeferredInteractor<Result> deferredInteractor;
+    protected final DeferredInteractor<Result> deferredInteractor;
 
     public InteractorTask(DeferredInteractor<Result> interactor) {
         super();

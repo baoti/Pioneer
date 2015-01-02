@@ -13,6 +13,12 @@
         app:title="@string/app_name" />
 
     <Button
+        android:id="@+id/btn_news"
+        android:text="News"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
         android:id="@+id/btn_me"
         android:text="Go to me"
         android:layout_width="wrap_content"

@@ -5,7 +5,10 @@ import com.github.baoti.pioneer.biz.interactor.AccountInteractor;
 import com.github.baoti.pioneer.biz.interactor.AccountInteractorImpl;
 import com.github.baoti.pioneer.biz.interactor.AppInteractor;
 import com.github.baoti.pioneer.biz.interactor.AppInteractorImpl;
+import com.github.baoti.pioneer.biz.interactor.NewsInteractor;
+import com.github.baoti.pioneer.biz.interactor.NewsInteractorImpl;
 import com.github.baoti.pioneer.data.api.AccountApi;
+import com.github.baoti.pioneer.data.api.NewsApi;
 import com.github.baoti.pioneer.data.prefs.AccountPrefs;
 import com.github.baoti.pioneer.event.EventPoster;
 import com.squareup.otto.Bus;
@@ -34,5 +37,11 @@ public class BizModule {
     public AccountInteractor provideAccountInteractor(
             EventPoster eventPoster, AccountApi accountApi, AccountPrefs accountPrefs) {
         return new AccountInteractorImpl(eventPoster, accountApi, accountPrefs);
+    }
+
+    @Provides
+    @Singleton
+    public NewsInteractor provideNewsInteractor(NewsApi newsApi) {
+        return new NewsInteractorImpl(newsApi);
     }
 }

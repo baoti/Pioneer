@@ -21,7 +21,6 @@ import com.github.baoti.pioneer.entity.ImageBean;
 import com.github.baoti.pioneer.misc.picasso.PicassoHelper;
 import com.github.baoti.pioneer.ui.common.FragmentView;
 import com.github.baoti.pioneer.ui.login.LoginDialogFragment;
-import com.github.baoti.pioneer.ui.main.MainActivity;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;

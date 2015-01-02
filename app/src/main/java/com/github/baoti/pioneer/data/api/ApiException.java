@@ -1,13 +1,13 @@
 package com.github.baoti.pioneer.data.api;
 
-import com.github.baoti.pioneer.biz.exception.BizException;
+import com.github.baoti.pioneer.data.DataException;
 
 import retrofit.RetrofitError;
 
 /**
  * Created by liuyedong on 2014/12/27.
  */
-public class ApiException extends BizException {
+public class ApiException extends DataException {
     private final ApiResponse response;
 
     public ApiException(ApiResponse response) {
@@ -20,7 +20,7 @@ public class ApiException extends BizException {
     }
 
     public ApiException(RetrofitError error) {
-        super(error.getMessage());
+        super(error.getMessage(), error);
         this.response = null;
     }
 

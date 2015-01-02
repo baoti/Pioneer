@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.app.notification.Toaster;
 import com.github.baoti.pioneer.app.task.InteractorTask;
-import com.github.baoti.pioneer.app.task.SafeAsyncTask;
+import com.github.baoti.pioneer.app.task.Tasks;
 import com.github.baoti.pioneer.biz.exception.ValidationException;
 import com.github.baoti.pioneer.biz.interactor.AccountInteractor;
 import com.github.baoti.pioneer.biz.interactor.DeferredInteractor;
@@ -21,7 +21,7 @@ import timber.log.Timber;
 /**
  * Created by liuyedong on 14-12-18.
  */
-public class LoginPresenter extends Presenter<ILoginView> implements SafeAsyncTask.LifecycleListener {
+public class LoginPresenter extends Presenter<ILoginView> implements Tasks.LifecycleListener {
     private final AccountInteractor interactor;
     private final Resources res;
     private final Toaster toaster;
@@ -115,13 +115,13 @@ public class LoginPresenter extends Presenter<ILoginView> implements SafeAsyncTa
     }
 
     @Override
-    public void onStarted(SafeAsyncTask task) {
+    public void onStarted(Tasks.SafeTask task) {
         taskCount++;
         updateLoadingShown();
     }
 
     @Override
-    public void onStopped(SafeAsyncTask task) {
+    public void onStopped(Tasks.SafeTask task) {
         if (this.task == task) {
             this.task = null;
         }

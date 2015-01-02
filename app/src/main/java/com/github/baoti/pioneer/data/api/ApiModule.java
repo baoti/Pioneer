@@ -1,5 +1,6 @@
 package com.github.baoti.pioneer.data.api;
 
+import com.github.baoti.pioneer.data.api.internal.FakeNewsApiImpl;
 import com.squareup.okhttp.OkHttpClient;
 
 import javax.inject.Singleton;
@@ -57,5 +58,11 @@ public class ApiModule {
     @Singleton
     AccountApi provideUserApi(RestAdapter restAdapter) {
         return restAdapter.create(AccountApi.class);
+    }
+
+    @Provides
+    @Singleton
+    NewsApi provideNewsApi() {
+        return new FakeNewsApiImpl();
     }
 }
