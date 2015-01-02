@@ -41,9 +41,13 @@ public abstract class ActivityView<V extends IView, P extends Presenter<V>>
         return (P) view.getPresenter();
     }
 
+    @Override
     public final P getPresenter() {
         return presenter;
     }
+
+    @Override
+    public void onPresenterTaken(Presenter presenter) {}
 
     protected final void setRetainPresenter(boolean retain) {
         retainPresenter = retain;

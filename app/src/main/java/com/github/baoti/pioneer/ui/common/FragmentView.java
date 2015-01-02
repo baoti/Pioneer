@@ -28,9 +28,13 @@ public abstract class FragmentView<V extends IView, P extends Presenter<V>>
         return (P) view.getPresenter();
     }
 
+    @Override
     public final P getPresenter() {
         return presenter;
     }
+
+    @Override
+    public void onPresenterTaken(Presenter presenter) {}
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

@@ -89,6 +89,7 @@ public abstract class Presenter<V extends IView> {
 
             this.view = view;
             onTakeView(view);
+            view.onPresenterTaken(this);
         }
     }
 

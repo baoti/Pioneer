@@ -7,6 +7,6 @@ import dagger.Module;
 /**
  * Created by Administrator on 2015/1/2.
  */
-@Module(injects = NewsListActivity.class, addsTo = AppMainModule.class)
+@Module(injects = NewsListFragment.class, addsTo = AppMainModule.class)
 public class NewsModule {
 }

@@ -2,25 +2,23 @@ package com.github.baoti.pioneer.ui.news;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.github.baoti.pioneer.app.task.PageTask;
 import com.github.baoti.pioneer.app.task.Tasks;
 import com.github.baoti.pioneer.biz.interactor.NewsInteractor;
 import com.github.baoti.pioneer.biz.interactor.PageInteractor;
 import com.github.baoti.pioneer.entity.News;
-import com.github.baoti.pioneer.misc.util.Texts;
 import com.github.baoti.pioneer.ui.common.Presenter;
 
 import java.util.Collection;
 
 import javax.inject.Inject;
 
-import timber.log.Timber;
-
 /**
  * Created by Administrator on 2015/1/2.
  */
-public class NewsListPresenter extends Presenter<INewsListView> implements Tasks.LifecycleListener {
+public class NewsListPresenter extends Presenter<INewsListView> implements Tasks.LifecycleListener, SwipeRefreshLayout.OnRefreshListener {
     private static final String CHANNEL = "channel1";
     private static final int FIRST_PAGE = 1;
     private static final int PAGE_SIZE = 50;
@@ -29,12 +27,20 @@ public class NewsListPresenter extends Presenter<INewsListView> implements Tasks
 
     private final NewsInteractor newsInteractor;
 
-    private PageInteractor<News> pageInteractor;
-    private String keyword;
+    private PageInteractor<News> initialResInteractor;
+    private PageInteractor<News> refreshInteractor;
 
     @Inject
     public NewsListPresenter(NewsInteractor newsInteractor) {
         this.newsInteractor = newsInteractor;
+    }
+
+    public void enableInitialResources() {
+        setInitialResInteractor(newsInteractor.pageNews(CHANNEL, FIRST_PAGE, PAGE_SIZE));
+    }
+
+    public void setInitialResInteractor(PageInteractor<News> interactor) {
+        initialResInteractor = interactor;
     }
 
     @Override
@@ -67,16 +73,29 @@ public class NewsListPresenter extends Presenter<INewsListView> implements Tasks
         if (newsTask.isRefreshing()) {
             getView().showRefreshing();
         } else if (!newsTask.hasLoadedResources()) {
-            if (pageInteractor == null) {
-                pageInteractor = newsInteractor.pageNews(CHANNEL, FIRST_PAGE, PAGE_SIZE);
-            }
-            onRefresh();
+            loadInitialResources();
         }
     }
 
+    public void loadInitialResources() {
+        if (initialResInteractor != null) {
+            refresh(initialResInteractor);
+        }
+    }
+
+    protected void refresh(PageInteractor<News> interactor) {
+        newsTask.refresh(interactor);
+        refreshInteractor = interactor;
+    }
+
+    public void refreshWithKeyword(String keyword) {
+        refresh(newsInteractor.pageNews(CHANNEL, keyword, FIRST_PAGE, PAGE_SIZE));
+    }
+
+    @Override
     public void onRefresh() {
-        if (pageInteractor != null) {
-            newsTask.refresh(pageInteractor);
+        if (refreshInteractor != null) {
+            refresh(refreshInteractor);
         }
     }
 
@@ -115,31 +134,5 @@ public class NewsListPresenter extends Presenter<INewsListView> implements Tasks
             Collection<News> resources = ((PageTask<News>) task).getLoadedResources();
             getView().showNewsList(resources);
         }
-    }
-
-    public boolean onQueryTextSubmit(String s) {
-        Timber.v("onQueryTextSubmit");
-        if (Texts.isTrimmedEmpty(s)) {
-            return false;
-        }
-        keyword = s;
-        pageInteractor = newsInteractor.pageNews(CHANNEL, s, FIRST_PAGE, PAGE_SIZE);
-        onRefresh();
-        return true;
-    }
-
-    public boolean onQueryTextChange(String s) {
-//        Timber.v("onQueryTextChange");
-        return false;
-    }
-
-    public boolean onCloseSearchView() {
-        if (keyword == null) {
-            return true;
-        }
-        keyword = null;
-        pageInteractor = newsInteractor.pageNews(CHANNEL, FIRST_PAGE, PAGE_SIZE);
-        onRefresh();
-        return true;
     }
 }

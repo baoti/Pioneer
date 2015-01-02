@@ -11,6 +11,7 @@ import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.misc.util.Texts;
 import com.github.baoti.pioneer.ui.common.IView;
 import com.github.baoti.pioneer.ui.common.IViewDelegate;
+import com.github.baoti.pioneer.ui.common.Presenter;
 
 import javax.inject.Inject;
 
@@ -59,6 +60,9 @@ public class LoginViewDelegate implements ILoginView, IViewDelegate<LoginViewDel
     public LoginPresenter getPresenter() {
         return presenter;
     }
+
+    @Override
+    public void onPresenterTaken(Presenter presenter) {}
 
     @OnClick(R.id.btn_sign_in) void onSignInClicked() {
         getPresenter().onSignInClicked();
