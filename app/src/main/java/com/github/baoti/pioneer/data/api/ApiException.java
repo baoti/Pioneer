@@ -2,8 +2,6 @@ package com.github.baoti.pioneer.data.api;
 
 import com.github.baoti.pioneer.data.DataException;
 
-import retrofit.RetrofitError;
-
 /**
  * Created by liuyedong on 2014/12/27.
  */
@@ -19,7 +17,7 @@ public class ApiException extends DataException {
         this.response = response;
     }
 
-    public ApiException(RetrofitError error) {
+    public ApiException(Exception error) {
         super(error.getMessage(), error);
         this.response = null;
     }

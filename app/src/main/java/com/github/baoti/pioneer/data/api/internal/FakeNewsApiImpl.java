@@ -58,7 +58,7 @@ public class FakeNewsApiImpl implements NewsApi {
         try {
             Thread.sleep(new Random().nextInt(1000) + 1000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new ApiException(e);
         }
         return new ResourcePage.Simple<News>(resources, pageSize) {
             @Override

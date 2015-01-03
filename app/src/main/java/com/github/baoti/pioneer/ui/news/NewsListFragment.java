@@ -79,6 +79,7 @@ public class NewsListFragment extends FragmentView<INewsListView, NewsListPresen
             }
         });
 
+        setRetainInstance(true);
         AppMain.globalGraph().plus(new NewsModule()).inject(this);
         super.onViewCreated(view, savedInstanceState);
     }

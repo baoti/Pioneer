@@ -42,6 +42,8 @@ public class NewsListActivity extends FragmentActivity implements FragmentManage
         listFragment = (NewsListFragment) getSupportFragmentManager().findFragmentById(R.id.frag_news_list);
         listFragment.enableInitialResources();
 
+        searchFragment = getSearchFragment();
+
         setupToolbar();
 
         searchView = (SearchView) toolbar.findViewById(R.id.action_search);
@@ -76,9 +78,15 @@ public class NewsListActivity extends FragmentActivity implements FragmentManage
             }
         });
         searchView.setOnQueryTextListener(this);
+        if (searchFragment != null) {
+            searchView.onActionViewExpanded();
+        }
     }
 
     private void openSearchFragment() {
+        if (getSearchFragment() != null) {
+            return;
+        }
         if (searchFragment == null) {
             searchFragment = NewsListFragment.newInstance();
         }
@@ -103,6 +111,7 @@ public class NewsListActivity extends FragmentActivity implements FragmentManage
 
     @Override
     public boolean onQueryTextSubmit(String s) {
+        searchView.clearFocus();
         if (searchFragment != null && searchFragment.isVisible()) {
             searchFragment.getPresenter().refreshWithKeyword(s);
             return true;
