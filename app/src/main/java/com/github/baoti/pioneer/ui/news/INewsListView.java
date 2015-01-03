@@ -16,4 +16,8 @@ public interface INewsListView extends IView {
     void hideRefreshing();
 
     void showLoadingMore();
+
+    void enableSwipeRefreshing();
+
+    void disableSwipeRefreshing();
 }

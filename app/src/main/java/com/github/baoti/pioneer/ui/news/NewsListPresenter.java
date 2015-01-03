@@ -71,7 +71,9 @@ public class NewsListPresenter extends Presenter<INewsListView> implements Tasks
 
     public void onSwipeRefreshPrepared() {
         if (newsTask.isRefreshing()) {
-            getView().showRefreshing();
+            if (hasView()) {
+                getView().showRefreshing();
+            }
         } else if (!newsTask.hasLoadedResources()) {
             loadInitialResources();
         }
@@ -80,12 +82,24 @@ public class NewsListPresenter extends Presenter<INewsListView> implements Tasks
     public void loadInitialResources() {
         if (initialResInteractor != null) {
             refresh(initialResInteractor);
+        } else {
+            if (hasView()) {
+                getView().disableSwipeRefreshing();
+            }
         }
+    }
+
+    public void clearRefreshInteractor() {
+        refreshInteractor = null;
+        getView().disableSwipeRefreshing();
     }
 
     protected void refresh(PageInteractor<News> interactor) {
         newsTask.refresh(interactor);
         refreshInteractor = interactor;
+        if (hasView()) {
+            getView().enableSwipeRefreshing();
+        }
     }
 
     public void refreshWithKeyword(String keyword) {
@@ -96,6 +110,8 @@ public class NewsListPresenter extends Presenter<INewsListView> implements Tasks
     public void onRefresh() {
         if (refreshInteractor != null) {
             refresh(refreshInteractor);
+        } else {
+            getView().hideRefreshing();
         }
     }
 

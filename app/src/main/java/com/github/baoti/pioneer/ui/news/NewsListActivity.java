@@ -112,6 +112,9 @@ public class NewsListActivity extends FragmentActivity implements FragmentManage
 
     @Override
     public boolean onQueryTextChange(String s) {
+        if (searchFragment != null && searchFragment.isVisible()) {
+            searchFragment.getPresenter().clearRefreshInteractor();
+        }
         return false;
     }
 }

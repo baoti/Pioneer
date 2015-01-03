@@ -38,6 +38,8 @@ public class NewsListFragment extends FragmentView<INewsListView, NewsListPresen
     private LinearLayoutManager layoutManager;
     private NewsListAdapter adapter;
 
+    private boolean swipeRefreshEnabled;
+
     @Override
     protected NewsListPresenter createPresenter(INewsListView view) {
         return presenterLazy.get();
@@ -67,8 +69,7 @@ public class NewsListFragment extends FragmentView<INewsListView, NewsListPresen
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                boolean enableRefresh = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
-                swipeRefreshLayout.setEnabled(enableRefresh);
+                updateSwipeRefreshLayoutEnabled();
             }
         });
         swipeRefreshLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -80,6 +81,11 @@ public class NewsListFragment extends FragmentView<INewsListView, NewsListPresen
 
         AppMain.globalGraph().plus(new NewsModule()).inject(this);
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void updateSwipeRefreshLayoutEnabled() {
+        boolean enableRefresh = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
+        swipeRefreshLayout.setEnabled(swipeRefreshEnabled && enableRefresh);
     }
 
     @Override
@@ -109,6 +115,18 @@ public class NewsListFragment extends FragmentView<INewsListView, NewsListPresen
         if (layoutManager.findLastVisibleItemPosition() >= layoutManager.getItemCount() - 1) {
             recyclerView.getAdapter().notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void enableSwipeRefreshing() {
+        swipeRefreshEnabled = true;
+        updateSwipeRefreshLayoutEnabled();
+    }
+
+    @Override
+    public void disableSwipeRefreshing() {
+        swipeRefreshEnabled = false;
+        updateSwipeRefreshLayoutEnabled();
     }
 
     public void enableInitialResources() {
