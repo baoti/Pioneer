@@ -6,7 +6,7 @@ import com.github.baoti.pioneer.biz.exception.NoSuchPageException;
 import java.util.Collection;
 
 /**
- * Created by Administrator on 2015/1/1.
+ * Created by liuyedong on 2015/1/1.
  */
 public interface ResourcePage<E> {
     Collection<E> getResources();

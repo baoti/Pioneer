@@ -8,11 +8,12 @@ import com.github.baoti.pioneer.data.api.NewsApi;
 import com.github.baoti.pioneer.entity.News;
 import com.github.baoti.pioneer.misc.util.Texts;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Created by Administrator on 2015/1/2.
+ * Created by liuyedong on 2015/1/2.
  */
 public class FakeNewsApiImpl implements NewsApi {
     private static final String[] NEWS_CHANNEL_1 = new String[130];
@@ -59,6 +60,9 @@ public class FakeNewsApiImpl implements NewsApi {
             Thread.sleep(new Random().nextInt(1000) + 1000);
         } catch (InterruptedException e) {
             throw new ApiException(e);
+        }
+        if (new Random().nextBoolean()) {
+            throw new ApiException(new IOException());
         }
         return new ResourcePage.Simple<News>(resources, pageSize) {
             @Override

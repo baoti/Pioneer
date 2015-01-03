@@ -3,7 +3,7 @@ package com.github.baoti.pioneer.data;
 import com.github.baoti.pioneer.biz.exception.BizException;
 
 /**
- * Created by Administrator on 2015/1/1.
+ * Created by liuyedong on 2015/1/1.
  */
 public class DataException extends BizException {
     public DataException(String detailMessage) {

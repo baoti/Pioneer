@@ -1,7 +1,7 @@
 package com.github.baoti.pioneer.entity;
 
 /**
- * Created by Administrator on 2015/1/2.
+ * Created by liuyedong on 2015/1/2.
  */
 public class News {
     private final String title;

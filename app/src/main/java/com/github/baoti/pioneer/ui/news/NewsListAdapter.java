@@ -8,33 +8,20 @@ import android.widget.TextView;
 
 import com.github.baoti.pioneer.entity.News;
 import com.github.baoti.pioneer.ui.common.holder.LoadingViewHolder;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import com.github.baoti.pioneer.ui.common.page.PageAdapter;
+import com.github.baoti.pioneer.ui.common.page.PagePresenter;
 
 import static butterknife.ButterKnife.findById;
 
 /**
- * Created by Administrator on 2015/1/2.
+ * Created by liuyedong on 2015/1/2.
  */
-public class NewsListAdapter extends RecyclerView.Adapter {
+public class NewsListAdapter extends PageAdapter<News> {
     private final int TYPE_MERCHANT = 0;
     private final int TYPE_LOAD_MORE = 1;
 
-    private final LayoutInflater inflater;
-    private final NewsListPresenter presenter;
-    private final List<News> items = new ArrayList<>();
-
-    public NewsListAdapter(LayoutInflater inflater, NewsListPresenter presenter) {
-        this.inflater = inflater;
-        this.presenter = presenter;
-    }
-
-    public void changeItems(Collection<News> resources) {
-        items.clear();
-        items.addAll(resources);
-        notifyDataSetChanged();
+    public NewsListAdapter(LayoutInflater inflater, PagePresenter<News> presenter) {
+        super(inflater, presenter);
     }
 
     @Override
@@ -49,7 +36,7 @@ public class NewsListAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_LOAD_MORE) {
-            return LoadingViewHolder.create(inflater, parent);
+            return createLoadingViewHolder(parent);
         }
         return new ViewHolder(inflater.inflate(android.R.layout.simple_list_item_2, parent, false));
     }
@@ -61,25 +48,8 @@ public class NewsListAdapter extends RecyclerView.Adapter {
             ((ViewHolder) holder).text2.setText(items.get(position).getContent());
         }
         if (holder instanceof LoadingViewHolder) {
-            LoadingViewHolder viewHolder = (LoadingViewHolder) holder;
-            if (presenter.isLoadingNextPage()) {
-                viewHolder.progressBar.setVisibility(View.VISIBLE);
-                viewHolder.textView.setVisibility(View.VISIBLE);
-                viewHolder.textView.setText("Loading");
-            } else if (!presenter.hasNextPage()) {
-                viewHolder.progressBar.setVisibility(View.GONE);
-                viewHolder.textView.setVisibility(View.VISIBLE);
-                viewHolder.textView.setText("No more");
-            } else {
-                viewHolder.progressBar.setVisibility(View.INVISIBLE);
-                viewHolder.textView.setVisibility(View.INVISIBLE);
-            }
+            bindLoadingViewHolder((LoadingViewHolder) holder);
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return presenter == null ? items.size() : items.size() + 1;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

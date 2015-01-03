@@ -9,12 +9,24 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
- * Created by Administrator on 2015/1/1.
+ * Created by liuyedong on 2015/1/1.
  */
 public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
     private Tasks.LifecycleListener listener;
+    /**
+     * 最后一次运行的 task
+     */
     private Task task;
+    /**
+     * 最后一次成功获得的 结果
+     */
+    private ResourcePage<E> page;
+    /**
+     * 已获得的所有资源
+     */
     private List<E> resources;
 
     public void setLifecycleListener(Tasks.LifecycleListener listener) {
@@ -59,18 +71,18 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
         return task == null || task.isFirst;
     }
 
-    public boolean isRefreshing() {
+    public boolean isLoadingFirstPage() {
         return isRunning() && isFirstPage();
     }
 
-    public void refresh(PageInteractor<E> interactor) {
+    public void loadFirstPage(PageInteractor<E> interactor) {
         cancel(true);
         task = new Task(true, interactor);
         task.executeOnDefaultThreadPool();
     }
 
     public boolean hasNextPage() {
-        return !(task != null && task.getResult() != null) || task.getResult().hasNext();
+        return page == null || page.hasNext();
     }
 
     public boolean isLoadingNextPage() {
@@ -83,31 +95,35 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
         }
         if (task.isRunning()) {
             if (task.isFirst) {
-                return LoadState.REFRESHING;
+                return LoadState.LOADING_FIRST;
             } else {
                 return LoadState.LOADING_NEXT;
             }
+        }
+        if (page == null) {
+            // fail to load first page
+            return LoadState.OTHER;
+        }
+        if (!page.hasNext()) {
+            return LoadState.NO_NEXT;
         }
         if (task.getResult() == null) {
             // failed, retry
             if (!task.isFirst) {
+                Task retryTask = task.recreate();
                 cancel(true);
-                task = task.recreate();
+                Timber.v("Retry loading next");
+                task = retryTask;
                 task.executeOnDefaultThreadPool();
                 return LoadState.LOADING_NEXT;
-            } else {
-                return LoadState.OTHER;
             }
         }
-        final ResourcePage<E> page = task.getResult();
-        if (!page.hasNext()) {
-            return LoadState.NO_NEXT;
-        }
         cancel(true);
-        task = new Task(false, new DeferredInteractor<ResourcePage<E>>() {
+        final ResourcePage<E> prevPage = page;
+        task = new Task(false, new PageInteractor<E>() {
             @Override
             public ResourcePage<E> interact() throws BizException {
-                return page.next();
+                return prevPage.next();
             }
         });
         task.executeOnDefaultThreadPool();
@@ -138,19 +154,20 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
 
     private void storeResources(Task task) {
         if (task.getResult() != null) {
+            page = task.getResult();
             if (resources == null) {
                 resources = new ArrayList<>();
             }
             if (task.isFirst) {
                 resources.clear();
             }
-            resources.addAll(task.getResult().getResources());
+            resources.addAll(page.getResources());
         }
     }
 
     public enum LoadState {
-        /** refreshing first page */
-        REFRESHING,
+        /** loading first page */
+        LOADING_FIRST,
         /** loading next page */
         LOADING_NEXT,
         /** no next page */

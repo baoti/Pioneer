@@ -6,7 +6,7 @@ import com.github.baoti.pioneer.data.api.NewsApi;
 import com.github.baoti.pioneer.entity.News;
 
 /**
- * Created by Administrator on 2015/1/2.
+ * Created by liuyedong on 2015/1/2.
  */
 public class NewsInteractorImpl implements NewsInteractor {
     private final NewsApi newsApi;

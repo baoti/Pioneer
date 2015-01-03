@@ -161,6 +161,10 @@ public abstract class SafeAsyncTask<Params, Progress, Result>
         if (stopped) {
             return;
         }
+        if (isCancelled()) {
+            onCancelled();
+            return;
+        }
         resultOrException = e;
         onStopped();
         if (e.exception != null) {
