@@ -14,7 +14,8 @@ import java.util.Collection;
 /**
  * Created by liuyedong on 2015/1/2.
  */
-public class PagePresenter<E> extends Presenter<IPageView<E>> implements Tasks.LifecycleListener, SwipeRefreshLayout.OnRefreshListener {
+public class PagePresenter<E> extends Presenter<IPageView<E>>
+        implements PageTask.LifecycleListener<E>, SwipeRefreshLayout.OnRefreshListener {
 
     private final PageTask<E> pageTask = new PageTask<>();
 
@@ -37,7 +38,8 @@ public class PagePresenter<E> extends Presenter<IPageView<E>> implements Tasks.L
     protected void onLoad(@Nullable Bundle savedInstanceState, boolean reusing) {
         super.onLoad(savedInstanceState, reusing);
         if (pageTask.hasLoadedResources()) {
-            getView().showResources(pageTask.getLoadedResources());
+            getView().showResources(pageTask.getLoadedResources(),
+                    0, 0, pageTask.getLoadedResources().size());
         }
     }
 
@@ -133,15 +135,16 @@ public class PagePresenter<E> extends Presenter<IPageView<E>> implements Tasks.L
         if (((PageTask) task).isFirstPage()) {
             getView().hideRefreshing();
         }
-        if (task.getResult() != null) {
-            //noinspection unchecked
-            Collection<E> resources = ((PageTask<E>) task).getLoadedResources();
-            getView().showResources(resources);
-        } else {
-            if (!((PageTask) task).isFirstPage()) {
-                // show "fail to loading"
-                getView().updateLoadingMore();
-            }
+        getView().updateLoadingMore();
+    }
+
+    @Override
+    public void onPageChanged(PageTask pageTask, int start, int before, int count) {
+        if (!hasView()) {
+            return;
         }
+        //noinspection unchecked
+        Collection<E> resources = pageTask.getLoadedResources();
+        getView().showResources(resources, start, before, count);
     }
 }

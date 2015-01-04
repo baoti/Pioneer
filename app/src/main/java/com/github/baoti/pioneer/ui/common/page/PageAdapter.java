@@ -25,11 +25,32 @@ public abstract class PageAdapter<E> extends RecyclerView.Adapter {
         this.presenter = presenter;
     }
 
-    public void changeItems(Collection<E> resources) {
+    public void changeItems(Collection<E> resources, int start, int before, int count) {
         items.clear();
         items.addAll(resources);
-        notifyDataSetChanged();
+        notifyItemChanged(start, before, count);
     }
+
+    protected void notifyItemChanged(int start, int before, int count) {
+        if (before == 0) {
+            if (start == 0) {
+                // Prevent scrolling to bottom
+                notifyDataSetChanged();
+            } else {
+                notifyItemRangeInserted(start, count);
+            }
+        } else {
+            if (before < count) {
+                notifyItemRangeInserted(start + before, count - before);
+            }
+            if (before > count) {
+                notifyItemRangeRemoved(start + count, before - count);
+            }
+            notifyItemRangeChanged(start, Math.min(before, count));
+        }
+    }
+
+    public abstract void notifyLoadingChanged();
 
     protected RecyclerView.ViewHolder createLoadingViewHolder(ViewGroup parent) {
         return LoadingViewHolder.create(inflater, parent);
@@ -52,10 +73,5 @@ public abstract class PageAdapter<E> extends RecyclerView.Adapter {
             viewHolder.progressBar.setVisibility(View.INVISIBLE);
             viewHolder.textView.setVisibility(View.INVISIBLE);
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return presenter == null ? items.size() : items.size() + 1;
     }
 }

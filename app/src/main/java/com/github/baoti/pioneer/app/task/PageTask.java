@@ -15,7 +15,7 @@ import timber.log.Timber;
  * Created by liuyedong on 2015/1/1.
  */
 public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
-    private Tasks.LifecycleListener listener;
+    private LifecycleListener<E> listener;
     /**
      * 最后一次运行的 task
      */
@@ -29,7 +29,7 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
      */
     private List<E> resources;
 
-    public void setLifecycleListener(Tasks.LifecycleListener listener) {
+    public void setLifecycleListener(LifecycleListener<E> listener) {
         this.listener = listener;
     }
 
@@ -158,11 +158,31 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
             if (resources == null) {
                 resources = new ArrayList<>();
             }
+            int start = resources.size();
+            int before = 0;
+            int count = page.getResources().size();
             if (task.isFirst) {
                 resources.clear();
+
+                before = start;
+                start = 0;
             }
             resources.addAll(page.getResources());
+            if (listener != null) {
+                listener.onPageChanged(this, start, before, count);
+            }
         }
+    }
+
+    public interface LifecycleListener<E> extends Tasks.LifecycleListener {
+        /**
+         * 分页资源发生了改变
+         * @param pageTask 分页任务
+         * @param start 从 start 开始
+         * @param before before 条旧数据
+         * @param count 改变为新的 count 条
+         */
+        void onPageChanged(PageTask<E> pageTask, int start, int before, int count);
     }
 
     public enum LoadState {

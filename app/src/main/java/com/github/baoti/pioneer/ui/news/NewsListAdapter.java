@@ -25,6 +25,11 @@ public class NewsListAdapter extends PageAdapter<News> {
     }
 
     @Override
+    public void notifyLoadingChanged() {
+        notifyItemChanged(getItemCount() - 1);
+    }
+
+    @Override
     public int getItemViewType(int position) {
         if (presenter != null && position == getItemCount() - 1) {
             return TYPE_LOAD_MORE;
@@ -50,6 +55,11 @@ public class NewsListAdapter extends PageAdapter<News> {
         if (holder instanceof LoadingViewHolder) {
             bindLoadingViewHolder((LoadingViewHolder) holder);
         }
+    }
+
+    @Override
+    public int getItemCount() {
+        return presenter == null ? items.size() : items.size() + 1;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

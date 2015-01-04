@@ -20,9 +20,9 @@ import java.util.Collection;
  */
 public abstract class PageFragment<E> extends FragmentView<IPageView<E>, PagePresenter<E>> implements IPageView<E> {
 
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView recyclerView;
-    private LinearLayoutManager layoutManager;
+    protected SwipeRefreshLayout swipeRefreshLayout;
+    protected RecyclerView recyclerView;
+    protected LinearLayoutManager layoutManager;
     private PageAdapter<E> adapter;
 
     private boolean swipeRefreshEnabled;
@@ -85,8 +85,8 @@ public abstract class PageFragment<E> extends FragmentView<IPageView<E>, PagePre
     protected abstract PageAdapter<E> createPageAdapter(LayoutInflater layoutInflater, PagePresenter<E> presenter);
 
     @Override
-    public void showResources(Collection<E> resources) {
-        adapter.changeItems(resources);
+    public void showResources(Collection<E> resources, int start, int before, int count) {
+        adapter.changeItems(resources, start, before, count);
     }
 
     @Override
@@ -102,7 +102,7 @@ public abstract class PageFragment<E> extends FragmentView<IPageView<E>, PagePre
     @Override
     public void updateLoadingMore() {
         if (layoutManager.findLastVisibleItemPosition() >= layoutManager.getItemCount() - 1) {
-            recyclerView.getAdapter().notifyDataSetChanged();
+            ((PageAdapter) recyclerView.getAdapter()).notifyLoadingChanged();
         }
     }
 
