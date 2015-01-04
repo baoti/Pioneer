@@ -99,7 +99,7 @@ public class Navigator {
         if (isFragmentInBackStack != null) {
             List<Fragment> fragments = fragmentManager.getFragments();
             for (Fragment frag : fragments) {
-                if (isInBackStack(frag)) {
+                if (frag != null && isInBackStack(frag)) {
                     return true;
                 }
             }
@@ -125,17 +125,28 @@ public class Navigator {
         }
     }
 
+    public static boolean canNavigateBack(Activity activity) {
+        if (!isTaskRoot(activity)) {
+            return true;
+        }
+        //noinspection SimplifiableIfStatement
+        if (activity instanceof FragmentActivity) {
+            return hasBackStackEntry(
+                    ((FragmentActivity) activity).getSupportFragmentManager());
+        }
+        return false;
+    }
+
+    public static boolean canNavigateBack(Fragment fragment) {
+        return !isTaskRoot(fragment);
+    }
+
     /**
      * 设置 Toolbar 上的 导航图标与事件
      * @return 返回导航图标是否可见
      */
     public static boolean setupToolbarNavigation(final Activity activity, Toolbar toolbar) {
-        boolean showNavigation = !Navigator.isTaskRoot(activity);
-        if (activity instanceof FragmentActivity) {
-            showNavigation |= hasBackStackEntry(
-                    ((FragmentActivity) activity).getSupportFragmentManager());
-        }
-        if (showNavigation) {
+        if (canNavigateBack(activity)) {
             toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -155,7 +166,7 @@ public class Navigator {
      * @return 返回导航图标是否可见
      */
     public static boolean setupToolbarNavigation(final Fragment fragment, Toolbar toolbar) {
-        if (!Navigator.isTaskRoot(fragment)) {
+        if (canNavigateBack(fragment)) {
             toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
