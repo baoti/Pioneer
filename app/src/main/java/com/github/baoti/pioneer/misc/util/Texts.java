@@ -3,8 +3,10 @@ package com.github.baoti.pioneer.misc.util;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Base64;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -64,6 +66,11 @@ public class Texts {
         char[] array = new char[length];
         Arrays.fill(array, filledChar);
         return new String(array);
+    }
+
+    public static String base64(String s) {
+        byte[] sourceBytes = s.getBytes(Charset.forName(CHARSET));
+        return Base64.encodeToString(sourceBytes, Base64.DEFAULT);
     }
 
     public static String md5Hex(boolean upperCase, String... strings) {

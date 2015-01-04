@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.baoti.pioneer.R;
+import com.github.baoti.pioneer.ui.Navigator;
 import com.github.baoti.pioneer.ui.common.FragmentView;
 
 import butterknife.ButterKnife;
@@ -38,6 +39,7 @@ public class LoginFragment extends FragmentView<ILoginView, LoginPresenter>
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.inject(this, view);
+        Navigator.setupToolbarNavigation(this, appBar);
         super.onViewCreated(view, savedInstanceState);
     }
 

@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.github.baoti.pioneer.AppMain;
 import com.github.baoti.pioneer.R;
-import com.github.baoti.pioneer.app.Navigator;
+import com.github.baoti.pioneer.ui.Navigator;
 import com.github.baoti.pioneer.ui.common.ActivityView;
 
 import javax.inject.Inject;

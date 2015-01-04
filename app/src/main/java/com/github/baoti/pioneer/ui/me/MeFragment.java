@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.github.baoti.pioneer.AppMain;
 import com.github.baoti.pioneer.AppMainModule;
 import com.github.baoti.pioneer.R;
-import com.github.baoti.pioneer.app.Navigator;
+import com.github.baoti.pioneer.ui.Navigator;
 import com.github.baoti.pioneer.entity.ImageBean;
 import com.github.baoti.pioneer.misc.picasso.PicassoHelper;
 import com.github.baoti.pioneer.ui.common.FragmentView;
@@ -78,8 +78,13 @@ public class MeFragment extends FragmentView<IMeView, MePresenter> implements IM
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.inject(this, view);
         AppMain.globalGraph().plus(new MeModule()).inject(this);
-        toolbar.setTitle("Me");
+        setupToolbar();
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void setupToolbar() {
+        toolbar.setTitle("Me");
+        Navigator.setupToolbarNavigation(this, toolbar);
     }
 
     @Override

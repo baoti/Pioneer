@@ -8,11 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.baoti.pioneer.R;
+import com.github.baoti.pioneer.ui.Navigator;
 import com.github.baoti.pioneer.ui.common.DialogFragmentView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.Optional;
 
 /**
  * Created by liuyedong on 2014/12/26.
@@ -20,11 +20,10 @@ import butterknife.Optional;
 public class LoginDialogFragment extends DialogFragmentView<ILoginView, LoginPresenter>
         implements LoginViewDelegate.Delegator {
     public static LoginDialogFragment newInstance() {
-        LoginDialogFragment fragment = new LoginDialogFragment();
-        return fragment;
+        return new LoginDialogFragment();
     }
 
-    @Optional
+//    @Optional
     @InjectView(R.id.app_toolbar)
     Toolbar appBar;
 
@@ -41,6 +40,7 @@ public class LoginDialogFragment extends DialogFragmentView<ILoginView, LoginPre
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.inject(this, view);
+        Navigator.setupToolbarNavigation(this, appBar);
         super.onViewCreated(view, savedInstanceState);
     }
 

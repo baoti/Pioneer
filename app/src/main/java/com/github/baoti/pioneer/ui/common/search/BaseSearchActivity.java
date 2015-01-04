@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.github.baoti.pioneer.R;
+import com.github.baoti.pioneer.ui.Navigator;
 
 /**
  * Created by liuyedong on 2015/1/2.
@@ -15,18 +16,20 @@ import com.github.baoti.pioneer.R;
 public abstract class BaseSearchActivity extends FragmentActivity implements FragmentManager.OnBackStackChangedListener, SearchView.OnQueryTextListener {
     private static final String TAG_FRAG_SEARCH = "frag_search";
 
+    private Toolbar toolbar;
     private SearchView searchView;
     private Fragment listFragment;
     private Fragment searchFragment;
 
+    @Override
+    protected void onDestroy() {
+        getSupportFragmentManager().removeOnBackStackChangedListener(this);
+        super.onDestroy();
+    }
+
     protected SearchView setupToolbar(Toolbar toolbar) {
-        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        this.toolbar = toolbar;
+        Navigator.setupToolbarNavigation(this, toolbar);
         toolbar.inflateMenu(R.menu.search_view);
         return (SearchView) toolbar.findViewById(R.id.action_search);
     }
@@ -86,6 +89,9 @@ public abstract class BaseSearchActivity extends FragmentActivity implements Fra
         searchFragment = getSearchFragment();
         if (searchFragment == null || searchFragment.isHidden()) {
             searchView.onActionViewCollapsed();
+        }
+        if (toolbar != null) {
+            Navigator.setupToolbarNavigation(this, toolbar);
         }
     }
 

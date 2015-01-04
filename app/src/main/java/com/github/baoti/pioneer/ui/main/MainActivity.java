@@ -3,7 +3,10 @@ package com.github.baoti.pioneer.ui.main;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
+import com.github.baoti.pioneer.ui.Navigator;
 import com.github.baoti.pioneer.ui.common.base.BaseContainerActivity;
+
+import timber.log.Timber;
 
 /**
  * Created by liuyedong on 14-12-18.
@@ -24,9 +27,9 @@ public class MainActivity extends BaseContainerActivity {
 
     @Override
     public void finish() {
-        if (hookFinishToMoveBack) {
+        if (hookFinishToMoveBack && Navigator.moveToBackIfRoot(this)) {
             // no finish, just move to back
-            moveTaskToBack(true);
+            Timber.v("Moved to back");
         } else {
             super.finish();
         }
