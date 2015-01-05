@@ -110,11 +110,8 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
         if (task.getResult() == null) {
             // failed, retry
             if (!task.isFirst) {
-                Task retryTask = task.recreate();
-                cancel(true);
                 Timber.v("Retry loading next");
-                task = retryTask;
-                task.executeOnDefaultThreadPool();
+                retry();
                 return LoadState.LOADING_NEXT;
             }
         }
@@ -128,6 +125,19 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
         });
         task.executeOnDefaultThreadPool();
         return LoadState.LOADING_NEXT;
+    }
+
+    public void retry() {
+        if (task == null) {
+            return;
+        }
+        if (task.isRunning()) {
+            return;
+        }
+        Task retryTask = task.recreate();
+        cancel(true);
+        task = retryTask;
+        task.executeOnDefaultThreadPool();
     }
 
     public final boolean cancel(boolean mayInterruptIfRunning) {

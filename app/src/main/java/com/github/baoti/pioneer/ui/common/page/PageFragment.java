@@ -47,11 +47,13 @@ public abstract class PageFragment<E> extends FragmentView<IPageView<E>, PagePre
                 if (lastVisibleItem >= lastItem && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     getPresenter().loadNextPage();
                 }
+                onRecyclerViewScrollStateChanged(newState);
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 updateSwipeRefreshLayoutEnabled();
+                onRecyclerViewScrolled(dx, dy);
             }
         });
         swipeRefreshLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -68,6 +70,14 @@ public abstract class PageFragment<E> extends FragmentView<IPageView<E>, PagePre
 
         setRetainInstance(true);
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    protected void onRecyclerViewScrollStateChanged(int newState) {
+
+    }
+
+    protected void onRecyclerViewScrolled(int dx, int dy) {
+
     }
 
     private void updateSwipeRefreshLayoutEnabled() {
