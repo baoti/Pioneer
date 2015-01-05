@@ -60,8 +60,8 @@ public class MeFragment extends FragmentView<IMeView, MePresenter> implements IM
     @InjectView(R.id.tv_following)
     TextView following;
 
-    @InjectView(R.id.tv_fans)
-    TextView fans;
+    @InjectView(R.id.tv_followers)
+    TextView followers;
 
     @InjectView(R.id.btn_sign_in)
     Button signIn;
@@ -114,8 +114,8 @@ public class MeFragment extends FragmentView<IMeView, MePresenter> implements IM
     }
 
     @Override
-    public void showFans(String fans) {
-        this.fans.setText(fans);
+    public void showFollowers(String followers) {
+        this.followers.setText(followers);
     }
 
     @Override

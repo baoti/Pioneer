@@ -45,7 +45,7 @@ public class MePresenter extends Presenter<IMeView> {
             getView().showAvatar(account.getAvatar());
             getView().showAccountId(account.getAccountId());
             getView().showName(account.getName());
-            getView().showFans(String.valueOf(account.getFans()));
+            getView().showFollowers(String.valueOf(account.getFollowers()));
             getView().showFollowing(String.valueOf(account.getFollowing()));
             getView().hideSignIn();
             getView().showAccountInfo();

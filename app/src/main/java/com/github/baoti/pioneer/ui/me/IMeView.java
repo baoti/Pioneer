@@ -11,7 +11,7 @@ public interface IMeView extends IView {
 
     void showName(String name);
 
-    void showFans(String fans);
+    void showFollowers(String followers);
 
     void showFollowing(String following);
 

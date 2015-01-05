@@ -82,10 +82,10 @@
 
             <TableRow>
                 <TextView
-                    android:text="Fans:"/>
+                    android:text="Followers:"/>
 
                 <TextView
-                    android:id="@+id/tv_fans"
+                    android:id="@+id/tv_followers"
                     android:text="粉丝"/>
             </TableRow>
 

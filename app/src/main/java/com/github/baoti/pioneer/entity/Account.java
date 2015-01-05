@@ -7,7 +7,7 @@ public class Account {
     private String accountId;
     private String name;
     private int following;
-    private int fans;
+    private int followers;
     private ImageBean avatar;
 
     @Override
@@ -27,8 +27,8 @@ public class Account {
         return following;
     }
 
-    public int getFans() {
-        return fans;
+    public int getFollowers() {
+        return followers;
     }
 
     public ImageBean getAvatar() {

@@ -10,10 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.ui.common.FragmentView;
 import com.github.baoti.pioneer.ui.common.Presenter;
 
 import java.util.Collection;
+
+import static butterknife.ButterKnife.findById;
 
 /**
  * Created by liuyedong on 2015/1/2.
@@ -29,12 +32,12 @@ public abstract class PageFragment<E> extends FragmentView<IPageView<E>, PagePre
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        swipeRefreshLayout = new SwipeRefreshLayout(getActivity());
-        recyclerView = new RecyclerView(getActivity());
-        layoutManager = new LinearLayoutManager(getActivity());
+        View view = inflater.inflate(getLayoutRes(), container, false);
+        swipeRefreshLayout = findById(view, R.id.srl_swipe_refresh);
+        recyclerView = findById(view, R.id.rv_recycler);
+        layoutManager = createLinearLayoutManager();
         recyclerView.setLayoutManager(layoutManager);
-        swipeRefreshLayout.addView(recyclerView);
-        return swipeRefreshLayout;
+        return view;
     }
 
     @Override
@@ -70,6 +73,14 @@ public abstract class PageFragment<E> extends FragmentView<IPageView<E>, PagePre
 
         setRetainInstance(true);
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    protected int getLayoutRes() {
+        return R.layout.swipe_recycler_view;
+    }
+
+    protected LinearLayoutManager createLinearLayoutManager() {
+        return new LinearLayoutManager(getActivity());
     }
 
     protected void onRecyclerViewScrollStateChanged(int newState) {
