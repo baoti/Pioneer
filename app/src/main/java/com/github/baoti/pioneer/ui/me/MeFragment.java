@@ -13,13 +13,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.baoti.android.presenter.FragmentView;
 import com.github.baoti.pioneer.AppMain;
 import com.github.baoti.pioneer.AppMainModule;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.ui.Navigator;
 import com.github.baoti.pioneer.entity.ImageBean;
 import com.github.baoti.pioneer.misc.picasso.PicassoHelper;
-import com.github.baoti.pioneer.ui.common.FragmentView;
 import com.github.baoti.pioneer.ui.login.LoginDialogFragment;
 import com.squareup.picasso.Picasso;
 

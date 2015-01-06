@@ -7,9 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.baoti.android.presenter.DialogFragmentView;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.ui.Navigator;
-import com.github.baoti.pioneer.ui.common.DialogFragmentView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

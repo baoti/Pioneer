@@ -3,10 +3,12 @@ package com.github.baoti.pioneer.ui.me;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.github.baoti.android.presenter.Presenter;
+import com.github.baoti.pioneer.BusProvider;
 import com.github.baoti.pioneer.biz.interactor.AccountInteractor;
 import com.github.baoti.pioneer.entity.Account;
 import com.github.baoti.pioneer.event.AccountChangedEvent;
-import com.github.baoti.pioneer.ui.common.Presenter;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -15,6 +17,7 @@ import javax.inject.Inject;
  * Created by liuyedong on 14-12-26.
  */
 public class MePresenter extends Presenter<IMeView> {
+    private final Bus uiBus = BusProvider.UI_BUS;
     private final AccountInteractor accountInteractor;
     private Account account;
 

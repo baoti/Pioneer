@@ -1,24 +1,27 @@
-package com.github.baoti.pioneer.ui.common;
+package com.github.baoti.android.presenter;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
 /**
+ * Base Fragment working with {@link Presenter}
+ *
  * Created by liuyedong on 14-12-24.
  */
-public abstract class DialogFragmentView<V extends IView, P extends Presenter<V>>
-        extends DialogFragment implements IView {
+public abstract class FragmentView<V extends IView, P extends Presenter<V>>
+        extends Fragment implements IView {
 
     private P presenter;
     private V viewDelegate;
 
-    @SuppressWarnings({"UnusedParameters", "unchecked"})
+    @SuppressWarnings("unchecked")
     protected V createViewDelegate() {
         return (V) this;
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public final V getViewDelegate() {
         return viewDelegate;
     }

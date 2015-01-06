@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import com.github.baoti.android.presenter.FragmentView;
+import com.github.baoti.android.presenter.Presenter;
 import com.github.baoti.pioneer.R;
-import com.github.baoti.pioneer.ui.common.FragmentView;
-import com.github.baoti.pioneer.ui.common.Presenter;
 
 import java.util.Collection;
 

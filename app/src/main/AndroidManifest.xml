@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.news.NewsListActivity" />
+        <activity android:name=".ui.news.NewsActivity" />
     </application>
 
 </manifest>

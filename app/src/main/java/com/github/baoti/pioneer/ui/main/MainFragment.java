@@ -9,12 +9,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.github.baoti.android.presenter.FragmentView;
 import com.github.baoti.pioneer.AppMain;
 import com.github.baoti.pioneer.R;
-import com.github.baoti.pioneer.ui.common.FragmentView;
+import com.github.baoti.pioneer.entity.News;
 import com.github.baoti.pioneer.ui.login.LoginDialogFragment;
 import com.github.baoti.pioneer.ui.me.MeFragment;
-import com.github.baoti.pioneer.ui.news.NewsListActivity;
+import com.github.baoti.pioneer.ui.news.NewsActivity;
 
 import javax.inject.Inject;
 
@@ -102,7 +103,6 @@ public class MainFragment extends FragmentView<IMainView, MainPresenter> impleme
                 .replace(getId(), LoginDialogFragment.newInstance())
                 .addToBackStack("login")
                 .commit();
-//        startActivity(LoginActivity.intentToLaunch(getActivity()));
     }
 
     @OnClick(R.id.btn_sign_in) void onSignInClicked() {
@@ -128,7 +128,11 @@ public class MainFragment extends FragmentView<IMainView, MainPresenter> impleme
     }
 
     @OnClick(R.id.btn_news) void navigateToNews() {
-        startActivity(NewsListActivity.intentToLaunch(getActivity()));
+        startActivity(NewsActivity.actionView(getActivity()));
+    }
+
+    @OnClick(R.id.btn_one_news) void navigateToOneNews() {
+        startActivity(NewsActivity.actionView(getActivity(), new News(1000, "One", "One content")));
     }
 
     @OnClick(R.id.btn_me) void navigateToMe() {
@@ -139,6 +143,6 @@ public class MainFragment extends FragmentView<IMainView, MainPresenter> impleme
                 .replace(getId(), fragment)
                 .addToBackStack(null)
                 .commit();
-//        startActivity(MeActivity.intentToLaunch(getActivity()));
+//        startActivity(MeActivity.actionLaunch(getActivity()));
     }
 }

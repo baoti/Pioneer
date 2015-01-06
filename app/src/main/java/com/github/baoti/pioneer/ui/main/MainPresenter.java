@@ -4,11 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.github.baoti.android.presenter.Presenter;
+import com.github.baoti.pioneer.BusProvider;
 import com.github.baoti.pioneer.app.ForApp;
 import com.github.baoti.pioneer.app.task.ReportTask;
 import com.github.baoti.pioneer.biz.interactor.AccountInteractor;
 import com.github.baoti.pioneer.event.AccountChangedEvent;
-import com.github.baoti.pioneer.ui.common.Presenter;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -17,6 +19,7 @@ import javax.inject.Inject;
  * Created by liuyedong on 14-12-22.
  */
 public class MainPresenter extends Presenter<IMainView> {
+    private final Bus uiBus = BusProvider.UI_BUS;
     private final AccountInteractor accountInteractor;
     private ReportTask reportTask;
     private Context appContext;

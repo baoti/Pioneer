@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.github.baoti.android.presenter.Presenter;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.app.notification.Toaster;
 import com.github.baoti.pioneer.app.task.InteractorTask;
@@ -12,7 +13,6 @@ import com.github.baoti.pioneer.biz.exception.ValidationException;
 import com.github.baoti.pioneer.biz.interactor.AccountInteractor;
 import com.github.baoti.pioneer.biz.interactor.DeferredInteractor;
 import com.github.baoti.pioneer.entity.Account;
-import com.github.baoti.pioneer.ui.common.Presenter;
 
 import javax.inject.Inject;
 

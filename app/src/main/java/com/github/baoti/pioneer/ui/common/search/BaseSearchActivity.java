@@ -72,10 +72,15 @@ public abstract class BaseSearchActivity extends FragmentActivity implements Fra
             searchFragment = createSearchFragment();
         }
         getSupportFragmentManager().beginTransaction()
-                .hide(listFragment)
-                .add(R.id.frag_container, searchFragment, TAG_FRAG_SEARCH)
+//                .hide(listFragment)
+//                .add(getSearchFragmentContainerId(), searchFragment, TAG_FRAG_SEARCH)
+                .replace(getSearchFragmentContainerId(), searchFragment, TAG_FRAG_SEARCH)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    protected int getSearchFragmentContainerId() {
+        return R.id.frag_container;
     }
 
     protected Fragment getSearchFragment() {
@@ -84,8 +89,22 @@ public abstract class BaseSearchActivity extends FragmentActivity implements Fra
 
     protected abstract Fragment createSearchFragment();
 
+    protected boolean isListOrSearchVisible() {
+        if (listFragment == null) {
+            return false;
+        }
+        if (listFragment.isVisible()) {
+            return true;
+        }
+        Fragment searchFragment = getSearchFragment();
+        return searchFragment != null && searchFragment.isVisible();
+    }
+
     @Override
     public void onBackStackChanged() {
+        if (searchView == null) {
+            return;
+        }
         searchFragment = getSearchFragment();
         if (searchFragment == null || searchFragment.isHidden()) {
             searchView.onActionViewCollapsed();

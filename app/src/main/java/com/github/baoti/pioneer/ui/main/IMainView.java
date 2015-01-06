@@ -1,6 +1,6 @@
 package com.github.baoti.pioneer.ui.main;
 
-import com.github.baoti.pioneer.ui.common.IView;
+import com.github.baoti.android.presenter.IView;
 
 /**
  * Created by liuyedong on 14-12-22.

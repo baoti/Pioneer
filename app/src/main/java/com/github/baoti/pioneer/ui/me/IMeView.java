@@ -1,7 +1,7 @@
 package com.github.baoti.pioneer.ui.me;
 
+import com.github.baoti.android.presenter.IView;
 import com.github.baoti.pioneer.entity.ImageBean;
-import com.github.baoti.pioneer.ui.common.IView;
 
 /**
  * Created by liuyedong on 2014/12/26.

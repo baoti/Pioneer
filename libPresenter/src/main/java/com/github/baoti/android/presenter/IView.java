@@ -1,4 +1,4 @@
-package com.github.baoti.pioneer.ui.common;
+package com.github.baoti.android.presenter;
 
 /**
  * Created by liuyedong on 2014/12/26.

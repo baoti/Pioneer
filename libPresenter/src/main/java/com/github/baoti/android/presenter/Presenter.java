@@ -1,13 +1,9 @@
-package com.github.baoti.pioneer.ui.common;
+package com.github.baoti.android.presenter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import com.github.baoti.pioneer.BusProvider;
-import com.squareup.otto.Bus;
-
-import timber.log.Timber;
+import android.util.Log;
 
 /**
  * Base Presenter.
@@ -36,7 +32,8 @@ import timber.log.Timber;
  * Created by liuyedong on 14-12-24.
  */
 public abstract class Presenter<V extends IView> {
-    private static boolean LOG_LIFECYCLE = false;
+    private static final String TAG = "Presenter";
+    public static boolean LOG_LIFECYCLE = false;
 
     private V view;
 
@@ -47,21 +44,9 @@ public abstract class Presenter<V extends IView> {
 
     private boolean reusing;
 
-    protected final Bus uiBus;
-    private final boolean subscribe;
-
     public Presenter() {
-        this(false);
-    }
-
-    /**
-     * @param subscribe 是否在 暂停/恢复 时自动注册/取消到 App EventBus
-     */
-    public Presenter(boolean subscribe) {
         super();
-        this.subscribe = subscribe;
-        uiBus = BusProvider.UI_BUS;
-        if (LOG_LIFECYCLE) Timber.v("[new]  " + this);
+        if (LOG_LIFECYCLE) Log.v(TAG, "[new] " + this);
     }
 
     /**
@@ -81,7 +66,7 @@ public abstract class Presenter<V extends IView> {
     }
 
     final void takeView(V view) {
-        if (LOG_LIFECYCLE) Timber.v("[takeView] " + this);
+        if (LOG_LIFECYCLE) Log.v(TAG, "[takeView] " + this);
         if (view == null) throw new NullPointerException("new view must not be null");
 
         if (this.view != view) {
@@ -102,7 +87,7 @@ public abstract class Presenter<V extends IView> {
     }
 
     final void load(@Nullable Bundle savedInstanceState) {
-        if (LOG_LIFECYCLE) Timber.v("[load] " + this);
+        if (LOG_LIFECYCLE) Log.v(TAG, "[load] " + this);
         if (hasView() && !loaded) {
             loaded = true;
             onLoad(savedInstanceState, reusing);
@@ -124,11 +109,8 @@ public abstract class Presenter<V extends IView> {
     }
 
     final void resume() {
-        if (LOG_LIFECYCLE) Timber.v("[resume] " + this);
+        if (LOG_LIFECYCLE) Log.v(TAG, "[resume] " + this);
         resumed = true;
-        if (subscribe) {
-            uiBus.register(this);
-        }
         onResume();
     }
 
@@ -139,8 +121,8 @@ public abstract class Presenter<V extends IView> {
     }
 
     /**
-     * 是否处理用户可见状态
-     * @return
+     * 是否处于用户可见状态
+     * @return resumed
      */
     @SuppressWarnings("UnusedDeclaration")
     protected final boolean isResumed() {
@@ -148,11 +130,8 @@ public abstract class Presenter<V extends IView> {
     }
 
     final void pause() {
-        if (LOG_LIFECYCLE) Timber.v("[pause] " + this);
+        if (LOG_LIFECYCLE) Log.v(TAG, "[pause] " + this);
         resumed = false;
-        if (subscribe) {
-            uiBus.unregister(this);
-        }
         onPause();
     }
 
@@ -163,7 +142,7 @@ public abstract class Presenter<V extends IView> {
     }
 
     final void save(@NonNull Bundle outState) {
-        if (LOG_LIFECYCLE) Timber.v("[save] " + this);
+        if (LOG_LIFECYCLE) Log.v(TAG, "[save] " + this);
         onSave(outState);
     }
 
@@ -176,7 +155,7 @@ public abstract class Presenter<V extends IView> {
     }
 
     final void dropView(V view) {
-        if (LOG_LIFECYCLE) Timber.v("[dropView] " + this);
+        if (LOG_LIFECYCLE) Log.v(TAG, "[dropView] " + this);
         if (view == null) throw new NullPointerException("dropped view must not be null");
         if (view == this.view) {
             onDropView(view);
@@ -194,7 +173,7 @@ public abstract class Presenter<V extends IView> {
     }
 
     final void close() {
-        if (LOG_LIFECYCLE) Timber.v("[close] " + this);
+        if (LOG_LIFECYCLE) Log.v(TAG, "[close] " + this);
         onClose();
     }
 

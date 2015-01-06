@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 
+import com.github.baoti.android.presenter.Presenter;
 import com.github.baoti.pioneer.app.task.PageTask;
 import com.github.baoti.pioneer.app.task.Tasks;
 import com.github.baoti.pioneer.biz.interactor.PageInteractor;
-import com.github.baoti.pioneer.ui.common.Presenter;
 
 import java.util.Collection;
 

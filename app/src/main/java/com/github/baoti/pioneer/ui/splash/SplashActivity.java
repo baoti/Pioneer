@@ -5,10 +5,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.github.baoti.android.presenter.ActivityView;
 import com.github.baoti.pioneer.AppMain;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.ui.Navigator;
-import com.github.baoti.pioneer.ui.common.ActivityView;
 
 import javax.inject.Inject;
 

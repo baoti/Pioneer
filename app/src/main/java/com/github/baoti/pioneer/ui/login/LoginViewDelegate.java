@@ -6,12 +6,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.github.baoti.android.presenter.IView;
+import com.github.baoti.android.presenter.IViewDelegate;
+import com.github.baoti.android.presenter.Presenter;
 import com.github.baoti.pioneer.AppMain;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.misc.util.Texts;
-import com.github.baoti.pioneer.ui.common.IView;
-import com.github.baoti.pioneer.ui.common.IViewDelegate;
-import com.github.baoti.pioneer.ui.common.Presenter;
 
 import javax.inject.Inject;
 

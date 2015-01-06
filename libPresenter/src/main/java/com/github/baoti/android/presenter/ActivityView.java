@@ -1,9 +1,11 @@
-package com.github.baoti.pioneer.ui.common;
+package com.github.baoti.android.presenter;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 /**
+ * Base Activity working with {@link Presenter}
+ *
  * Created by liuyedong on 14-12-24.
  */
 public abstract class ActivityView<V extends IView, P extends Presenter<V>>
@@ -27,11 +29,12 @@ public abstract class ActivityView<V extends IView, P extends Presenter<V>>
     private P presenter;
     private V viewDelegate;
 
-    @SuppressWarnings({"UnusedParameters", "unchecked"})
+    @SuppressWarnings("unchecked")
     protected V createViewDelegate() {
         return (V) this;
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public final V getViewDelegate() {
         return viewDelegate;
     }
@@ -62,11 +65,22 @@ public abstract class ActivityView<V extends IView, P extends Presenter<V>>
         return instance;
     }
 
+    /**
+     * Replace {@link #getLastCustomNonConfigurationInstance}
+     * @return Retained instance by {@link #onRetainNonConfigInstance}
+     * @see #onRetainNonConfigInstance()
+     */
+    @SuppressWarnings("UnusedDeclaration")
     protected Object getLastNonConfigInstance() {
         RetainInstance instance = (RetainInstance) getLastCustomNonConfigurationInstance();
         return instance != null ? instance.other : null;
     }
 
+    /**
+     * Replace {@link #onRetainCustomNonConfigurationInstance}
+     * @return Will be retained
+     * @see #getLastNonConfigInstance()
+     */
     protected Object onRetainNonConfigInstance() {
         return null;
     }

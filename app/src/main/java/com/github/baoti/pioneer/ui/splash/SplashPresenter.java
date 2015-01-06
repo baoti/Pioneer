@@ -6,12 +6,12 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.baoti.android.presenter.Presenter;
 import com.github.baoti.pioneer.app.task.SafeAsyncTask;
 import com.github.baoti.pioneer.biz.interactor.AppInteractor;
 import com.github.baoti.pioneer.event.app.AppInitializeReportEvent;
 import com.github.baoti.pioneer.misc.util.Texts;
 import com.github.baoti.pioneer.ui.ForUi;
-import com.github.baoti.pioneer.ui.common.Presenter;
 import com.squareup.otto.Subscribe;
 
 import java.util.concurrent.TimeUnit;

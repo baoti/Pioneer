@@ -1,4 +1,4 @@
-package com.github.baoti.pioneer.ui.news;
+package com.github.baoti.pioneer.ui.news.list;
 
 import com.github.baoti.pioneer.entity.News;
 import com.github.baoti.pioneer.ui.common.page.IPageView;

@@ -1,18 +1,23 @@
-package com.github.baoti.pioneer.ui.news;
+package com.github.baoti.pioneer.ui.news.list;
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.github.baoti.android.presenter.Presenter;
 import com.github.baoti.pioneer.AppMain;
+import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.entity.News;
+import com.github.baoti.pioneer.ui.common.holder.OnViewHolderClickListener;
 import com.github.baoti.pioneer.ui.common.page.IPageView;
 import com.github.baoti.pioneer.ui.common.page.PageAdapter;
 import com.github.baoti.pioneer.ui.common.page.PageFragment;
 import com.github.baoti.pioneer.ui.common.page.PagePresenter;
+import com.github.baoti.pioneer.ui.news.NewsModule;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.listeners.ActionClickListener;
@@ -24,7 +29,9 @@ import dagger.Lazy;
 /**
  * Created by liuyedong on 2015/1/2.
  */
-public class NewsListFragment extends PageFragment<News> implements INewsListView {
+public class NewsListFragment extends PageFragment<News> implements INewsListView, OnViewHolderClickListener<News> {
+
+    private OnViewHolderClickListener<News> onItemClickListener;
 
     public static NewsListFragment newInstance() {
         return new NewsListFragment();
@@ -33,9 +40,16 @@ public class NewsListFragment extends PageFragment<News> implements INewsListVie
     @Inject
     Lazy<NewsListPresenter> presenterLazy;
 
+    private boolean enableInitialResources;
+
     @Override
     protected PagePresenter<News> createPresenter(IPageView<News> view) {
         return presenterLazy.get();
+    }
+
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.swipe_recycler_view_vertical;
     }
 
     @Override
@@ -53,7 +67,7 @@ public class NewsListFragment extends PageFragment<News> implements INewsListVie
 
     @Override
     protected PageAdapter<News> createPageAdapter(LayoutInflater layoutInflater, PagePresenter<News> presenter) {
-        return new NewsListAdapter(layoutInflater, presenter);
+        return new NewsListAdapter(layoutInflater, presenter, this);
     }
 
     @Override
@@ -62,8 +76,19 @@ public class NewsListFragment extends PageFragment<News> implements INewsListVie
         super.onHiddenChanged(hidden);
     }
 
+    @Override
+    public void onPresenterTaken(Presenter presenter) {
+        super.onPresenterTaken(presenter);
+        if (enableInitialResources) {
+            ((NewsListPresenter) getPresenter()).enableInitialResources();
+        }
+    }
+
     public void enableInitialResources() {
-        ((NewsListPresenter) getPresenter()).enableInitialResources();
+        enableInitialResources = true;
+        if (getPresenter() != null) {
+            ((NewsListPresenter) getPresenter()).enableInitialResources();
+        }
     }
 
     @Override
@@ -80,5 +105,17 @@ public class NewsListFragment extends PageFragment<News> implements INewsListVie
                 .text(text).textColor(Color.RED)
                 .actionLabel(actionLabel).actionColor(Color.YELLOW)
                 .actionListener(actionListener));
+    }
+
+    public NewsListFragment setOnItemClickedListener(OnViewHolderClickListener<News> listener) {
+        this.onItemClickListener = listener;
+        return this;
+    }
+
+    @Override
+    public void onViewHolderClick(RecyclerView.ViewHolder viewHolder, News item) {
+        if (onItemClickListener != null) {
+            onItemClickListener.onViewHolderClick(viewHolder, item);
+        }
     }
 }

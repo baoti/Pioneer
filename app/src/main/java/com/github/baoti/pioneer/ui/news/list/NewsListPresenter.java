@@ -1,4 +1,4 @@
-package com.github.baoti.pioneer.ui.news;
+package com.github.baoti.pioneer.ui.news.list;
 
 import com.github.baoti.pioneer.app.task.PageTask;
 import com.github.baoti.pioneer.app.task.Tasks;

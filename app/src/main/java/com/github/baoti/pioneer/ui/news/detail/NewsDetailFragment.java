@@ -1,0 +1,81 @@
+package com.github.baoti.pioneer.ui.news.detail;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.github.baoti.android.presenter.FragmentView;
+import com.github.baoti.pioneer.R;
+import com.github.baoti.pioneer.entity.News;
+import com.github.baoti.pioneer.ui.Navigator;
+import com.github.baoti.pioneer.ui.news.NewsActivity;
+import com.github.baoti.pioneer.ui.news.edit.NewsEditFragment;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
+/**
+ * Created by liuyedong on 15-1-6.
+ */
+public class NewsDetailFragment extends FragmentView implements Toolbar.OnMenuItemClickListener {
+
+    public static NewsDetailFragment newInstance(Bundle args) {
+        NewsDetailFragment fragment = new NewsDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @InjectView(R.id.app_toolbar)
+    Toolbar toolbar;
+
+    @InjectView(R.id.tv_news_content)
+    TextView newsContent;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_news_detail, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        ButterKnife.inject(this, view);
+        Navigator.setupToolbarNavigation(this, toolbar);
+        toolbar.setOnMenuItemClickListener(this);
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        News news = (News) getArguments().getSerializable(NewsActivity.EXTRA_NEWS);
+        boolean editable = getArguments().getBoolean(NewsActivity.EXTRA_EDITABLE);
+        toolbar.setTitle(news.getTitle());
+        if (editable) {
+            toolbar.inflateMenu(R.menu.edit);
+        }
+        newsContent.setText(news.getContent());
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.action_edit:
+                navigateToEdit();
+                return true;
+        }
+        return false;
+    }
+
+    private void navigateToEdit() {
+        String tag = null;
+        getFragmentManager().beginTransaction()
+                .replace(getId(), NewsEditFragment.newInstance(getArguments()), tag)
+                .addToBackStack(null)
+                .commit();
+    }
+}

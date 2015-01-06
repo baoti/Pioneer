@@ -1,0 +1,89 @@
+package com.github.baoti.pioneer.ui.news.edit;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+
+import com.github.baoti.android.presenter.FragmentView;
+import com.github.baoti.pioneer.AppMain;
+import com.github.baoti.pioneer.R;
+import com.github.baoti.pioneer.app.notification.Toaster;
+import com.github.baoti.pioneer.entity.News;
+import com.github.baoti.pioneer.ui.Navigator;
+import com.github.baoti.pioneer.ui.news.NewsActivity;
+import com.github.baoti.pioneer.ui.news.NewsModule;
+
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
+/**
+ * Created by liuyedong on 15-1-6.
+ */
+public class NewsEditFragment extends FragmentView implements Toolbar.OnMenuItemClickListener {
+
+    public static NewsEditFragment newInstance(Bundle extras) {
+        NewsEditFragment fragment = new NewsEditFragment();
+        fragment.setArguments(extras);
+        return fragment;
+    }
+
+    @Inject
+    Toaster toaster;
+
+    @InjectView(R.id.app_toolbar)
+    Toolbar toolbar;
+
+    @InjectView(R.id.et_news_content)
+    EditText contentInput;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        AppMain.globalGraph().plus(new NewsModule()).inject(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_news_edit, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        ButterKnife.inject(this, view);
+        Navigator.setupToolbarNavigation(this, toolbar);
+        toolbar.inflateMenu(R.menu.save);
+        toolbar.setOnMenuItemClickListener(this);
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        News news = (News) getArguments().getSerializable(NewsActivity.EXTRA_NEWS);
+        toolbar.setTitle(news.getTitle());
+        contentInput.setText(news.getContent());
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.action_save:
+                onSaveClicked();
+                return true;
+        }
+        return false;
+    }
+
+    private void onSaveClicked() {
+        toaster.show("News's content changed to: " + contentInput.getText());
+        // TODO: post news changed event
+        getActivity().onBackPressed();
+    }
+}

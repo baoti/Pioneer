@@ -39,21 +39,23 @@ public class FakeNewsApiImpl implements NewsApi {
             int end = Math.min(page * pageSize, news.length);
             int start = Math.max(0, (page - 1) * pageSize);
             for (int i = start; i < end; i++) {
-                resources.add(new News(channel + "=" + i, news[i]));
+                resources.add(new News(i, channel + "=" + i, news[i]));
             }
         } else {
             int offset = 0;
+            int id = 0;
             for (String s : news) {
                 if (offset >= page * pageSize) {
                     break;
                 }
                 if (s.contains(keyword)) {
                     if (offset >= (page - 1) * pageSize) {
-                        resources.add(new News(channel + "="
+                        resources.add(new News(id, channel + "="
                                 + (resources.size() + (page - 1) * pageSize), s));
                     }
                     offset++;
                 }
+                id++;
             }
         }
         try {

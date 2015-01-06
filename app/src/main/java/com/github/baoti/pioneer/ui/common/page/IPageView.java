@@ -1,6 +1,6 @@
 package com.github.baoti.pioneer.ui.common.page;
 
-import com.github.baoti.pioneer.ui.common.IView;
+import com.github.baoti.android.presenter.IView;
 
 import java.util.Collection;
 

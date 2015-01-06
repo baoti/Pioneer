@@ -1,4 +1,4 @@
-package com.github.baoti.pioneer.ui.news;
+package com.github.baoti.pioneer.ui.news.list;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.github.baoti.pioneer.entity.News;
 import com.github.baoti.pioneer.ui.common.holder.LoadingViewHolder;
+import com.github.baoti.pioneer.ui.common.holder.OnViewHolderClickListener;
 import com.github.baoti.pioneer.ui.common.page.PageAdapter;
 import com.github.baoti.pioneer.ui.common.page.PagePresenter;
 
@@ -20,8 +21,12 @@ public class NewsListAdapter extends PageAdapter<News> {
     private final int TYPE_MERCHANT = 0;
     private final int TYPE_LOAD_MORE = 1;
 
-    public NewsListAdapter(LayoutInflater inflater, PagePresenter<News> presenter) {
+    private final OnViewHolderClickListener<News> listener;
+
+    public NewsListAdapter(LayoutInflater inflater, PagePresenter<News> presenter,
+                           OnViewHolderClickListener<News> listener) {
         super(inflater, presenter);
+        this.listener = listener;
     }
 
     @Override
@@ -62,14 +67,20 @@ public class NewsListAdapter extends PageAdapter<News> {
         return presenter == null ? items.size() : items.size() + 1;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView text1;
         final TextView text2;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             text1 = findById(itemView, android.R.id.text1);
             text2 = findById(itemView, android.R.id.text2);
+        }
+
+        @Override
+        public void onClick(View v) {
+            listener.onViewHolderClick(this, items.get(getPosition()));
         }
     }
 }
