@@ -21,8 +21,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -333,48 +331,15 @@ public class IoUtils {
         if (ensureDirsExist(result)) {
             return result;
         }
-        File dirs[] = buildExternalStoragePublicDirs(type);
-        if (dirs != null) {
-            for (File dir : dirs) {
-                File d = new File(dir, type);
-                if (ensureDirsExist(d)) {
-                    return d;
-                }
-            }
-        }
+        Timber.v("Fail to create public storage directory: " + result);
         return result;
-    }
-
-    private static Method buildExternalDirsOnUserEnvironment;
-    private static Object currentUserEnvironment;
-    static {
-        try {
-            Field field = Environment.class.getDeclaredField("sCurrentUser");
-            currentUserEnvironment = field.get(Environment.class);
-            Class<?> cls = Class.forName("android.os.Environment.UserEnvironment");
-            buildExternalDirsOnUserEnvironment = cls.getDeclaredMethod(
-                    "buildExternalStoragePublicDirs", String.class);
-            buildExternalDirsOnUserEnvironment.setAccessible(true);
-        } catch (Exception ignored) {
-        }
-    }
-
-    private static File[] buildExternalStoragePublicDirs(String type) {
-        if (buildExternalDirsOnUserEnvironment != null && currentUserEnvironment != null) {
-            try {
-                Object result = buildExternalDirsOnUserEnvironment.invoke(currentUserEnvironment, type);
-                return (File[]) result;
-            } catch (Exception ignored) {
-            }
-        }
-        return null;
     }
 
     @NonNull
     public static File generateDatedFile(File directory, String suffix) {
         boolean dirOk = IoUtils.ensureDirsExist(directory);
         if (!dirOk) {
-            Timber.v("Fail to create directory: " + directory.getPath());
+            Timber.v("Fail to create directory: " + directory);
         }
         String filename = DateFormat.format("yyyyMMdd_hhmmss",
                 Calendar.getInstance(Locale.CHINA)) + suffix;
@@ -395,6 +360,12 @@ public class IoUtils {
         }
         File tmp = File.createTempFile(DataConfig.TMP_FILE_PREFIX, suffix, directory);
         Timber.v("Create tmp file: %s", tmp);
+        if (isPublic) {
+            boolean succeeded = tmp.setWritable(true, false);
+            if (!succeeded) {
+                Timber.d("Fail to setWritable(true, false): %s", tmp);
+            }
+        }
         return tmp;
     }
 
