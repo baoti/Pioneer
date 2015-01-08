@@ -1,7 +1,9 @@
 package com.github.baoti.pioneer.misc.util;
 
 import android.annotation.TargetApi;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -55,6 +57,52 @@ public class IoUtils {
         if (!saveOk) {
             //noinspection ResultOfMethodCallIgnored
             file.delete();
+        }
+        return saveOk;
+    }
+
+    public static boolean saveBitmap(File file, Bitmap bitmap, int quality) {
+        FileOutputStream outputStream;
+        try {
+            outputStream = new FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+            Timber.d(e, "[saveBitmap] Couldn't open file output");
+            return false;
+        }
+        boolean saveOk = true;
+        try {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+        } finally {
+            if (!close(outputStream)) {
+                saveOk = false;
+            }
+        }
+        if (!saveOk) {
+            //noinspection ResultOfMethodCallIgnored
+            file.delete();
+        }
+        return saveOk;
+    }
+
+    public static boolean saveBitmap(Uri uri, Bitmap bitmap, int quality) {
+        ContentResolver contentResolver = AppMain.app().getContentResolver();
+        OutputStream outputStream;
+        try {
+            outputStream = contentResolver.openOutputStream(uri);
+        } catch (FileNotFoundException e) {
+            Timber.d(e, "[saveBitmap] Couldn't open uri output");
+            return false;
+        }
+        boolean saveOk = true;
+        try {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+        } finally {
+            if (!close(outputStream)) {
+                saveOk = false;
+            }
+        }
+        if (!saveOk) {
+            contentResolver.delete(uri, null, null);
         }
         return saveOk;
     }
@@ -335,15 +383,48 @@ public class IoUtils {
         return result;
     }
 
+    /**
+     * 以当前时间为名称, 生成文件
+     * @param directory 目录
+     * @param suffix 后缀名
+     * @return 生成的文件
+     */
     @NonNull
     public static File generateDatedFile(File directory, String suffix) {
+        return generateDatedFile(directory, suffix, false);
+    }
+
+    /**
+     * 以当前时间为名称, 生成文件
+     * @param directory 目录
+     * @param suffix 后缀名
+     * @param twoStage 是否生成二级文件, 即存放在当前月的文件夹下
+     * @return 生成的文件
+     */
+    @NonNull
+    public static File generateDatedFile(File directory, String suffix, boolean twoStage) {
         boolean dirOk = IoUtils.ensureDirsExist(directory);
         if (!dirOk) {
             Timber.v("Fail to create directory: " + directory);
         }
-        String filename = DateFormat.format("yyyyMMdd_hhmmss",
-                Calendar.getInstance(Locale.CHINA)) + suffix;
-        return new File(directory, filename);
+        String filename = DateFormat.format(
+                "yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)).toString();
+        if (twoStage) {
+            String month = filename.substring(0, 6);
+            return generateDatedFile(new File(directory, month), suffix, false);
+        }
+        File result = new File(directory, filename + suffix);
+
+        int i = 1;
+        try {
+            while (!result.createNewFile()) {
+                result = new File(directory, filename + (i + suffix));
+                i++;
+            }
+        } catch (IOException e) {
+            Timber.v("Fail to create new file: " + result);
+        }
+        return result;
     }
 
     @NonNull

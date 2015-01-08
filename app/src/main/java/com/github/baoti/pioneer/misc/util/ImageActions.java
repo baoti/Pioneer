@@ -6,7 +6,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
+
+import com.github.baoti.pioneer.Constants;
+import com.github.baoti.pioneer.data.DataConstants;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,8 +39,103 @@ public class ImageActions {
 
 
     public static boolean isImageCaptureAvailable(Context context) {
-        return Intents.hasResolvedActivity(
-                context, new Intent(MediaStore.ACTION_IMAGE_CAPTURE));
+        return Intents.hasResolvedActivity(context, CaptureCompat.baseAction());
+    }
+
+    public static boolean isImageCropAvailable(Context context) {
+        return Intents.hasResolvedActivity(context, Crop.baseAction());
+    }
+
+    public static class Crop {
+        private static final String ACTION_CROP = "com.android.camera.action.CROP";
+
+        private static final String RETURN_DATA = "return-data";
+
+        private Intent intent;
+        public Crop() {
+
+        }
+
+        public Intent action(Uri image) {
+            Intent actionIntent = actionCropImage(image);
+            intent = actionIntent;
+            return actionIntent;
+        }
+
+        public Uri croppedImage(int resultCode, Intent data) {
+            if (resultCode != Activity.RESULT_OK || intent == null) {
+                return null;
+            }
+            Intent actionIntent = intent;
+            intent = null;
+            boolean returnData = actionIntent.getBooleanExtra(RETURN_DATA, false);
+            if (returnData && data == null) {
+                return null;
+            }
+            Uri output = actionIntent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+            if (output != null) {
+                return output;
+            }
+            Bitmap bm = data.getParcelableExtra("data");
+            if (bm == null) {
+                return null;
+            }
+            try {
+                File imagesDir = IoUtils.fromFilesDir(DataConstants.Files.IMAGES);
+                if (!IoUtils.ensureDirsExist(imagesDir)) {
+                    return null;
+                }
+                File dst = IoUtils.generateDatedFile(imagesDir, ".jpg", true);
+                if (!IoUtils.saveBitmap(dst, bm, 50)) {
+                    return null;
+                }
+                return Uri.fromFile(dst);
+            } finally {
+                bm.recycle();
+            }
+        }
+
+        private static Intent baseAction() {
+            return new Intent(ACTION_CROP).setType("image/*");
+        }
+
+        private static Intent actionCropImage(Uri image) {
+            Intent intent = baseAction();
+            if (image != null) {
+                intent.setData(image);
+            } else {
+                // NOT SUPPORTED!!!
+                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            }
+            intent.putExtra("crop", "true");
+
+            // aspectX aspectY 是宽高的比例
+            intent.putExtra("aspectX", 1);
+            intent.putExtra("aspectY", 1);
+
+            // outputX,outputY 是剪裁图片的宽高
+            intent.putExtra("outputX", 200);
+            intent.putExtra("outputY", 200);
+
+            intent.putExtra("noFaceDetection", true);
+
+            intent.putExtra("scale", true);
+            intent.putExtra("scaleUpIfNeeded", true); //剪裁区域太小去除黑边
+            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cropOutput));
+//        intent.putExtra("return-data", false);
+            intent.putExtra(RETURN_DATA, true);
+            return intent;
+        }
+
+        public void onLoad(Bundle savedInstanceState) {
+            intent = savedInstanceState.getParcelable(Constants.Saved.SAVED_CROP_IMAGE_INTENT);
+        }
+
+        public void onSave(Bundle outState) {
+            outState.putParcelable(Constants.Saved.SAVED_CROP_IMAGE_INTENT, intent);
+        }
     }
 
     public static class CaptureCompat {
@@ -89,9 +188,12 @@ public class ImageActions {
             outputImage = file;
         }
 
+        private static Intent baseAction() {
+            return new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        }
+
         private static Intent actionCaptureImage(Uri output) {
-            return new Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                    .putExtra(MediaStore.EXTRA_OUTPUT, output);
+            return baseAction().putExtra(MediaStore.EXTRA_OUTPUT, output);
         }
 
         private static Uri insertToMediaImages(Context context, File file) {
@@ -128,6 +230,15 @@ public class ImageActions {
                 return uri;
             }
             return null;
+        }
+
+        public void onLoad(Bundle savedInstanceState) {
+            setTmpOutputFile(
+                    (File) savedInstanceState.getSerializable(Constants.Saved.SAVED_CAPTURE_IMAGE_OUTPUT));
+        }
+
+        public void onSave(Bundle outState) {
+            outState.putSerializable(Constants.Saved.SAVED_CAPTURE_IMAGE_OUTPUT, getTmpOutputFile());
         }
     }
 }

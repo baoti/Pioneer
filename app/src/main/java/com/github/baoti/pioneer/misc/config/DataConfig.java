@@ -3,6 +3,8 @@ package com.github.baoti.pioneer.misc.config;
 import com.github.baoti.pioneer.BuildConfig;
 
 /**
+ * 可配置项
+ *
  * Created by liuyedong on 15-1-7.
  */
 public class DataConfig {

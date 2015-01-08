@@ -2,6 +2,7 @@ package com.github.baoti.pioneer.ui.common.image.chooser;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +22,6 @@ import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.enums.SnackbarType;
 
-import java.io.File;
 import java.io.IOException;
 
 import butterknife.ButterKnife;
@@ -32,34 +32,40 @@ import timber.log.Timber;
  * Created by liuyedong on 15-1-6.
  */
 public class ImageChooserFragment extends DialogFragment {
-    private static final String SAVED_OUTPUT_IMAGE = "app:savedOutputImage";
 
     private static final String TAG_FRAG_IMAGE_CHOOSER = "frag_image_chooser";
+    private static final String ARG_CROP = "crop";  // Type: boolean
 
-    public static ImageChooserFragment showDialog(FragmentManager fragmentManager) {
+    public static ImageChooserFragment showDialog(FragmentManager fragmentManager, boolean crop) {
         ImageChooserFragment fragment = (ImageChooserFragment) fragmentManager.findFragmentByTag(
                 TAG_FRAG_IMAGE_CHOOSER);
         if (fragment == null) {
             fragment = new ImageChooserFragment();
             fragment.setStyle(STYLE_NO_FRAME, R.style.AppTheme_Dialog);
         }
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_CROP, crop);
+        fragment.setArguments(args);
         fragment.show(fragmentManager, TAG_FRAG_IMAGE_CHOOSER);
         return fragment;
     }
 
     private static final int REQUEST_CAPTURE_IMAGE = 1;
     private static final int REQUEST_PICK_IMAGE = 2;
+    private static final int REQUEST_CROP_IMAGE = 3;
 
     private ImageActions.CaptureCompat imageCapture;
+    private ImageActions.Crop imageCrop;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imageCapture = new ImageActions.CaptureCompat(getActivity());
+        imageCrop = new ImageActions.Crop();
 
         if (savedInstanceState != null) {
-            imageCapture.setTmpOutputFile(
-                    (File) savedInstanceState.getSerializable(SAVED_OUTPUT_IMAGE));
+            imageCapture.onLoad(savedInstanceState);
+            imageCrop.onLoad(savedInstanceState);
         }
     }
 
@@ -84,7 +90,17 @@ public class ImageChooserFragment extends DialogFragment {
         return (OnImageChooserListener) getTargetFragment();
     }
 
-    protected void onImageChose(Uri image) {
+    protected void onImageChose(int requestCode, Uri image) {
+        if (getArguments().getBoolean(ARG_CROP)
+                && ImageActions.isImageCropAvailable(getActivity())) {
+            switch (requestCode) {
+                case REQUEST_CAPTURE_IMAGE:
+                case REQUEST_PICK_IMAGE:
+                    if (cropImage(image)) {
+                        return;
+                    }
+            }
+        }
         close();
         OnImageChooserListener listener = getListener();
         if (listener != null) {
@@ -92,7 +108,7 @@ public class ImageChooserFragment extends DialogFragment {
         }
     }
 
-    protected void onImageCancelled() {
+    protected void onImageCancelled(int requestCode) {
         close();
         OnImageChooserListener listener = getListener();
         if (listener != null) {
@@ -118,8 +134,10 @@ public class ImageChooserFragment extends DialogFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (imageCapture != null) {
-            File output = imageCapture.getTmpOutputFile();
-            outState.putSerializable(SAVED_OUTPUT_IMAGE, output);
+            imageCapture.onSave(outState);
+        }
+        if (imageCrop != null) {
+            imageCrop.onSave(outState);
         }
     }
 
@@ -145,20 +163,30 @@ public class ImageChooserFragment extends DialogFragment {
                 if (imageCapture != null && resultCode != Activity.RESULT_CANCELED) {
                     Uri image = imageCapture.capturedImage(resultCode, data);
                     verbose("Captured: %s", image);
-                    onImageChose(image);
+                    onImageChose(requestCode, image);
                 } else {
                     verbose("Capture cancelled");
-                    onImageCancelled();
+                    onImageCancelled(requestCode);
                 }
                 break;
             case REQUEST_PICK_IMAGE:
                 if (resultCode != Activity.RESULT_CANCELED) {
                     Uri image = ImageActions.pickedImage(resultCode, data);
                     verbose("Picked: %s", image);
-                    onImageChose(image);
+                    onImageChose(requestCode, image);
                 } else {
                     verbose("Pick cancelled");
-                    onImageCancelled();
+                    onImageCancelled(requestCode);
+                }
+                break;
+            case REQUEST_CROP_IMAGE:
+                if (imageCrop != null && resultCode != Activity.RESULT_CANCELED) {
+                    Uri image = imageCrop.croppedImage(resultCode, data);
+                    verbose("Cropped: %s", image);
+                    onImageChose(requestCode, image);
+                } else {
+                    verbose("Crop cancelled");
+                    onImageCancelled(requestCode);
                 }
                 break;
             default:
@@ -193,6 +221,16 @@ public class ImageChooserFragment extends DialogFragment {
 
     @OnClick(R.id.item_pick_image) void onPickImageClicked() {
         startActivityForResult(ImageActions.actionPickImage(), REQUEST_PICK_IMAGE);
+    }
+
+    private boolean cropImage(Uri image) {
+        try {
+            startActivityForResult(imageCrop.action(image), REQUEST_CROP_IMAGE);
+            return true;
+        } catch (ActivityNotFoundException e) {
+            verbose("您的手机不支持图片裁剪功能");
+            return false;
+        }
     }
 
     private void verbose(String msg, Object... args) {
