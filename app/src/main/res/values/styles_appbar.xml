@@ -3,6 +3,7 @@
     <style name="AppBar" />
 
     <style name="AppBar.Toolbar">
+        <item name="android:minHeight">?attr/actionBarSize</item>
         <item name="android:background">?attr/colorPrimaryDark</item>
     </style>
 </resources>

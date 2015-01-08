@@ -50,6 +50,11 @@ public class NewsActivity extends BaseSearchActivity implements OnViewHolderClic
                 .putExtra(EXTRA_NEWS, news);
     }
 
+    public static Intent actionEdit(Context context) {
+        return withAction(context, Intent.ACTION_EDIT)
+                .putExtra(EXTRA_EDITABLE, true);
+    }
+
     public static Intent actionEdit(Context context, News news) {
         return withAction(context, Intent.ACTION_EDIT)
                 .putExtra(EXTRA_EDITABLE, true)
@@ -81,21 +86,15 @@ public class NewsActivity extends BaseSearchActivity implements OnViewHolderClic
         ButterKnife.inject(this);
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
+
         String action = getIntent().getAction();
-        switch (action) {
-            case Intent.ACTION_VIEW:
-                showList = !getIntent().hasExtra(EXTRA_NEWS);
-                inPickMode = false;
-                break;
-            case Intent.ACTION_PICK:
-                showList = true;
-                inPickMode = true;
-                break;
-            default:
-                showList = true;
-                inPickMode = false;
-                break;
-        }
+        showList = !getIntent().hasExtra(EXTRA_NEWS);
+        inPickMode = Intent.ACTION_PICK.equals(action);
+
+        initContentFragment(savedInstanceState, action);
+    }
+
+    private void initContentFragment(Bundle savedInstanceState, String action) {
         if (showList) {
             NewsListFragment listFragment;
             if (savedInstanceState == null) {

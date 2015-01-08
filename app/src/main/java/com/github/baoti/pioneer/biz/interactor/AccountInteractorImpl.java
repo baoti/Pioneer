@@ -1,5 +1,7 @@
 package com.github.baoti.pioneer.biz.interactor;
 
+import android.net.Uri;
+
 import com.github.baoti.pioneer.biz.Passwords;
 import com.github.baoti.pioneer.biz.exception.BizException;
 import com.github.baoti.pioneer.biz.exception.ValidationException;
@@ -8,9 +10,12 @@ import com.github.baoti.pioneer.data.api.ApiException;
 import com.github.baoti.pioneer.data.api.ApiResponse;
 import com.github.baoti.pioneer.data.prefs.AccountPrefs;
 import com.github.baoti.pioneer.entity.Account;
+import com.github.baoti.pioneer.entity.ImageBean;
 import com.github.baoti.pioneer.event.AccountChangedEvent;
 import com.github.baoti.pioneer.event.EventPoster;
 import com.github.baoti.pioneer.misc.util.Texts;
+
+import retrofit.RetrofitError;
 
 /**
  * Created by liuyedong on 14-12-22.
@@ -50,7 +55,7 @@ public class AccountInteractorImpl implements AccountInteractor {
                     ApiResponse<Account> response = accountApi.login(accountId, finalPassword);
                     cachedAccount = response.checkedPayload();
                 } catch (ApiException e) {
-                    if (e.hasResponse()) {
+                    if (!(e.getCause() instanceof RetrofitError)) {
                         throw e;
                     }
                     cachedAccount = Account.ANONYMOUS;
@@ -72,6 +77,20 @@ public class AccountInteractorImpl implements AccountInteractor {
     @Override
     public Account getAccount() {
         return cachedAccount;
+    }
+
+    @Override
+    public void changeAvatar(Uri avatar) {
+        if (cachedAccount != null) {
+            ImageBean imageBean = new ImageBean(avatar);
+            cachedAccount = new Account(
+                    cachedAccount.getAccountId(),
+                    cachedAccount.getName(),
+                    cachedAccount.getFollowing(),
+                    cachedAccount.getFollowers(),
+                    imageBean);
+            eventPoster.postOnBoth(new AccountChangedEvent(true, cachedAccount.getAccountId()));
+        }
     }
 
     private void validateAccount(String account) throws ValidationException {

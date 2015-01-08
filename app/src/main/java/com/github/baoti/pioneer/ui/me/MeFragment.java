@@ -1,5 +1,6 @@
 package com.github.baoti.pioneer.ui.me;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -17,9 +18,10 @@ import com.github.baoti.android.presenter.FragmentView;
 import com.github.baoti.pioneer.AppMain;
 import com.github.baoti.pioneer.AppMainModule;
 import com.github.baoti.pioneer.R;
-import com.github.baoti.pioneer.ui.Navigator;
 import com.github.baoti.pioneer.entity.ImageBean;
 import com.github.baoti.pioneer.misc.picasso.PicassoHelper;
+import com.github.baoti.pioneer.ui.Navigator;
+import com.github.baoti.pioneer.ui.common.image.chooser.ImageChooserFragment;
 import com.github.baoti.pioneer.ui.login.LoginDialogFragment;
 import com.squareup.picasso.Picasso;
 
@@ -34,13 +36,20 @@ import dagger.Module;
 /**
  * Created by liuyedong on 14-12-26.
  */
-public class MeFragment extends FragmentView<IMeView, MePresenter> implements IMeView {
+public class MeFragment extends FragmentView<IMeView, MePresenter> implements IMeView,
+        ImageChooserFragment.OnImageChooserListener {
+
     public static MeFragment newInstance() {
         return new MeFragment();
     }
 
+    private static final int CHOOSE_AVATAR = 0;
+
     @Inject
     Lazy<MePresenter> presenterLazy;
+
+    @Inject
+    Picasso picasso;
 
     @InjectView(R.id.app_toolbar)
     Toolbar toolbar;
@@ -176,6 +185,26 @@ public class MeFragment extends FragmentView<IMeView, MePresenter> implements IM
     @OnClick(R.id.btn_sign_out)
     void onSignOutClicked() {
         getPresenter().onSignOutClicked();
+    }
+
+    @OnClick(R.id.tr_avatar)
+    void onAvatarClicked() {
+        ImageChooserFragment.showDialog(getFragmentManager()).setTargetFragment(this, CHOOSE_AVATAR);
+    }
+
+    @Override
+    public void onImageChose(int requestCode, @Nullable Uri image) {
+        switch (requestCode) {
+            case CHOOSE_AVATAR:
+                getPresenter().onAvatarChanged(image);
+                picasso.load(image).into(avatar);
+                break;
+        }
+    }
+
+    @Override
+    public void onImageCancelled(int requestCode) {
+
     }
 
     @Module(injects = MeFragment.class, addsTo = AppMainModule.class)

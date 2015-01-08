@@ -10,6 +10,14 @@ public class Account {
     private int followers;
     private ImageBean avatar;
 
+    public Account(String accountId, String name, int following, int followers, ImageBean avatar) {
+        this.accountId = accountId;
+        this.name = name;
+        this.following = following;
+        this.followers = followers;
+        this.avatar = avatar;
+    }
+
     @Override
     public String toString() {
         return "accountId=" + accountId;
@@ -35,9 +43,5 @@ public class Account {
         return avatar;
     }
 
-    public static final Account ANONYMOUS = new Account();
-    static {
-        ANONYMOUS.accountId = "Anonymous";
-        ANONYMOUS.name = "Anonymous";
-    }
+    public static final Account ANONYMOUS = new Account("Anonymous", "Anonymous", 0, 0, null);
 }

@@ -1,5 +1,6 @@
 package com.github.baoti.pioneer.ui.me;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -70,5 +71,9 @@ public class MePresenter extends Presenter<IMeView> {
 
     public void onSignOutClicked() {
         accountInteractor.signOut();
+    }
+
+    public void onAvatarChanged(Uri image) {
+        accountInteractor.changeAvatar(image);
     }
 }

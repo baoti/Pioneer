@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.PopupMenu" parent="Widget.AppCompat.Light.PopupMenu">
+    </style>
+
+    <style name="Animation.Window" parent="@android:style/Animation" />
+
+    <style name="Animation.Window.SlideBottom">
+        <item name="android:windowEnterAnimation">@anim/abc_slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/abc_slide_out_bottom</item>
+    </style>
+</resources>

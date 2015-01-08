@@ -1,5 +1,7 @@
 package com.github.baoti.pioneer.biz.interactor;
 
+import android.net.Uri;
+
 import com.github.baoti.pioneer.biz.exception.ValidationException;
 import com.github.baoti.pioneer.entity.Account;
 
@@ -16,4 +18,6 @@ public interface AccountInteractor {
     void signOut();
 
     Account getAccount();
+
+    void changeAvatar(Uri avatar);
 }

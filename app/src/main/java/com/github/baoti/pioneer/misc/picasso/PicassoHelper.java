@@ -1,7 +1,5 @@
 package com.github.baoti.pioneer.misc.picasso;
 
-import android.text.TextUtils;
-
 import com.github.baoti.pioneer.entity.ImageBean;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
@@ -16,9 +14,6 @@ public class PicassoHelper {
 
     public static RequestCreator load(Picasso picasso, ImageBean imageBean) {
         if (imageBean == null) {
-            return load(picasso);
-        }
-        if (TextUtils.isEmpty(imageBean.getUrl())) {
             return load(picasso);
         }
         return picasso.load(imageBean.getUrl());

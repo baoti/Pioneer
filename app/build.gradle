@@ -10,6 +10,11 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+
+        /**
+         * 临时文件的前缀, 不得少于3个字符
+         */
+        buildConfigField "String", "TMP_FILE_PREFIX", '"Pioneer-"'
     }
     buildTypes {
         release {

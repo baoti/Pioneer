@@ -2,11 +2,15 @@ package com.github.baoti.pioneer.misc.util;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.support.annotation.NonNull;
+import android.text.format.DateFormat;
 
 import com.github.baoti.pioneer.AppMain;
+import com.github.baoti.pioneer.misc.config.DataConfig;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -17,6 +21,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Calendar;
+import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -292,16 +300,114 @@ public class IoUtils {
      * @return
      */
     public static boolean isAppPrivate(File file) {
+        return isInDataDir(file);
+    }
+
+    /**
+     * 文件是否在 内部 Data 目录下
+     * @param file
+     * @return
+     */
+    public static boolean isInDataDir(File file) {
         if (file == null) {
             return false;
         }
-        // XXX: 需改进该判断方法, 改为通过用户ID 来判断
-        String path = file.getAbsolutePath();
-        File privateCacheDir = AppMain.app().getCacheDir();
-        if (privateCacheDir != null) {
-            String privateDir = privateCacheDir.getParent();
-            return path.equals(privateDir) || path.startsWith(privateDir + File.separator);
+        String dataDir = AppMain.app().getApplicationInfo().dataDir;
+        if (dataDir != null) {
+            dataDir = new File(dataDir).getAbsolutePath();  // Removing any trailing slash
+            String filePath = file.getAbsolutePath();
+            return filePath.equals(dataDir) || filePath.startsWith(dataDir + File.separator);
         }
         return false;
+    }
+
+    @NonNull
+    public static File getDCIMDirectory(String type) {
+        File directory = getAvailableExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        return new File(directory, type);
+    }
+
+    @NonNull
+    public static File getAvailableExternalStoragePublicDirectory(String type) {
+        File result = Environment.getExternalStoragePublicDirectory(type);
+        if (ensureDirsExist(result)) {
+            return result;
+        }
+        File dirs[] = buildExternalStoragePublicDirs(type);
+        if (dirs != null) {
+            for (File dir : dirs) {
+                File d = new File(dir, type);
+                if (ensureDirsExist(d)) {
+                    return d;
+                }
+            }
+        }
+        return result;
+    }
+
+    private static Method buildExternalDirsOnUserEnvironment;
+    private static Object currentUserEnvironment;
+    static {
+        try {
+            Field field = Environment.class.getDeclaredField("sCurrentUser");
+            currentUserEnvironment = field.get(Environment.class);
+            Class<?> cls = Class.forName("android.os.Environment.UserEnvironment");
+            buildExternalDirsOnUserEnvironment = cls.getDeclaredMethod(
+                    "buildExternalStoragePublicDirs", String.class);
+            buildExternalDirsOnUserEnvironment.setAccessible(true);
+        } catch (Exception ignored) {
+        }
+    }
+
+    private static File[] buildExternalStoragePublicDirs(String type) {
+        if (buildExternalDirsOnUserEnvironment != null && currentUserEnvironment != null) {
+            try {
+                Object result = buildExternalDirsOnUserEnvironment.invoke(currentUserEnvironment, type);
+                return (File[]) result;
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
+
+    @NonNull
+    public static File generateDatedFile(File directory, String suffix) {
+        boolean dirOk = IoUtils.ensureDirsExist(directory);
+        if (!dirOk) {
+            Timber.v("Fail to create directory: " + directory.getPath());
+        }
+        String filename = DateFormat.format("yyyyMMdd_hhmmss",
+                Calendar.getInstance(Locale.CHINA)) + suffix;
+        return new File(directory, filename);
+    }
+
+    @NonNull
+    public static File createTempFile(String suffix, boolean isPublic) throws IOException {
+        File directory;
+        if (isPublic) {
+            directory = null;
+        } else {
+            directory = fromCacheDir(DataConfig.TMP_DIRECTORY_NAME);
+            if (directory != null && !ensureDirsExist(directory)) {
+                Timber.w("Could not create tmp directory in cacheDir");
+                directory = null;
+            }
+        }
+        File tmp = File.createTempFile(DataConfig.TMP_FILE_PREFIX, suffix, directory);
+        Timber.v("Create tmp file: %s", tmp);
+        return tmp;
+    }
+
+    public static final String SCHEME_FILE = "file";
+
+    public static boolean isFile(Uri uri) {
+        return uri != null && SCHEME_FILE.equals(uri.getScheme());
+    }
+
+    public static File toFile(Uri uri) {
+        if (isFile(uri)) {
+            return new File(uri.getPath());
+        }
+        return null;
     }
 }
