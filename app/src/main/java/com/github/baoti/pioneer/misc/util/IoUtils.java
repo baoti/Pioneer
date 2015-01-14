@@ -237,6 +237,10 @@ public class IoUtils {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
+    public static boolean rmFile(File file) {
+        return !file.exists() || (file.isFile() && file.delete());
+    }
+
     /** rm -r */
     public static boolean rmR(File file) {
         if (!file.exists()) {
