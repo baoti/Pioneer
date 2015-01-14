@@ -137,6 +137,22 @@ public class IoUtils {
         }
     }
 
+    public static boolean copyFile(Uri src, File dst) {
+        ContentResolver contentResolver = AppMain.app().getContentResolver();
+        InputStream inputStream;
+        try {
+            inputStream = contentResolver.openInputStream(src);
+        } catch (FileNotFoundException e) {
+            Timber.d(e, "[copyFile] Couldn't open uri input");
+            return false;
+        }
+        try {
+            return copyStream(inputStream, dst);
+        } finally {
+            close(inputStream);
+        }
+    }
+
     public static boolean copyStream(InputStream src, File dst) {
         FileOutputStream fos;
         try {
