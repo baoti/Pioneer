@@ -1,7 +1,8 @@
 package com.github.baoti.pioneer.app.task;
 
-import android.os.AsyncTask;
 import android.os.Build;
+
+import com.github.baoti.pioneer.app.task.compat.AsyncTask;
 
 /**
  * Created by liuyedong on 14-12-26.
@@ -24,12 +25,18 @@ public class Tasks {
     }
 
     @SafeVarargs
-    static <P, T extends AsyncTask<P, ?, ?>> void executeOnDefaultThreadPool(T task, P... params) {
+    static <P, T extends android.os.AsyncTask<P, ?, ?>> void executeOnDefaultThreadPool(
+            T task, P... params) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+            task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, params);
         } else {
             task.execute(params);
         }
+    }
+
+    @SafeVarargs
+    static <P, T extends AsyncTask<P, ?, ?>> void executeOnDefaultThreadPool(T task, P... params) {
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
     }
 
     static class ResultOrException<Result> {

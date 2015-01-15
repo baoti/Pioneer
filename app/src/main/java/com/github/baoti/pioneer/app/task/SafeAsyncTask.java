@@ -1,10 +1,10 @@
 package com.github.baoti.pioneer.app.task;
 
 import android.annotation.TargetApi;
-import android.os.AsyncTask;
 import android.os.Build;
 
 import com.github.baoti.pioneer.BusProvider;
+import com.github.baoti.pioneer.app.task.compat.AsyncTask;
 import com.squareup.otto.Bus;
 
 import timber.log.Timber;
