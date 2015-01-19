@@ -22,6 +22,9 @@ public class InteractorTask<Progress, Result> extends SafeAsyncTask<Void, Progre
     public InteractorTask(DeferredInteractor<Result> interactor,
                           boolean subscribe) {
         super(subscribe);
+        if (interactor == null) {
+            throw new NullPointerException("interactor is null");
+        }
         this.deferredInteractor = interactor;
     }
 
