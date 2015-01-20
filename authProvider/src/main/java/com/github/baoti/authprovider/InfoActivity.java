@@ -75,6 +75,10 @@ public class InfoActivity extends Activity implements AccountConstants, View.OnC
     private void auth() {
         AccountManager accountManager = AccountManager.get(this);
 
+//        AuthenticatorDescription[] authenticatorTypes = accountManager.getAuthenticatorTypes();
+//        for (AuthenticatorDescription ad : authenticatorTypes) {
+//            Timber.v("Authenticator type:%s, package:%s", ad.type, ad.packageName);
+//        }
         accountManager.getAuthTokenByFeatures(ACCOUNT_TYPE, AUTH_TOKEN_TYPE_PIONEER,
                 new String[]{FEATURE_READ_NEWS}, this, null, null,
                 new AccountManagerCallback<Bundle>() {
@@ -98,7 +102,7 @@ public class InfoActivity extends Activity implements AccountConstants, View.OnC
                     }
                 }, null);
 
-        if (!"a".equals(accountName)) {
+        if (true) {
             return;
         }
         Account[] accounts = accountManager.getAccountsByType(ACCOUNT_TYPE);

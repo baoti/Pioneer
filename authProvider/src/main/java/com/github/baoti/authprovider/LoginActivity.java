@@ -58,7 +58,7 @@ import java.util.List;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AccountAuthenticatorActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AccountAuthenticatorActivity {
 
     public static Intent actionAuthenticate(Context context, AccountAuthenticatorResponse response, String authTokenType) {
         return new Intent(context, LoginActivity.class)
@@ -87,6 +87,9 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Loade
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(String.format("%s[%s]",
+                getString(R.string.app_name),
+                getPackageName()));
         setContentView(R.layout.activity_login);
 
         // Set up the login form.
@@ -120,7 +123,22 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Loade
     private void populateAutoComplete() {
         if (VERSION.SDK_INT >= 14) {
             // Use ContactsContract.Profile (API 14+)
-            getLoaderManager().initLoader(0, null, this);
+            getLoaderManager().initLoader(0, null, new LoaderCallbacks<Cursor>() {
+                @Override
+                public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+                    return LoginActivity.this.onCreateLoader(id, args);
+                }
+
+                @Override
+                public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                    LoginActivity.this.onLoadFinished(loader, data);
+                }
+
+                @Override
+                public void onLoaderReset(Loader<Cursor> loader) {
+                    LoginActivity.this.onLoaderReset(loader);
+                }
+            });
         } else if (VERSION.SDK_INT >= 8) {
             // Use AccountManager (API 8+)
             new SetupEmailAutoCompleteTask().execute(null, null);
@@ -227,7 +245,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Loade
         }
     }
 
-    @Override
+//    @Override
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
                 // Retrieve data rows for the device user's 'profile' contact.
@@ -244,7 +263,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Loade
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
 
-    @Override
+//    @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         List<String> emails = new ArrayList<String>();
         cursor.moveToFirst();
@@ -256,7 +275,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Loade
         addEmailsToAutoComplete(emails);
     }
 
-    @Override
+//    @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
 
     }
