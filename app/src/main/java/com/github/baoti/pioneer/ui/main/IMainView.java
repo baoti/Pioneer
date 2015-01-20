@@ -1,5 +1,7 @@
 package com.github.baoti.pioneer.ui.main;
 
+import android.app.Activity;
+
 import com.github.baoti.android.presenter.IView;
 
 /**
@@ -21,4 +23,6 @@ public interface IMainView extends IView {
     void navigateToLogin();
 
     void hideStopReport();
+
+    Activity getActivity();
 }

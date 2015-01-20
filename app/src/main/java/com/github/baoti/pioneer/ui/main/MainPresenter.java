@@ -1,5 +1,8 @@
 package com.github.baoti.pioneer.ui.main;
 
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +10,7 @@ import android.support.annotation.Nullable;
 import com.github.baoti.android.presenter.Presenter;
 import com.github.baoti.pioneer.BusProvider;
 import com.github.baoti.pioneer.app.ForApp;
+import com.github.baoti.pioneer.app.notification.Toaster;
 import com.github.baoti.pioneer.app.task.ReportTask;
 import com.github.baoti.pioneer.biz.interactor.AccountInteractor;
 import com.github.baoti.pioneer.event.AccountChangedEvent;
@@ -22,17 +26,24 @@ public class MainPresenter extends Presenter<IMainView> {
     private final Bus uiBus = BusProvider.UI_BUS;
     private final AccountInteractor accountInteractor;
     private ReportTask reportTask;
-    private Context appContext;
+    private final Context appContext;
+    private final AccountManager accountManager;
+    private final Toaster toaster;
 
     @Inject
     MainPresenter(AccountInteractor accountInteractor,
-                  @ForApp Context appContext) {
+                  @ForApp Context appContext,
+                  AccountManager accountManager,
+                  Toaster toaster) {
         this.accountInteractor = accountInteractor;
         this.appContext = appContext;
+        this.accountManager = accountManager;
+        this.toaster = toaster;
     }
 
     @Override
     protected void onLoad(@Nullable Bundle savedInstanceState, boolean reusing) {
+        fetchPioneerAccount();
         updateViewByAccount();
         uiBus.register(this);
         if (reportTask == null) {
@@ -49,6 +60,30 @@ public class MainPresenter extends Presenter<IMainView> {
                 //  Saving it's state in savedInstanceState.
             }
         }
+    }
+
+    private void fetchPioneerAccount() {
+        String ACCOUNT_TYPE = "com.github.baoti";
+        String AUTH_TOKEN_TYPE = "pioneer";
+
+        accountManager.getAuthTokenByFeatures(ACCOUNT_TYPE, AUTH_TOKEN_TYPE, null,
+                getView().getActivity(), null, null,
+                new AccountManagerCallback<Bundle>() {
+                    @Override
+                    public void run(AccountManagerFuture<Bundle> future) {
+                        try {
+                            Bundle result = future.getResult();
+                            String name = result.getString(AccountManager.KEY_ACCOUNT_NAME);
+                            String type = result.getString(AccountManager.KEY_ACCOUNT_TYPE);
+                            String token = result.getString(AccountManager.KEY_AUTHTOKEN);
+                            toaster.show(
+                                    String.format("Auth result - name: %s, type: %s, token: %s",
+                                            name, type, token));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, null);
     }
 
     @Override

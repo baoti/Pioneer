@@ -1,5 +1,6 @@
 package com.github.baoti.pioneer.app;
 
+import android.accounts.AccountManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
@@ -65,6 +66,12 @@ public class AppModule {
     @Singleton
     public LocalBroadcastManager provideBroadcastManager(@ForApp Context context) {
         return LocalBroadcastManager.getInstance(context);
+    }
+
+    @Provides
+    @Singleton
+    public AccountManager provideAccountManager(@ForApp Context context) {
+        return AccountManager.get(context);
     }
 
     @Provides

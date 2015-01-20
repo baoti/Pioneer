@@ -1,1 +1,1 @@
-include ':app', ':libPresenter'
+include ':app', ':libPresenter', ':authProvider'
