@@ -27,6 +27,10 @@ public class Navigator {
      * @param context
      */
     public static void launchMain(Context context) {
+//        context.getPackageManager().resolveActivity(
+//                new Intent(Intent.ACTION_MAIN).setPackage(context.getPackageName())
+//                        .addCategory(Intent.CATEGORY_DEFAULT),
+//                0);
         boolean inActivityContext = context instanceof Activity;
         Intent intent = new Intent(context, MainActivity.class);
         if (!inActivityContext) {
