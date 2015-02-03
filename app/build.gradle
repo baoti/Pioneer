@@ -27,6 +27,8 @@ android {
         versionCode 1
         versionName "1.0"
 
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
         /**
          * 临时文件的前缀, 不得少于3个字符
          */
@@ -39,13 +41,15 @@ android {
         }
     }
 
-    lintOptions {
-        abortOnError false
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
+    }
+    lintOptions {
+        abortOnError false
+    }
+    packagingOptions {
+        exclude 'LICENSE.txt'
     }
 }
 
@@ -76,6 +80,13 @@ dependencies {
     compile 'com.squareup.dagger:dagger:1.2.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
 
+    // Espresso
+    androidTestCompile('com.android.support.test:testing-support-lib:0.1')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.0') {
+        exclude group: 'javax.inject'
+    }
+
+    // Robolectric
     testCompile 'junit:junit:4.12'
 
     testCompile('org.robolectric:robolectric:2.4') {
