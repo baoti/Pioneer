@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2014-2015 Sean Liu.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.github.baoti.pioneer.misc.util;
 
 import android.text.SpannableStringBuilder;
@@ -59,6 +75,26 @@ public class Texts {
             return 0;
         }
         return s.length();
+    }
+
+    /**
+     * Return a copy of the string S with leading and trailing
+     * whitespace removed.
+     */
+    public static CharSequence trip(CharSequence s, String chars) {
+        if (s == null) {
+            return "";
+        }
+        int start = 0;
+        int length = s.length();
+        while (start < length && chars.contains(s.subSequence(start, start + 1))) {
+            start++;
+        }
+        int end = length;
+        while (end > start && chars.contains(s.subSequence(end - 1, end))) {
+            end--;
+        }
+        return s.subSequence(start, end);
     }
 
     /** 使用指定字符填充字符串 */
