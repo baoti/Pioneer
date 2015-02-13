@@ -38,8 +38,6 @@ public class PagePresenter<E> extends Presenter<IPageView<E>>
     private PageInteractor<E> initialResInteractor;
     private PageInteractor<E> refreshInteractor;
 
-    private boolean failedToLoadNextPage;
-
     public void setInitialResInteractor(PageInteractor<E> interactor) {
         initialResInteractor = interactor;
     }
@@ -126,7 +124,7 @@ public class PagePresenter<E> extends Presenter<IPageView<E>>
     }
 
     public boolean isFailedToLoadNextPage() {
-        return failedToLoadNextPage;
+        return pageTask.isFailedToLoadNextPage();
     }
 
     @Override
@@ -144,7 +142,6 @@ public class PagePresenter<E> extends Presenter<IPageView<E>>
 
     @Override
     public void onStopped(Tasks.SafeTask task) {
-        failedToLoadNextPage = (!((PageTask) task).isFirstPage()) && task.getResult() == null;
         if (!hasView()) {
             return;
         }
