@@ -17,13 +17,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    compileSdkVersion androidCompileSdkVersion
+    buildToolsVersion androidBuildToolsVersion
 
     defaultConfig {
         applicationId "com.github.baoti.pioneer"
         minSdkVersion 9
-        targetSdkVersion 21
+        targetSdkVersion androidTargetSdkVersion
         versionCode 1
         versionName "1.0"
 
@@ -53,7 +53,7 @@ android {
     }
 }
 
-apply plugin: 'android-unit-test'
+//apply plugin: 'android-unit-test'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
