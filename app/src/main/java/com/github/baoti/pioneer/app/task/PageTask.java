@@ -45,8 +45,6 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
      */
     private List<E> resources;
 
-    private boolean failedToLoadNextPage;
-
     public void setLifecycleListener(LifecycleListener<E> listener) {
         this.listener = listener;
     }
@@ -147,15 +145,16 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
         return LoadState.LOADING_NEXT;
     }
 
+    public boolean isFailedToLoad() {
+        return task != null && task.hasResultOrException() && task.getResult() == null;
+    }
+
     public boolean isFailedToLoadNextPage() {
-        return failedToLoadNextPage;
+        return isFailedToLoad() && !isFirstPage();
     }
 
     public void retry() {
-        if (task == null) {
-            return;
-        }
-        if (task.isRunning()) {
+        if (!isFailedToLoad()) {
             return;
         }
         Timber.v("retry");
@@ -181,8 +180,6 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
     }
 
     private void onStopped(Task task) {
-        failedToLoadNextPage = !task.isFirst
-                && task.hasResultOrException() && task.getResult() == null;
         storeResources(task);
         if (listener != null) {
             listener.onStopped(this);
