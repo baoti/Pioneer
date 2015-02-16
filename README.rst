@@ -4,9 +4,39 @@ Pioneer
 It is a android project which using "Best Practices" with "Dependency Inject", "View Inject" and
 "Event Bus".
 
+使用的库有:
+
+  - com.jakewharton:butterknife
+    View 注入
+  - com.squareup.dagger:dagger
+    依赖 注入
+  - com.squareup:otto
+    使用 Event Bus
+  - com.squareup.picasso:picasso
+    图片的加载与缓存
+  - com.squareup.retrofit:retrofit
+    封装 REST API
+
+单元测试库使用了 Robolectric_
+
 补充：
-该项目的MVP以及代码结构，灵感来自 android10.Android-CleanArchitecture (on github)，同时也做了大量改动。
-Presenter的设计，借鉴了 square.Flow 与 square.Mortar (on github) 。
+该项目的 MVP_ 以及代码结构，灵感来自 Android-CleanArchitecture_ ，同时也做了大量改动。
+Presenter的设计，借鉴了 square's Flow_ 与 Mortar_ 。
+
+.. _Robolectric:
+   https://github.com/robolectric/robolectric
+
+.. _MVP:
+   https://github.com/baoti/Pioneer/tree/master/libPresenter
+
+.. _Android-CleanArchitecture:
+   https://github.com/android10/Android-CleanArchitecture
+
+.. _Flow:
+   https://github.com/square/flow
+
+.. _Mortar:
+   https://github.com/square/mortar
 
 License
 -------
