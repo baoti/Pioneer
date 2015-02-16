@@ -21,13 +21,16 @@ It is a android project which using "Best Practices" with "Dependency Inject", "
 
 补充：
 该项目的 MVP_ 以及代码结构，灵感来自 Android-CleanArchitecture_ ，同时也做了大量改动。
-Presenter的设计，借鉴了 square's Flow_ 与 Mortar_ 。
+Presenter_ 的设计，借鉴了 square's Flow_ 与 Mortar_ 。
 
 .. _Robolectric:
    https://github.com/robolectric/robolectric
 
 .. _MVP:
    https://github.com/baoti/Pioneer/tree/master/libPresenter
+
+.. _Presenter:
+   https://github.com/baoti/Pioneer/blob/master/libPresenter/src/main/java/com/github/baoti/android/presenter/Presenter.java
 
 .. _Android-CleanArchitecture:
    https://github.com/android10/Android-CleanArchitecture
