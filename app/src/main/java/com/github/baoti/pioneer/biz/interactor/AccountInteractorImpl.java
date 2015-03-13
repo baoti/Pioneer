@@ -19,7 +19,6 @@ package com.github.baoti.pioneer.biz.interactor;
 import android.net.Uri;
 
 import com.github.baoti.pioneer.biz.Passwords;
-import com.github.baoti.pioneer.biz.exception.BizException;
 import com.github.baoti.pioneer.biz.exception.ValidationException;
 import com.github.baoti.pioneer.data.api.AccountApi;
 import com.github.baoti.pioneer.data.api.ApiException;
@@ -31,7 +30,9 @@ import com.github.baoti.pioneer.event.AccountChangedEvent;
 import com.github.baoti.pioneer.event.EventPoster;
 import com.github.baoti.pioneer.misc.util.Texts;
 
-import retrofit.RetrofitError;
+import rx.exceptions.OnErrorThrowable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Created by liuyedong on 14-12-22.
@@ -60,27 +61,36 @@ public class AccountInteractorImpl implements AccountInteractor {
     }
 
     @Override
-    public DeferredInteractor<Account> signInDeferred(final String accountId,
-                                                      String password) throws ValidationException {
+    public rx.Observable<Account> signInDeferred(final String accountId,
+                                                 String password) throws ValidationException {
         validateAccount(accountId);
         final String finalPassword = Passwords.forAccount(accountId, password);
-        return new DeferredInteractor<Account>() {
-            @Override
-            public Account interact() throws BizException {
-                try {
-                    ApiResponse<Account> response = accountApi.login(accountId, finalPassword);
-                    cachedAccount = response.checkedPayload();
-                } catch (ApiException e) {
-                    if (!(e.getCause() instanceof RetrofitError)) {
-                        throw e;
+        return accountApi.login(accountId, finalPassword)
+                .onErrorReturn(new Func1<Throwable, ApiResponse<Account>>() {
+                    @Override
+                    public ApiResponse<Account> call(Throwable throwable) {
+                        return null;
                     }
-                    cachedAccount = Account.ANONYMOUS;
-                }
-                accountPrefs.saveAccount(cachedAccount.getAccountId(), true);
-                eventPoster.postOnBoth(new AccountChangedEvent(true, cachedAccount.getAccountId()));
-                return cachedAccount;
-            }
-        };
+                }).map(new Func1<ApiResponse<Account>, Account>() {
+                    @Override
+                    public Account call(ApiResponse<Account> accountApiResponse) {
+                        if (accountApiResponse == null) {
+                            return Account.ANONYMOUS;
+                        }
+                        try {
+                            return accountApiResponse.checkedPayload();
+                        } catch (ApiException e) {
+                            throw OnErrorThrowable.from(e);
+                        }
+                    }
+                }).doOnNext(new Action1<Account>() {
+                    @Override
+                    public void call(Account account) {
+                        cachedAccount = account;
+                        accountPrefs.saveAccount(account.getAccountId(), true);
+                        eventPoster.postOnBoth(new AccountChangedEvent(true, account.getAccountId()));
+                    }
+                });
     }
 
     @Override

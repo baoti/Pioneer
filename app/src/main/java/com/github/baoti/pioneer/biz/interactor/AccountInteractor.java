@@ -29,7 +29,7 @@ public interface AccountInteractor {
 
     String getAccountId();
 
-    DeferredInteractor<Account> signInDeferred(String accountId, String password) throws ValidationException;
+    rx.Observable<Account> signInDeferred(String accountId, String password) throws ValidationException;
 
     void signOut();
 

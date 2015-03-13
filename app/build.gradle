@@ -80,6 +80,10 @@ dependencies {
     compile 'com.squareup.dagger:dagger:1.2.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
 
+    // RxJava
+    compile 'io.reactivex:rxjava:1.0.3'
+    compile 'io.reactivex:rxandroid:0.23.0'
+
     // Espresso
     androidTestCompile('com.android.support.test:testing-support-lib:0.1')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.0') {
