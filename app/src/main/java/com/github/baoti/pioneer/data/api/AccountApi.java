@@ -26,6 +26,5 @@ import retrofit.http.Query;
  */
 public interface AccountApi {
     @POST("/account/login")
-    ApiResponse<Account> login(@Query("account") String accountId, @Query("pwd") String password)
-            throws ApiException;
+    rx.Observable<ApiResponse<Account>> login(@Query("account") String accountId, @Query("pwd") String password);
 }

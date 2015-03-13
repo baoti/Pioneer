@@ -23,28 +23,32 @@ import android.support.annotation.Nullable;
 import com.github.baoti.android.presenter.Presenter;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.app.notification.Toaster;
-import com.github.baoti.pioneer.app.task.InteractorTask;
-import com.github.baoti.pioneer.app.task.Tasks;
 import com.github.baoti.pioneer.biz.exception.ValidationException;
 import com.github.baoti.pioneer.biz.interactor.AccountInteractor;
-import com.github.baoti.pioneer.biz.interactor.DeferredInteractor;
 import com.github.baoti.pioneer.entity.Account;
 
 import javax.inject.Inject;
 
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Action1;
 import timber.log.Timber;
 
 /**
  * Created by liuyedong on 14-12-18.
  */
-public class LoginPresenter extends Presenter<ILoginView> implements Tasks.LifecycleListener {
+public class LoginPresenter extends Presenter<ILoginView> {
     private final AccountInteractor interactor;
     private final Resources res;
     private final Toaster toaster;
-    private InteractorTask<Void, Account> task;
+    private Subscription sign;
     private int taskCount;
 
-    @Inject public LoginPresenter(AccountInteractor interactor, Resources res, Toaster toaster) {
+    @Inject
+    public LoginPresenter(AccountInteractor interactor, Resources res, Toaster toaster) {
         this.interactor = interactor;
         this.res = res;
         this.toaster = toaster;
@@ -65,7 +69,7 @@ public class LoginPresenter extends Presenter<ILoginView> implements Tasks.Lifec
         } else {
             getView().hideLoading();
         }
-        if (task != null) {
+        if (sign != null) {
             getView().disableSignIn();
         } else {
             getView().enableSignIn();
@@ -73,7 +77,10 @@ public class LoginPresenter extends Presenter<ILoginView> implements Tasks.Lifec
     }
 
     public void onSignInClicked() {
-        DeferredInteractor<Account> deferredInteractor;
+        if (sign != null) {
+            return;
+        }
+        Observable<Account> deferredInteractor;
         try {
             deferredInteractor = interactor.signInDeferred(
                     getView().getAccount(),
@@ -82,24 +89,40 @@ public class LoginPresenter extends Presenter<ILoginView> implements Tasks.Lifec
             showValidationException(e);
             return;
         }
-        if (task == null) {
-            task = new InteractorTask<Void, Account>(deferredInteractor, false) {
-                @Override
-                protected void onException(Exception exception) {
-                    handleSignInException(exception);
-                }
+        sign = deferredInteractor
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnRequest(new Action1<Long>() {
+                    @Override
+                    public void call(Long aLong) {
+                        taskCount++;
+                        updateLoadingShown();
+                    }
+                }).doOnTerminate(new Action0() {
+                    @Override
+                    public void call() {
+                        taskCount--;
+                        updateLoadingShown();
+                    }
+                }).subscribe(new Observer<Account>() {
+                    @Override
+                    public void onCompleted() {
+                        sign.unsubscribe();
+                        sign = null;
+                    }
 
-                @Override
-                protected void onSuccess(Account account) {
-                    handleSignInSuccess(account);
-                }
-            };
-            task.setLifecycleListener(this);
-            task.executeOnDefaultThreadPool();
-        }
+                    @Override
+                    public void onError(Throwable e) {
+                        handleSignInException(e);
+                    }
+
+                    @Override
+                    public void onNext(Account account) {
+                        handleSignInSuccess(account);
+                    }
+                });
     }
 
-    private void handleSignInException(Exception e) {
+    private void handleSignInException(Throwable e) {
         Timber.d(e, "Sign in failed");
         if (!hasView()) {
             return;
@@ -128,20 +151,5 @@ public class LoginPresenter extends Presenter<ILoginView> implements Tasks.Lifec
 
     public void onSignUpClicked() {
         toaster.show("Not implemented");
-    }
-
-    @Override
-    public void onStarted(Tasks.SafeTask task) {
-        taskCount++;
-        updateLoadingShown();
-    }
-
-    @Override
-    public void onStopped(Tasks.SafeTask task) {
-        if (this.task == task) {
-            this.task = null;
-        }
-        taskCount--;
-        updateLoadingShown();
     }
 }
