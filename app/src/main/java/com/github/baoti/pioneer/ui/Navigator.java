@@ -118,9 +118,11 @@ public class Navigator {
         }
         if (isFragmentInBackStack != null) {
             List<Fragment> fragments = fragmentManager.getFragments();
-            for (Fragment frag : fragments) {
-                if (frag != null && isInBackStack(frag)) {
-                    return true;
+            if (fragments != null) {
+                for (Fragment frag : fragments) {
+                    if (frag != null && isInBackStack(frag)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -128,6 +130,7 @@ public class Navigator {
     }
 
     private static Method isFragmentInBackStack;
+
     static {
         try {
             isFragmentInBackStack = Fragment.class.getDeclaredMethod("isInBackStack");
@@ -139,8 +142,10 @@ public class Navigator {
     private static boolean isInBackStack(Fragment fragment) {
         try {
             Object result = isFragmentInBackStack.invoke(fragment);
-            return (boolean) result;
-        } catch (IllegalAccessException | InvocationTargetException e) {
+            return (Boolean) result;
+        } catch (IllegalAccessException e) {
+            return false;
+        } catch (InvocationTargetException e) {
             return false;
         }
     }

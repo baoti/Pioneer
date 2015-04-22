@@ -31,7 +31,7 @@ public class MainActivity extends BaseContainerActivity {
 
     private boolean hookFinishToMoveBack = true;
 
-    protected Fragment contentFragment() {
+    protected Fragment createContentFragment() {
         return MainFragment.newInstance();
     }
 

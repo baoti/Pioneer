@@ -21,7 +21,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.0-rc3'
+        classpath 'com.android.tools.build:gradle:1.1.3'
 //        classpath 'com.github.jcandksolutions.gradle:android-unit-test:2.1.1'
 
         // NOTE: Do not place your application dependencies here; they belong

@@ -18,10 +18,9 @@ package com.github.baoti.pioneer.app.task;
 
 import com.github.baoti.pioneer.biz.ResourcePage;
 import com.github.baoti.pioneer.biz.exception.BizException;
-import com.github.baoti.pioneer.biz.interactor.DeferredInteractor;
 import com.github.baoti.pioneer.biz.interactor.PageInteractor;
+import com.github.baoti.pioneer.biz.interactor.ResourcePager;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,14 +35,7 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
      * 最后一次运行的 task
      */
     private Task task;
-    /**
-     * 最后一次成功获得的 结果
-     */
-    private ResourcePage<E> page;
-    /**
-     * 已获得的所有资源
-     */
-    private List<E> resources;
+    private final Pager<E> pager = new Pager<>(null);
 
     public void setLifecycleListener(LifecycleListener<E> listener) {
         this.listener = listener;
@@ -59,6 +51,11 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
         return task != null && task.hasResultOrException();
     }
 
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+    public boolean hasException() {
+        return getException() != null;
+    }
+
     @Override
     public Exception getException() {
         if (task != null) {
@@ -70,17 +67,17 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
     @Override
     public Collection<E> getResult() {
         if (task != null && task.getResult() != null) {
-            return task.getResult().getResources();
+            return task.getResources();
         }
         return null;
     }
 
     public boolean hasLoadedResources() {
-        return resources != null;
+        return pager.hasLoadedResources();
     }
 
     public Collection<E> getLoadedResources() {
-        return resources;
+        return pager.getResources();
     }
 
     public boolean isFirstPage() {
@@ -94,12 +91,13 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
     public void loadFirstPage(PageInteractor<E> interactor) {
         Timber.v("loadFirstPage");
         cancel(true);
-        task = new Task(true, interactor);
+        pager.setFirst(interactor);
+        task = new Task(true);
         task.executeOnDefaultThreadPool();
     }
 
     public boolean hasNextPage() {
-        return page == null || page.hasNext();
+        return pager.hasMore();
     }
 
     public boolean isLoadingNextPage() {
@@ -117,11 +115,11 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
                 return LoadState.LOADING_NEXT;
             }
         }
-        if (page == null) {
+        if (!pager.hasFirst()) {
             // fail to load first page
             return LoadState.OTHER;
         }
-        if (!page.hasNext()) {
+        if (!pager.hasMore()) {
             return LoadState.NO_NEXT;
         }
         if (task.getResult() == null) {
@@ -134,13 +132,7 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
         }
         Timber.v("loadNextPage");
         cancel(true);
-        final ResourcePage<E> prevPage = page;
-        task = new Task(false, new PageInteractor<E>() {
-            @Override
-            public ResourcePage<E> interact() throws BizException {
-                return prevPage.next();
-            }
-        });
+        task = new Task(false);
         task.executeOnDefaultThreadPool();
         return LoadState.LOADING_NEXT;
     }
@@ -187,23 +179,10 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
     }
 
     private void storeResources(Task task) {
-        if (task.getResult() != null) {
-            page = task.getResult();
-            if (resources == null) {
-                resources = new ArrayList<>();
-            }
-            int start = resources.size();
-            int before = 0;
-            int count = page.getResources().size();
-            if (task.isFirst) {
-                resources.clear();
-
-                before = start;
-                start = 0;
-            }
-            resources.addAll(page.getResources());
+        int[] result = task.getResult();
+        if (result != null) {
             if (listener != null) {
-                listener.onPageChanged(this, start, before, count);
+                listener.onPageChanged(this, result[0], result[1], result[2]);
             }
         }
     }
@@ -211,20 +190,27 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
     public interface LifecycleListener<E> extends Tasks.LifecycleListener {
         /**
          * 分页资源发生了改变
+         *
          * @param pageTask 分页任务
-         * @param start 从 start 开始
-         * @param before before 条旧数据
-         * @param count 改变为新的 count 条
+         * @param start    从 start 开始
+         * @param before   before 条旧数据
+         * @param count    改变为新的 count 条
          */
         void onPageChanged(PageTask<E> pageTask, int start, int before, int count);
     }
 
     public enum LoadState {
-        /** loading first page */
+        /**
+         * loading first page
+         */
         LOADING_FIRST,
-        /** loading next page */
+        /**
+         * loading next page
+         */
         LOADING_NEXT,
-        /** no next page */
+        /**
+         * no next page
+         */
         NO_NEXT,
         OTHER
     }
@@ -243,17 +229,51 @@ public class PageTask<E> implements Tasks.SafeTask<Collection<E>> {
         }
     };
 
-    public class Task extends InteractorTask<Void, ResourcePage<E>> {
-        private boolean isFirst;
+    public static class Pager<E> extends ResourcePager<E> {
+        private PageInteractor<E> first;
 
-        public Task(boolean isFirst, DeferredInteractor<ResourcePage<E>> interactor) {
-            super(interactor);
+        public Pager(PageInteractor<E> interactor) {
+            this.first = interactor;
+        }
+
+        @Override
+        protected ResourcePage<E> first() throws BizException {
+            return first.interact();
+        }
+
+        public void setFirst(PageInteractor<E> interactor) {
+            reset();
+            this.first = interactor;
+        }
+
+        public boolean hasFirst() {
+            return first != null;
+        }
+    }
+
+    public class Task extends SafeAsyncTask<Void, Void, int[]> {
+        private boolean isFirst;
+        private List<E> resources;
+
+        public Task(boolean isFirst) {
             setLifecycleListener(lifecycleListener);
             this.isFirst = isFirst;
         }
 
         public Task recreate() {
-            return new Task(isFirst, deferredInteractor);
+            return new Task(isFirst);
+        }
+
+        public List<E> getResources() {
+            return resources;
+        }
+
+        @Override
+        protected int[] doTask(Void... params) throws Exception {
+            pager.next();
+            ResourcePager.Changed lastChanged = pager.getLastChanged();
+            resources = pager.getResources().subList(lastChanged.start(), pager.size());
+            return new int[]{lastChanged.start(), 0, lastChanged.count()};
         }
     }
 }

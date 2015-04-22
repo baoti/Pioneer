@@ -26,7 +26,7 @@ import java.util.Collection;
  */
 public interface PageInteractor<E> extends DeferredInteractor<ResourcePage<E>> {
 
-    public abstract class Simple<E> implements PageInteractor<E> {
+    abstract class Simple<E> implements PageInteractor<E> {
 
         private final int pageStart;
         protected final int pageSize;
