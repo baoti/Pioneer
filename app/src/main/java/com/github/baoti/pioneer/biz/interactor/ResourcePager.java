@@ -83,7 +83,7 @@ public abstract class ResourcePager<E> {
      *
      * @return this pager
      */
-    public ResourcePager<E> reset() {
+    public synchronized ResourcePager<E> reset() {
         page = FIRST_PAGE;
         return clear();
     }
@@ -94,7 +94,7 @@ public abstract class ResourcePager<E> {
      *
      * @return this pager
      */
-    public ResourcePager<E> clear() {
+    public synchronized ResourcePager<E> clear() {
         count = Math.max(1, page - 1);
         page = FIRST_PAGE;
         current = null;
@@ -131,7 +131,7 @@ public abstract class ResourcePager<E> {
      * @return true if more pages
      * @throws BizException
      */
-    public boolean next() throws BizException {
+    public synchronized boolean next() throws BizException {
         boolean emptyPage = false;
         ResourcePage<E> it = current;
         List<E> added = new ArrayList<>();
