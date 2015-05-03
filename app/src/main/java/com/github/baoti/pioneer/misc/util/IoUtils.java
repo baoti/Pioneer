@@ -46,7 +46,7 @@ import timber.log.Timber;
 
 /**
  * IO相关
- *
+ * <p/>
  * Created by sean on 2014/10/12.
  */
 public class IoUtils {
@@ -77,7 +77,8 @@ public class IoUtils {
         return saveOk;
     }
 
-    public static boolean saveBitmap(File file, Bitmap bitmap, int quality) {
+    public static boolean saveBitmap(File file, Bitmap bitmap,
+                                     Bitmap.CompressFormat format, int quality) {
         FileOutputStream outputStream;
         try {
             outputStream = new FileOutputStream(file);
@@ -87,7 +88,7 @@ public class IoUtils {
         }
         boolean saveOk = true;
         try {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+            bitmap.compress(format, quality, outputStream);
         } finally {
             if (!close(outputStream)) {
                 saveOk = false;
@@ -100,7 +101,8 @@ public class IoUtils {
         return saveOk;
     }
 
-    public static boolean saveBitmap(Uri uri, Bitmap bitmap, int quality) {
+    public static boolean saveBitmap(Uri uri, Bitmap bitmap,
+                                     Bitmap.CompressFormat format, int quality) {
         ContentResolver contentResolver = AppMain.app().getContentResolver();
         OutputStream outputStream;
         try {
@@ -111,7 +113,7 @@ public class IoUtils {
         }
         boolean saveOk = true;
         try {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+            bitmap.compress(format, quality, outputStream);
         } finally {
             if (!close(outputStream)) {
                 saveOk = false;
@@ -273,7 +275,9 @@ public class IoUtils {
         return !file.exists() || (file.isFile() && file.delete());
     }
 
-    /** rm -r */
+    /**
+     * rm -r
+     */
     public static boolean rmR(File file) {
         if (!file.exists()) {
             return true;
@@ -289,8 +293,21 @@ public class IoUtils {
         return result;
     }
 
+    public static long getTotalLength(File file) {
+        if (file.isDirectory()) {
+            long total = 0;
+            for (File child : file.listFiles()) {
+                total += getTotalLength(child);
+            }
+            return total;
+        } else {
+            return file.length();
+        }
+    }
+
     /**
      * 保证目录存在
+     *
      * @param dir
      * @return
      */
@@ -349,6 +366,7 @@ public class IoUtils {
 
     /**
      * 获得在缓存存储中的文件
+     *
      * @param path
      * @return
      */
@@ -378,6 +396,7 @@ public class IoUtils {
 
     /**
      * 是否应用私有的文件
+     *
      * @param file
      * @return
      */
@@ -387,6 +406,7 @@ public class IoUtils {
 
     /**
      * 文件是否在 内部 Data 目录下
+     *
      * @param file
      * @return
      */
@@ -478,12 +498,18 @@ public class IoUtils {
         File tmp = File.createTempFile(DataConfig.TMP_FILE_PREFIX, suffix, directory);
         Timber.v("Create tmp file: %s", tmp);
         if (isPublic) {
-            boolean succeeded = tmp.setWritable(true, false);
-            if (!succeeded) {
-                Timber.d("Fail to setWritable(true, false): %s", tmp);
-            }
+            setOtherWritable(tmp);
         }
         return tmp;
+    }
+
+    private static void setOtherWritable(File file) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            boolean succeeded = file.setWritable(true, false);
+            if (!succeeded) {
+                Timber.d("Fail to setWritable(true, false): %s", file);
+            }
+        }
     }
 
     public static final String SCHEME_FILE = "file";
