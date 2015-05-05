@@ -31,7 +31,7 @@ public class MeActivity extends BaseContainerActivity {
     }
 
     @Override
-    protected Fragment contentFragment() {
+    protected Fragment createContentFragment() {
         return MeFragment.newInstance();
     }
 }

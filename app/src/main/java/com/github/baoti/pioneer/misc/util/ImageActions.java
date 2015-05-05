@@ -102,7 +102,7 @@ public class ImageActions {
                     return null;
                 }
                 File dst = IoUtils.generateDatedFile(imagesDir, ".jpg", true);
-                if (!IoUtils.saveBitmap(dst, bm, 50)) {
+                if (!IoUtils.saveBitmap(dst, bm, Bitmap.CompressFormat.JPEG, 50)) {
                     return null;
                 }
                 return Uri.fromFile(dst);
