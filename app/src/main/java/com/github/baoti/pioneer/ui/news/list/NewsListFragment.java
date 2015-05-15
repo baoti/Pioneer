@@ -32,7 +32,6 @@ import com.github.baoti.pioneer.ui.common.holder.OnViewHolderClickListener;
 import com.github.baoti.pioneer.ui.common.page.PageAdapter;
 import com.github.baoti.pioneer.ui.common.page.PageFragment;
 import com.github.baoti.pioneer.ui.common.page.PagePresenter;
-import com.github.baoti.pioneer.ui.news.NewsModule;
 
 import javax.inject.Inject;
 
@@ -66,7 +65,7 @@ public class NewsListFragment extends PageFragment<INewsListView, News> implemen
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        AppMain.globalGraph().plus(new NewsModule()).inject(this);
+        AppMain.component().ui().injectNewsListFragment(this);
         super.onViewCreated(view, savedInstanceState);
     }
 

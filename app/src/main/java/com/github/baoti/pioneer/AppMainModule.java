@@ -30,8 +30,6 @@ import dagger.Provides;
  * Created by liuyedong on 14-12-22.
  */
 @Module(
-        library = true,
-        injects = {},
         includes = {
                 AppModule.class,
                 UiModule.class,

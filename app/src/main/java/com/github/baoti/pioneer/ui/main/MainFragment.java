@@ -79,7 +79,7 @@ public class MainFragment extends FragmentView<IMainView, MainPresenter> impleme
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-        AppMain.globalGraph().plus(new MainModule()).inject(this);
+        AppMain.component().ui().injectMainFragment(this);
         super.onViewCreated(view, savedInstanceState);
     }
 

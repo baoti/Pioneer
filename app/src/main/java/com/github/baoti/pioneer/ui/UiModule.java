@@ -30,7 +30,7 @@ import dagger.Provides;
 /**
  * Created by liuyedong on 14-12-18.
  */
-@Module(library = true)
+@Module
 public class UiModule {
     @Provides
     @Singleton

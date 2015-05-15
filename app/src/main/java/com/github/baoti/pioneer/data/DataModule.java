@@ -42,11 +42,6 @@ import timber.log.Timber;
  * Created by liuyedong on 14-12-19.
  */
 @Module(
-        library = true,
-        complete = false,
-        injects = {
-                DataInitializer.class
-        },
         includes = {
                 ApiModule.class
         }

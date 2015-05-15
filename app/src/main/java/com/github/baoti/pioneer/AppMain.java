@@ -20,10 +20,6 @@ import android.app.Application;
 
 import com.squareup.leakcanary.LeakCanary;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import dagger.ObjectGraph;
 import timber.log.Timber;
 
 /**
@@ -37,7 +33,7 @@ public class AppMain extends Application {
         return app;
     }
 
-    private ObjectGraph graph;
+    private AppMainComponent component;
 
     @Override
     public void onCreate() {
@@ -45,37 +41,16 @@ public class AppMain extends Application {
 
         super.onCreate();
 
-
-        graph = ObjectGraph.create(getModules().toArray());
-
-        globalGraph().injectStatics();
+        component = DaggerAppMainComponent.builder().appMainModule(new AppMainModule(this)).build();
 
         if (BuildConfig.DEBUG) {
-            globalGraph().validate(); // validate dagger's object graph
             Timber.plant(new Timber.DebugTree());
         }
 
         LeakCanary.install(this);
     }
 
-    public void inject(Object object) {
-        graph.inject(object);
-    }
-
-    public ObjectGraph getScopedGraph() {
-        return graph;
-    }
-
-    public static ObjectGraph globalGraph() {
-        if (app == null) {
-            throw new IllegalStateException("app is null");
-        }
-        return app.getScopedGraph();
-    }
-
-    protected List<Object> getModules() {
-        List<Object> modules = new ArrayList<>();
-        modules.add(new AppMainModule(this));
-        return modules;
+    public static AppMainComponent component() {
+        return app().component;
     }
 }
