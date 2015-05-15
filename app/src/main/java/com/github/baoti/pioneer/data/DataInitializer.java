@@ -50,7 +50,7 @@ public class DataInitializer {
     private void initialize() {
         if (!initialized) {
             initialized = true;
-            AppMain.globalGraph().inject(this);
+            cacheDir = AppMain.component().cacheDir();
         }
     }
 

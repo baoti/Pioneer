@@ -26,13 +26,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.github.baoti.android.presenter.FragmentView;
+import com.github.baoti.android.presenter.IView;
+import com.github.baoti.android.presenter.Presenter;
 import com.github.baoti.pioneer.AppMain;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.app.notification.Toaster;
 import com.github.baoti.pioneer.entity.News;
 import com.github.baoti.pioneer.ui.Navigator;
 import com.github.baoti.pioneer.ui.news.NewsActivity;
-import com.github.baoti.pioneer.ui.news.NewsModule;
 
 import javax.inject.Inject;
 
@@ -42,7 +43,7 @@ import butterknife.InjectView;
 /**
  * Created by liuyedong on 15-1-6.
  */
-public class NewsEditFragment extends FragmentView implements Toolbar.OnMenuItemClickListener {
+public class NewsEditFragment extends FragmentView<IView, Presenter<IView>> implements Toolbar.OnMenuItemClickListener {
 
     public static NewsEditFragment newInstance(Bundle extras) {
         NewsEditFragment fragment = new NewsEditFragment();
@@ -62,7 +63,7 @@ public class NewsEditFragment extends FragmentView implements Toolbar.OnMenuItem
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppMain.globalGraph().plus(new NewsModule()).inject(this);
+        AppMain.component().ui().injectNewsEditFragment(this);
     }
 
     @Override

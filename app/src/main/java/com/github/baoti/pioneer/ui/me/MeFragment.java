@@ -32,7 +32,6 @@ import android.widget.TextView;
 
 import com.github.baoti.android.presenter.FragmentView;
 import com.github.baoti.pioneer.AppMain;
-import com.github.baoti.pioneer.AppMainModule;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.entity.ImageBean;
 import com.github.baoti.pioneer.misc.picasso.PicassoHelper;
@@ -47,7 +46,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import dagger.Lazy;
-import dagger.Module;
 
 /**
  * Created by liuyedong on 14-12-26.
@@ -102,7 +100,7 @@ public class MeFragment extends FragmentView<IMeView, MePresenter> implements IM
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.inject(this, view);
-        AppMain.globalGraph().plus(new MeModule()).inject(this);
+        AppMain.component().ui().injectMeFragment(this);
         setupToolbar();
         super.onViewCreated(view, savedInstanceState);
     }
@@ -222,9 +220,5 @@ public class MeFragment extends FragmentView<IMeView, MePresenter> implements IM
     @Override
     public void onImageCancelled(int requestCode) {
 
-    }
-
-    @Module(injects = MeFragment.class, addsTo = AppMainModule.class)
-    public class MeModule {
     }
 }

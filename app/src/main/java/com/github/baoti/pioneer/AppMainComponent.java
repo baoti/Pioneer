@@ -14,18 +14,27 @@
  * limitations under the License.
  */
 
-package com.github.baoti.pioneer.ui.main;
+package com.github.baoti.pioneer;
 
-import com.github.baoti.pioneer.AppMainModule;
+import com.github.baoti.pioneer.ui.UiComponent;
 
-import dagger.Module;
+import java.io.File;
+
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import dagger.Component;
 
 /**
- * Created by liuyedong on 14-12-18.
+ * Created by liuyedong on 15-5-15.
  */
-@Module(
-        injects = MainFragment.class,
-        addsTo = AppMainModule.class
+@Singleton
+@Component(
+        modules = AppMainModule.class
 )
-public class MainModule {
+public interface AppMainComponent {
+
+    UiComponent ui();
+
+    @Named("cacheDir") File cacheDir();
 }

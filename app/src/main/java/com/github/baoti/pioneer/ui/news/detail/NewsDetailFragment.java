@@ -26,6 +26,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.baoti.android.presenter.FragmentView;
+import com.github.baoti.android.presenter.IView;
+import com.github.baoti.android.presenter.Presenter;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.entity.News;
 import com.github.baoti.pioneer.ui.Navigator;
@@ -38,7 +40,7 @@ import butterknife.InjectView;
 /**
  * Created by liuyedong on 15-1-6.
  */
-public class NewsDetailFragment extends FragmentView implements Toolbar.OnMenuItemClickListener {
+public class NewsDetailFragment extends FragmentView<IView, Presenter<IView>> implements Toolbar.OnMenuItemClickListener {
 
     public static NewsDetailFragment newInstance(Bundle args) {
         NewsDetailFragment fragment = new NewsDetailFragment();

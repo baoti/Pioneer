@@ -63,7 +63,7 @@ public class SplashActivity extends ActivityView<ISplashView, SplashPresenter> i
         setContentView(R.layout.activity_splash);
         ButterKnife.inject(this);
 
-        AppMain.globalGraph().plus(new SplashModule()).inject(this);
+        AppMain.component().ui().injectSplashActivity(this);
     }
 
     @OnCheckedChanged(R.id.cb_retain)

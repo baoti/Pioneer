@@ -34,10 +34,7 @@ import retrofit.client.OkClient;
 /**
  * Created by liuyedong on 14-12-19.
  */
-@Module(
-        library = true,
-        complete = false
-)
+@Module
 public class ApiModule {
     public static final String PRODUCTION_API_URL = "http://api.github.com/3/";
 

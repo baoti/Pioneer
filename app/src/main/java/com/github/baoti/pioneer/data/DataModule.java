@@ -30,7 +30,6 @@ import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.IOException;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -43,11 +42,6 @@ import timber.log.Timber;
  * Created by liuyedong on 14-12-19.
  */
 @Module(
-        library = true,
-        complete = false,
-        injects = {
-                DataInitializer.class
-        },
         includes = {
                 ApiModule.class
         }

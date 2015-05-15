@@ -33,7 +33,6 @@ import com.github.baoti.pioneer.ui.common.page.IPageView;
 import com.github.baoti.pioneer.ui.common.page.PageAdapter;
 import com.github.baoti.pioneer.ui.common.page.PageFragment;
 import com.github.baoti.pioneer.ui.common.page.PagePresenter;
-import com.github.baoti.pioneer.ui.news.NewsModule;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.listeners.ActionClickListener;
@@ -70,7 +69,7 @@ public class NewsListFragment extends PageFragment<News> implements INewsListVie
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        AppMain.globalGraph().plus(new NewsModule()).inject(this);
+        AppMain.component().ui().injectNewsListFragment(this);
         swipeRefreshLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

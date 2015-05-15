@@ -39,10 +39,7 @@ import dagger.Provides;
 /**
  * Created by liuyedong on 14-12-18.
  */
-@Module(
-        library = true,
-        complete = false
-)
+@Module
 public class AppModule {
 
     @Provides

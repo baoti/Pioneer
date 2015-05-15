@@ -60,7 +60,7 @@ public class LoginViewDelegate implements ILoginView, IViewDelegate<LoginViewDel
     LoginViewDelegate(View view, Delegator delegator) {
         this.delegator = delegator;
         ButterKnife.inject(this, view);
-        AppMain.globalGraph().plus(new LoginModule()).inject(this);
+        AppMain.component().ui().injectLoginViewDelegate(this);
     }
 
     @Override
