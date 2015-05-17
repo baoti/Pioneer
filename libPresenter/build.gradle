@@ -21,7 +21,7 @@ android {
     buildToolsVersion androidBuildToolsVersion
 
     defaultConfig {
-        minSdkVersion 4
+        minSdkVersion 7
         targetSdkVersion androidTargetSdkVersion
         versionCode 1
         versionName "1.0"
@@ -37,6 +37,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.android.support:support-v4:22.0.0'
-    compile 'com.android.support:support-annotations:22.0.0'
+    compile 'com.android.support:support-v4:22.1.1'
+    compile 'com.android.support:support-annotations:22.1.1'
+    compile 'com.android.support:appcompat-v7:22.1.1'
 }
