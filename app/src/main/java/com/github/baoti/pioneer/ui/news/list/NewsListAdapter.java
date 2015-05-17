@@ -96,7 +96,7 @@ public class NewsListAdapter extends PageAdapter<News> {
 
         @Override
         public void onClick(View v) {
-            listener.onViewHolderClick(this, items.get(getPosition()));
+            listener.onViewHolderClick(this, items.get(getAdapterPosition()));
         }
     }
 }
