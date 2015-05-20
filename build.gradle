@@ -34,8 +34,8 @@ buildscript {
 allprojects {
     ext {
         androidBuildToolsVersion = "22.0.1"
-        androidTargetSdkVersion = 21
-        androidCompileSdkVersion = 21
+        androidTargetSdkVersion = 22
+        androidCompileSdkVersion = 22
     }
     repositories {
         jcenter()
