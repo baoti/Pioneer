@@ -29,7 +29,6 @@ import com.github.baoti.pioneer.entity.Account;
 import com.github.baoti.pioneer.entity.ImageBean;
 import com.github.baoti.pioneer.event.AccountChangedEvent;
 import com.github.baoti.pioneer.event.EventPoster;
-import com.github.baoti.pioneer.misc.util.Texts;
 
 import retrofit.RetrofitError;
 
@@ -62,7 +61,6 @@ public class AccountInteractorImpl implements AccountInteractor {
     @Override
     public DeferredInteractor<Account> signInDeferred(final String accountId,
                                                       String password) throws ValidationException {
-        validateAccount(accountId);
         final String finalPassword = Passwords.forAccount(accountId, password);
         return new DeferredInteractor<Account>() {
             @Override
@@ -106,12 +104,6 @@ public class AccountInteractorImpl implements AccountInteractor {
                     cachedAccount.getFollowers(),
                     imageBean);
             eventPoster.postOnBoth(new AccountChangedEvent(true, cachedAccount.getAccountId()));
-        }
-    }
-
-    private void validateAccount(String account) throws ValidationException {
-        if (Texts.isTrimmedEmpty(account)) {
-            throw new ValidationException(ValidationException.Kind.ACCOUNT_EMPTY);
         }
     }
 }

@@ -23,6 +23,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:1.5.0'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
+        classpath 'org.aspectj:aspectjtools:1.8.5'
 //        classpath 'com.github.jcandksolutions.gradle:android-unit-test:2.1.1'
 
         // NOTE: Do not place your application dependencies here; they belong
