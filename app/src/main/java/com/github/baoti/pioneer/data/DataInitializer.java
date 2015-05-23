@@ -28,6 +28,7 @@ import java.io.File;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import hugo.weaving.DebugLog;
 import timber.log.Timber;
 
 /**
@@ -54,6 +55,7 @@ public class DataInitializer {
         }
     }
 
+    @DebugLog
     @Subscribe
     public void onAppInitializeRequest(AppInitializeRequestEvent event) {
         // 构造的时候无法执行注入, 推迟到需要的时候再注入
