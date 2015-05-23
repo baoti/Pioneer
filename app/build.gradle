@@ -15,6 +15,7 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'checkstyle'
 apply from: rootProject.file('gradle/android-findbugs.gradle')
 
