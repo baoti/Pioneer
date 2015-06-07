@@ -464,7 +464,7 @@ public class IoUtils {
             Timber.v("Fail to create directory: " + directory);
         }
         String filename = DateFormat.format(
-                "yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)).toString();
+                "yyyyMMdd_HHmmss", Calendar.getInstance(Locale.CHINA)).toString();
         if (twoStage) {
             String month = filename.substring(0, 6);
             return generateDatedFile(new File(directory, month), suffix, false);
