@@ -471,11 +471,11 @@ public class IoUtils {
         }
         File result = new File(directory, filename + suffix);
 
-        int i = 1;
+        int i = -1;
         try {
             while (!result.createNewFile()) {
                 result = new File(directory, filename + (i + suffix));
-                i++;
+                i--;
             }
         } catch (IOException e) {
             Timber.v("Fail to create new file: " + result);
