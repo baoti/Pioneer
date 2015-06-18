@@ -19,13 +19,12 @@ package com.github.baoti.pioneer.misc.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 
-import com.github.baoti.pioneer.Constants;
 import com.github.baoti.pioneer.data.DataConstants;
 
 import java.io.File;
@@ -34,6 +33,8 @@ import java.io.IOException;
 import timber.log.Timber;
 
 /**
+ * 图片相关
+ *
  * Created by liuyedong on 15-1-6.
  */
 public class ImageActions {
@@ -54,41 +55,96 @@ public class ImageActions {
     }
 
 
+    private static boolean hasResolvedActivity(Context context, Intent intent) {
+        PackageManager packageManager = context.getPackageManager();
+        return intent.resolveActivity(packageManager) != null;
+    }
+
     public static boolean isImageCaptureAvailable(Context context) {
-        return Intents.hasResolvedActivity(context, CaptureCompat.baseAction());
+        return hasResolvedActivity(context, CaptureCompat.baseAction());
     }
 
     public static boolean isImageCropAvailable(Context context) {
-        return Intents.hasResolvedActivity(context, Crop.baseAction());
+        return hasResolvedActivity(context, Crop.baseAction());
     }
 
-    public static class Crop {
+    public static File generateImageFile(Context context, String suffix) {
+        File imagesDir = IoUtils.fromPublicPath(context, DataConstants.Files.IMAGES);
+        return IoUtils.generateDatedFile(imagesDir, suffix, true);
+    }
+
+    public static Intent actionCapture(Context context) throws IOException {
+        File outputImage = generateImageFile(context, ".jpg");
+        return CaptureCompat.actionCaptureImage(Uri.fromFile(outputImage));
+    }
+
+    public static Uri capturedImage(Context context, ActivityRequestState requestState, int resultCode, Intent data) {
+        return CaptureCompat.getCapturedImage(context, requestState.getRequestIntent(), resultCode, data);
+    }
+
+    public static Intent actionCrop(Context context, Uri image, int size) {
+        return actionCrop(context, image, 1, 1, size, size);
+    }
+
+    public static Intent actionCrop(Context context, Uri image,
+                                    int aspectX, int aspectY, int outputX, int outputY) {
+        return Crop.actionCropImage(context, image, aspectX, aspectY, outputX, outputY);
+    }
+
+    public static Uri croppedImage(Context context, ActivityRequestState requestState, int resultCode, Intent data) {
+        return Crop.getCroppedImage(context, requestState.getRequestIntent(), resultCode, data);
+    }
+
+    private static class Crop {
         private static final String ACTION_CROP = "com.android.camera.action.CROP";
+        private static final String MIME_TYPE = "image/*";
 
         private static final String RETURN_DATA = "return-data";
 
-        private Intent intent;
-        public Crop() {
-
+        private static Intent baseAction() {
+            return new Intent(ACTION_CROP).setType(MIME_TYPE);
         }
 
-        public Intent action(Uri image) {
-            Intent actionIntent = actionCropImage(image);
-            intent = actionIntent;
-            return actionIntent;
+        private static Intent actionCropImage(Context context, Uri image,
+                                              int aspectX, int aspectY, int outputX, int outputY) {
+            Intent intent = baseAction();
+            if (image != null) {
+                intent.setDataAndType(image, MIME_TYPE);
+            } else {
+                // NOT SUPPORTED!!!
+                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MIME_TYPE);
+            }
+            intent.putExtra("crop", "true");
+
+            // aspectX aspectY 是宽高的比例
+            intent.putExtra("aspectX", aspectX);
+            intent.putExtra("aspectY", aspectY);
+
+            // outputX,outputY 是剪裁图片的宽高
+            intent.putExtra("outputX", outputX);
+            intent.putExtra("outputY", outputY);
+
+            intent.putExtra("noFaceDetection", true);
+
+            intent.putExtra("scale", true);
+            intent.putExtra("scaleUpIfNeeded", true); //剪裁区域太小去除黑边
+            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(generateImageFile(context, ".jpg")));
+            intent.putExtra("return-data", false);
+//            intent.putExtra(RETURN_DATA, true);
+            return intent;
         }
 
-        public Uri croppedImage(int resultCode, Intent data) {
-            if (resultCode != Activity.RESULT_OK || intent == null) {
+        private static Uri getCroppedImage(Context context, Intent requestIntent, int resultCode, Intent data) {
+            if (resultCode != Activity.RESULT_OK || requestIntent == null) {
                 return null;
             }
-            Intent actionIntent = intent;
-            intent = null;
-            boolean returnData = actionIntent.getBooleanExtra(RETURN_DATA, false);
+            boolean returnData = requestIntent.getBooleanExtra(RETURN_DATA, false);
             if (returnData && data == null) {
                 return null;
             }
-            Uri output = actionIntent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+            Uri output = requestIntent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
             if (output != null) {
                 return output;
             }
@@ -97,11 +153,7 @@ public class ImageActions {
                 return null;
             }
             try {
-                File imagesDir = IoUtils.fromFilesDir(DataConstants.Files.IMAGES);
-                if (!IoUtils.ensureDirsExist(imagesDir)) {
-                    return null;
-                }
-                File dst = IoUtils.generateDatedFile(imagesDir, ".jpg", true);
+                File dst = generateImageFile(context, ".jpg");
                 if (!IoUtils.saveBitmap(dst, bm, Bitmap.CompressFormat.JPEG, 50)) {
                     return null;
                 }
@@ -110,99 +162,9 @@ public class ImageActions {
                 bm.recycle();
             }
         }
-
-        private static Intent baseAction() {
-            return new Intent(ACTION_CROP).setType("image/*");
-        }
-
-        private static Intent actionCropImage(Uri image) {
-            Intent intent = baseAction();
-            if (image != null) {
-                intent.setData(image);
-            } else {
-                // NOT SUPPORTED!!!
-                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            }
-            intent.putExtra("crop", "true");
-
-            // aspectX aspectY 是宽高的比例
-            intent.putExtra("aspectX", 1);
-            intent.putExtra("aspectY", 1);
-
-            // outputX,outputY 是剪裁图片的宽高
-            intent.putExtra("outputX", 200);
-            intent.putExtra("outputY", 200);
-
-            intent.putExtra("noFaceDetection", true);
-
-            intent.putExtra("scale", true);
-            intent.putExtra("scaleUpIfNeeded", true); //剪裁区域太小去除黑边
-            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cropOutput));
-//        intent.putExtra("return-data", false);
-            intent.putExtra(RETURN_DATA, true);
-            return intent;
-        }
-
-        public void onLoad(Bundle savedInstanceState) {
-            intent = savedInstanceState.getParcelable(Constants.Saved.SAVED_CROP_IMAGE_INTENT);
-        }
-
-        public void onSave(Bundle outState) {
-            outState.putParcelable(Constants.Saved.SAVED_CROP_IMAGE_INTENT, intent);
-        }
     }
 
-    public static class CaptureCompat {
-
-        private final Context context;
-        private File outputImage;
-        private Uri capturedUri;
-
-        public CaptureCompat(Context context) {
-            this.context = context.getApplicationContext();
-        }
-
-        public Intent action() throws IOException {
-            capturedUri = null;
-            outputImage = IoUtils.createTempFile(null, true);
-            return actionCaptureImage(Uri.fromFile(outputImage));
-        }
-
-        public Uri capturedImage(int resultCode, Intent data) {
-            if (capturedUri == null && outputImage != null) {
-                File file = outputImage;
-                outputImage = null;
-                if (file.length() == 0) {
-                    Timber.w("Image file is empty");
-                    return null;
-                }
-
-                try {
-                    if (resultCode == Activity.RESULT_OK) {
-                        Timber.v("Image file's length: %s", file.length());
-                        capturedUri = insertToMediaImages(context, file);
-                        if (capturedUri == null) {
-                            capturedUri = insertToMediaImagesCompat(context, file);
-                        }
-                    }
-                } finally {
-                    if (!file.delete()) {
-                        Timber.w("Could not delete tmp image file: %s", file);
-                    }
-                }
-            }
-            return capturedUri;
-        }
-
-        public File getTmpOutputFile() {
-            return outputImage;
-        }
-
-        public void setTmpOutputFile(File file) {
-            outputImage = file;
-        }
+    private static class CaptureCompat {
 
         private static Intent baseAction() {
             return new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -210,6 +172,36 @@ public class ImageActions {
 
         private static Intent actionCaptureImage(Uri output) {
             return baseAction().putExtra(MediaStore.EXTRA_OUTPUT, output);
+        }
+
+        private static Uri getCapturedImage(Context context, Intent requestIntent, int resultCode, Intent data) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri output = requestIntent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+                Timber.d("getCapturedImage - [%s]", output);
+                File file = IoUtils.toFile(output);
+                if (file == null) {
+                    return output;
+                }
+                if (file.length() == 0) {
+                    Timber.w("Image file is empty");
+                    return null;
+                }
+
+                return output;
+//                try {
+//                    Timber.v("Image file's length: %s", file.length());
+//                    Uri capturedUri = insertToMediaImages(context, file);
+//                    if (capturedUri == null) {
+//                        capturedUri = insertToMediaImagesCompat(context, file);
+//                    }
+//                    return capturedUri;
+//                } finally {
+//                    if (!file.delete()) {
+//                        Timber.w("Could not delete tmp image file: %s", file);
+//                    }
+//                }
+            }
+            return null;
         }
 
         private static Uri insertToMediaImages(Context context, File file) {
@@ -246,15 +238,6 @@ public class ImageActions {
                 return uri;
             }
             return null;
-        }
-
-        public void onLoad(Bundle savedInstanceState) {
-            setTmpOutputFile(
-                    (File) savedInstanceState.getSerializable(Constants.Saved.SAVED_CAPTURE_IMAGE_OUTPUT));
-        }
-
-        public void onSave(Bundle outState) {
-            outState.putSerializable(Constants.Saved.SAVED_CAPTURE_IMAGE_OUTPUT, getTmpOutputFile());
         }
     }
 }

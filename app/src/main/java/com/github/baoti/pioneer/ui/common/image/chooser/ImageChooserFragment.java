@@ -33,6 +33,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.github.baoti.pioneer.R;
+import com.github.baoti.pioneer.misc.util.ActivityRequestState;
 import com.github.baoti.pioneer.misc.util.ImageActions;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -70,18 +71,14 @@ public class ImageChooserFragment extends DialogFragment {
     private static final int REQUEST_PICK_IMAGE = 2;
     private static final int REQUEST_CROP_IMAGE = 3;
 
-    private ImageActions.CaptureCompat imageCapture;
-    private ImageActions.Crop imageCrop;
+    private final ActivityRequestState requestState = new ActivityRequestState();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        imageCapture = new ImageActions.CaptureCompat(getActivity());
-        imageCrop = new ImageActions.Crop();
 
         if (savedInstanceState != null) {
-            imageCapture.onLoad(savedInstanceState);
-            imageCrop.onLoad(savedInstanceState);
+            requestState.onLoad(savedInstanceState);
         }
     }
 
@@ -149,12 +146,13 @@ public class ImageChooserFragment extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (imageCapture != null) {
-            imageCapture.onSave(outState);
-        }
-        if (imageCrop != null) {
-            imageCrop.onSave(outState);
-        }
+        requestState.onSave(outState);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+        requestState.setRequestState(intent, null, requestCode);
     }
 
     private void setupDialog() {
@@ -176,8 +174,8 @@ public class ImageChooserFragment extends DialogFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_CAPTURE_IMAGE:
-                if (imageCapture != null && resultCode != Activity.RESULT_CANCELED) {
-                    Uri image = imageCapture.capturedImage(resultCode, data);
+                if (resultCode != Activity.RESULT_CANCELED) {
+                    Uri image = ImageActions.capturedImage(getActivity(), requestState, resultCode, data);
                     verbose("Captured: %s", image);
                     onImageChose(requestCode, image);
                 } else {
@@ -196,8 +194,8 @@ public class ImageChooserFragment extends DialogFragment {
                 }
                 break;
             case REQUEST_CROP_IMAGE:
-                if (imageCrop != null && resultCode != Activity.RESULT_CANCELED) {
-                    Uri image = imageCrop.croppedImage(resultCode, data);
+                if (resultCode != Activity.RESULT_CANCELED) {
+                    Uri image = ImageActions.croppedImage(getActivity(), requestState, resultCode, data);
                     verbose("Cropped: %s", image);
                     onImageChose(requestCode, image);
                 } else {
@@ -226,7 +224,7 @@ public class ImageChooserFragment extends DialogFragment {
         }
         Intent intent;
         try {
-            intent = imageCapture.action();
+            intent = ImageActions.actionCapture(getActivity());
         } catch (IOException e) {
             Timber.w(e, "Could not capture image");
             alert("存储空间不可用, 无法使用拍照功能");
@@ -236,12 +234,14 @@ public class ImageChooserFragment extends DialogFragment {
     }
 
     @OnClick(R.id.item_pick_image) void onPickImageClicked() {
-        startActivityForResult(ImageActions.actionPickImage(), REQUEST_PICK_IMAGE);
+        Intent intent = ImageActions.actionPickImage();
+        startActivityForResult(intent, REQUEST_PICK_IMAGE);
     }
 
     private boolean cropImage(Uri image) {
         try {
-            startActivityForResult(imageCrop.action(image), REQUEST_CROP_IMAGE);
+            Intent intent = ImageActions.actionCrop(getActivity(), image, 200);
+            startActivityForResult(intent, REQUEST_CROP_IMAGE);
             return true;
         } catch (ActivityNotFoundException e) {
             verbose("您的手机不支持图片裁剪功能");
