@@ -214,7 +214,7 @@ public class IoUtils {
             try {
                 closeable.close();
             } catch (IOException e) {
-                Timber.d("[close] Close failed");
+                Timber.d(e, "[close] Close failed");
                 return false;
             }
         }
@@ -505,7 +505,7 @@ public class IoUtils {
                 i--;
             }
         } catch (IOException e) {
-            Timber.v("Fail to create new file: " + result);
+            Timber.v(e, "Fail to create new file: " + result);
         }
         return result;
     }
