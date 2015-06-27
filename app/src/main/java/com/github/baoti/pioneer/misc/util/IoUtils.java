@@ -26,7 +26,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
-import android.text.format.DateFormat;
 
 import com.github.baoti.pioneer.data.DataConstants;
 
@@ -39,7 +38,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import timber.log.Timber;
@@ -490,8 +490,7 @@ public class IoUtils {
         if (!dirOk) {
             Timber.v("Fail to create directory: " + directory);
         }
-        String filename = DateFormat.format(
-                "yyyyMMdd_HHmmss", Calendar.getInstance(Locale.CHINA)).toString();
+        String filename = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(new Date());
         if (twoStage) {
             String month = filename.substring(0, 6);
             return generateDatedFile(new File(directory, month), suffix, false);
