@@ -35,8 +35,8 @@ import com.github.baoti.pioneer.ui.news.NewsActivity;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import dagger.Lazy;
@@ -50,16 +50,16 @@ public class MainFragment extends FragmentView<IMainView, MainPresenter> impleme
     @Inject
     Lazy<MainPresenter> presenterLazy;
 
-    @InjectView(R.id.tv_account)
+    @Bind(R.id.tv_account)
     TextView account;
 
-    @InjectView(R.id.btn_sign_in)
+    @Bind(R.id.btn_sign_in)
     TextView signIn;
 
-    @InjectView(R.id.btn_sign_out)
+    @Bind(R.id.btn_sign_out)
     TextView signOut;
 
-    @InjectView(R.id.btn_stop_report)
+    @Bind(R.id.btn_stop_report)
     Button btnStopReport;
 
     public static Fragment newInstance() {
@@ -78,7 +78,7 @@ public class MainFragment extends FragmentView<IMainView, MainPresenter> impleme
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         AppMain.globalGraph().plus(new MainModule()).inject(this);
         super.onViewCreated(view, savedInstanceState);
     }

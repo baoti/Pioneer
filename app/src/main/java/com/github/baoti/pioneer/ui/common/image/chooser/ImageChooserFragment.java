@@ -136,7 +136,7 @@ public class ImageChooserFragment extends DialogFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         if (getShowsDialog()) {
             setupDialog();
         }

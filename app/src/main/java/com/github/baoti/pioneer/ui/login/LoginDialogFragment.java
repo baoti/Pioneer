@@ -27,8 +27,8 @@ import com.github.baoti.android.presenter.DialogFragmentView;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.ui.Navigator;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by liuyedong on 2014/12/26.
@@ -39,8 +39,7 @@ public class LoginDialogFragment extends DialogFragmentView<ILoginView, LoginPre
         return new LoginDialogFragment();
     }
 
-//    @Optional
-    @InjectView(R.id.app_toolbar)
+    @Bind(R.id.app_toolbar)
     Toolbar appBar;
 
     @Override
@@ -55,7 +54,7 @@ public class LoginDialogFragment extends DialogFragmentView<ILoginView, LoginPre
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         Navigator.setupToolbarNavigation(this, appBar);
         super.onViewCreated(view, savedInstanceState);
     }
