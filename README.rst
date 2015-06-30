@@ -1,13 +1,13 @@
 Pioneer
 =======
 
-It is a android project which using "Best Practices" with "Dependency Inject", "View Inject" and
+It is a android project which using "Best Practices" with "Dependency Inject", "View Bind" and
 "Event Bus".
 
 使用的库有:
 
   - com.jakewharton:butterknife
-    View 注入
+    View 绑定
   - com.squareup.dagger:dagger
     依赖 注入
   - com.squareup:otto
