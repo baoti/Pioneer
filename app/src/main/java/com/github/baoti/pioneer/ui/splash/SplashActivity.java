@@ -28,8 +28,8 @@ import com.github.baoti.pioneer.ui.Navigator;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import dagger.Lazy;
@@ -40,13 +40,13 @@ import timber.log.Timber;
  */
 public class SplashActivity extends ActivityView<ISplashView, SplashPresenter> implements ISplashView {
 
-    @InjectView(R.id.tv_status)
+    @Bind(R.id.tv_status)
     TextView statusText;
 
-    @InjectView(R.id.btn_retain_in_bundle)
+    @Bind(R.id.btn_retain_in_bundle)
     Button retainInBundle;
 
-    @InjectView(R.id.btn_retain_in_presenter)
+    @Bind(R.id.btn_retain_in_presenter)
     Button retainInPresenter;
 
     @Inject
@@ -61,7 +61,7 @@ public class SplashActivity extends ActivityView<ISplashView, SplashPresenter> i
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         AppMain.globalGraph().plus(new SplashModule()).inject(this);
     }

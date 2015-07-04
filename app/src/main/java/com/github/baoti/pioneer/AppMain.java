@@ -18,6 +18,8 @@ package com.github.baoti.pioneer;
 
 import android.app.Application;
 
+import com.squareup.leakcanary.LeakCanary;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +54,8 @@ public class AppMain extends Application {
             globalGraph().validate(); // validate dagger's object graph
             Timber.plant(new Timber.DebugTree());
         }
+
+        LeakCanary.install(this);
     }
 
     public void inject(Object object) {

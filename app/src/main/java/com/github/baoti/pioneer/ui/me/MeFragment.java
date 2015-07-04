@@ -43,8 +43,8 @@ import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import dagger.Lazy;
 import dagger.Module;
@@ -67,31 +67,31 @@ public class MeFragment extends FragmentView<IMeView, MePresenter> implements IM
     @Inject
     Picasso picasso;
 
-    @InjectView(R.id.app_toolbar)
+    @Bind(R.id.app_toolbar)
     Toolbar toolbar;
 
-    @InjectView(R.id.cv_account_info)
+    @Bind(R.id.cv_account_info)
     CardView accountInfo;
 
-    @InjectView(R.id.iv_avatar)
+    @Bind(R.id.iv_avatar)
     ImageView avatar;
 
-    @InjectView(R.id.tv_account)
+    @Bind(R.id.tv_account)
     TextView accountId;
 
-    @InjectView(R.id.tv_name)
+    @Bind(R.id.tv_name)
     TextView name;
 
-    @InjectView(R.id.tv_following)
+    @Bind(R.id.tv_following)
     TextView following;
 
-    @InjectView(R.id.tv_followers)
+    @Bind(R.id.tv_followers)
     TextView followers;
 
-    @InjectView(R.id.btn_sign_in)
+    @Bind(R.id.btn_sign_in)
     Button signIn;
 
-    @InjectView(R.id.btn_sign_out)
+    @Bind(R.id.btn_sign_out)
     Button signOut;
 
     @Override
@@ -101,7 +101,7 @@ public class MeFragment extends FragmentView<IMeView, MePresenter> implements IM
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         AppMain.globalGraph().plus(new MeModule()).inject(this);
         setupToolbar();
         super.onViewCreated(view, savedInstanceState);

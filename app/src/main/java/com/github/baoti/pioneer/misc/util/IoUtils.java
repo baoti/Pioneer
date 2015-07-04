@@ -19,16 +19,15 @@ package com.github.baoti.pioneer.misc.util;
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
-import android.text.format.DateFormat;
 
-import com.github.baoti.pioneer.AppMain;
-import com.github.baoti.pioneer.misc.config.DataConfig;
+import com.github.baoti.pioneer.data.DataConstants;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -39,7 +38,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import timber.log.Timber;
@@ -54,7 +54,7 @@ public class IoUtils {
     public static boolean saveFile(File file, byte[] content) {
         FileOutputStream outputStream;
         try {
-            outputStream = new FileOutputStream(file);
+            outputStream = openFileOutputStream(file);
         } catch (FileNotFoundException e) {
             Timber.d(e, "[saveFile] Couldn't open output");
             return false;
@@ -81,7 +81,7 @@ public class IoUtils {
                                      Bitmap.CompressFormat format, int quality) {
         FileOutputStream outputStream;
         try {
-            outputStream = new FileOutputStream(file);
+            outputStream = openFileOutputStream(file);
         } catch (FileNotFoundException e) {
             Timber.d(e, "[saveBitmap] Couldn't open file output");
             return false;
@@ -101,9 +101,8 @@ public class IoUtils {
         return saveOk;
     }
 
-    public static boolean saveBitmap(Uri uri, Bitmap bitmap,
+    public static boolean saveBitmap(ContentResolver contentResolver, Uri uri, Bitmap bitmap,
                                      Bitmap.CompressFormat format, int quality) {
-        ContentResolver contentResolver = AppMain.app().getContentResolver();
         OutputStream outputStream;
         try {
             outputStream = contentResolver.openOutputStream(uri);
@@ -125,10 +124,10 @@ public class IoUtils {
         return saveOk;
     }
 
-    public static boolean copyAssets(String assetsPath, File dst) {
+    public static boolean copyAssets(AssetManager assetManager, String assetsPath, File dst) {
         InputStream is;
         try {
-            is = AppMain.app().getAssets().open(assetsPath);
+            is = assetManager.open(assetsPath);
         } catch (IOException e) {
             Timber.d(e, "[copyAssets] Couldn't open assets");
             return false;
@@ -155,8 +154,7 @@ public class IoUtils {
         }
     }
 
-    public static boolean copyFile(Uri src, File dst) {
-        ContentResolver contentResolver = AppMain.app().getContentResolver();
+    public static boolean copyFile(ContentResolver contentResolver, Uri src, File dst) {
         InputStream inputStream;
         try {
             inputStream = contentResolver.openInputStream(src);
@@ -174,7 +172,7 @@ public class IoUtils {
     public static boolean copyStream(InputStream src, File dst) {
         FileOutputStream fos;
         try {
-            fos = new FileOutputStream(dst);
+            fos = openFileOutputStream(dst);
         } catch (FileNotFoundException e) {
             Timber.d(e, "[copyStream] Couldn't open output");
             return false;
@@ -206,16 +204,39 @@ public class IoUtils {
         }
     }
 
+    public static FileOutputStream openFileOutputStream(File file) throws FileNotFoundException {
+        ensureDirsExist(file.getParentFile());
+        return new FileOutputStream(file);
+    }
+
     public static boolean close(Closeable closeable) {
         if (closeable != null) {
             try {
                 closeable.close();
             } catch (IOException e) {
-                Timber.d("[close] Close failed");
+                Timber.d(e, "[close] Close failed");
                 return false;
             }
         }
         return true;
+    }
+
+    public static String readString(File file) {
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            Timber.d(e, "[readString] Couldn't open input: %s", file);
+            return "";
+        }
+        try {
+            return readString(fis);
+        } catch (Exception e) {
+            Timber.d(e, "[readString] Couldn't read input: %s", file);
+        } finally {
+            close(fis);
+        }
+        return "";
     }
 
     /**
@@ -326,26 +347,10 @@ public class IoUtils {
     /**
      * 获得在文件存储中的文件
      */
-    public static File fromFilesDirCompat(String path) {
-        if (hasExtStorage()) {
-            // 保持旧版本兼容
-            if (path == null) {
-                return Environment.getExternalStorageDirectory();
-            } else {
-                return new File(Environment.getExternalStorageDirectory(), path);
-            }
-        }
-        return fromFilesDir(path);
-    }
-
-    /**
-     * 获得在文件存储中的文件
-     */
-    public static File fromFilesDir(String path) {
+    public static File fromFilesDir(Context context, String path) {
         if (path != null && path.startsWith(File.separator)) {
             path = path.substring(File.separator.length());
         }
-        Context context = AppMain.app();
         File filesDir = context.getExternalFilesDir(null);
         File rollback = filesDir;
         if (filesDir != null && !ensureDirsExist(filesDir)) {
@@ -370,11 +375,10 @@ public class IoUtils {
      * @param path
      * @return
      */
-    public static File fromCacheDir(String path) {
+    public static File fromCacheDir(Context context, String path) {
         if (path != null && path.startsWith(File.separator)) {
             path = path.substring(File.separator.length());
         }
-        Context context = AppMain.app();
         File cacheDir = context.getExternalCacheDir();
         File rollback = cacheDir;
         if (cacheDir != null && !ensureDirsExist(cacheDir)) {
@@ -400,8 +404,8 @@ public class IoUtils {
      * @param file
      * @return
      */
-    public static boolean isAppPrivate(File file) {
-        return isInDataDir(file);
+    public static boolean isAppPrivate(Context context, File file) {
+        return isInDataDir(context, file);
     }
 
     /**
@@ -410,11 +414,11 @@ public class IoUtils {
      * @param file
      * @return
      */
-    public static boolean isInDataDir(File file) {
+    public static boolean isInDataDir(Context context, File file) {
         if (file == null) {
             return false;
         }
-        String dataDir = AppMain.app().getApplicationInfo().dataDir;
+        String dataDir = context.getApplicationInfo().dataDir;
         if (dataDir != null) {
             dataDir = new File(dataDir).getAbsolutePath();  // Removing any trailing slash
             String filePath = file.getAbsolutePath();
@@ -439,6 +443,29 @@ public class IoUtils {
         return result;
     }
 
+    @NonNull
+    public static File fromPublicPath(Context context, String path) {
+        String publicBase = DataConstants.DIRECTORY_PUBLIC_BASE;
+        if (hasExtStorage()) {
+            File result = new File(Environment.getExternalStorageDirectory(), publicBase);
+            if (ensureDirsExist(result)) {
+                if (path == null) {
+                    return result;
+                }
+                result = new File(result, path);
+                ensureDirsExist(result.getParentFile());
+                return result;
+            }
+        }
+        File result = fromFilesDir(context, publicBase);
+        ensureDirsExist(result);
+        if (path != null) {
+            result = new File(result, path);
+            ensureDirsExist(result.getParentFile());
+        }
+        return result;
+    }
+
     /**
      * 以当前时间为名称, 生成文件
      * @param directory 目录
@@ -447,7 +474,7 @@ public class IoUtils {
      */
     @NonNull
     public static File generateDatedFile(File directory, String suffix) {
-        return generateDatedFile(directory, suffix, false);
+        return generateDatedFile(directory, suffix, false, false);
     }
 
     /**
@@ -459,43 +486,59 @@ public class IoUtils {
      */
     @NonNull
     public static File generateDatedFile(File directory, String suffix, boolean twoStage) {
-        boolean dirOk = IoUtils.ensureDirsExist(directory);
+        return generateDatedFile(directory, suffix, twoStage, false);
+    }
+
+    /**
+     * 以当前时间为名称, 生成文件
+     * @param directory 目录
+     * @param suffix 后缀名
+     * @param twoStage 是否生成二级文件, 即存放在当前月的文件夹下
+     * @param createNewFile 是否需要创建新文件
+     * @return 生成的文件
+     */
+    @NonNull
+    public static File generateDatedFile(File directory, String suffix, boolean twoStage, boolean createNewFile) {
+        boolean dirOk = ensureDirsExist(directory);
         if (!dirOk) {
             Timber.v("Fail to create directory: " + directory);
         }
-        String filename = DateFormat.format(
-                "yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)).toString();
+        String filename = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(new Date());
         if (twoStage) {
             String month = filename.substring(0, 6);
             return generateDatedFile(new File(directory, month), suffix, false);
         }
         File result = new File(directory, filename + suffix);
 
-        int i = 1;
+        if (!createNewFile) {
+            return result;
+        }
+
+        int i = -1;
         try {
             while (!result.createNewFile()) {
                 result = new File(directory, filename + (i + suffix));
-                i++;
+                i--;
             }
         } catch (IOException e) {
-            Timber.v("Fail to create new file: " + result);
+            Timber.v(e, "Fail to create new file: " + result);
         }
         return result;
     }
 
     @NonNull
-    public static File createTempFile(String suffix, boolean isPublic) throws IOException {
+    public static File createTempFile(Context context, String suffix, boolean isPublic) throws IOException {
         File directory;
         if (isPublic) {
             directory = null;
         } else {
-            directory = fromCacheDir(DataConfig.TMP_DIRECTORY_NAME);
+            directory = fromCacheDir(context, DataConstants.Temp.TMP_DIRECTORY_NAME);
             if (directory != null && !ensureDirsExist(directory)) {
                 Timber.w("Could not create tmp directory in cacheDir");
                 directory = null;
             }
         }
-        File tmp = File.createTempFile(DataConfig.TMP_FILE_PREFIX, suffix, directory);
+        File tmp = File.createTempFile(DataConstants.Temp.TMP_FILE_PREFIX, suffix, directory);
         Timber.v("Create tmp file: %s", tmp);
         if (isPublic) {
             setOtherWritable(tmp);
@@ -519,7 +562,7 @@ public class IoUtils {
     }
 
     public static File toFile(Uri uri) {
-        if (isFile(uri)) {
+        if (uri != null && isFile(uri)) {
             return new File(uri.getPath());
         }
         return null;
