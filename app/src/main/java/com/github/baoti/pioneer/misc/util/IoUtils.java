@@ -474,7 +474,7 @@ public class IoUtils {
      */
     @NonNull
     public static File generateDatedFile(File directory, String suffix) {
-        return generateDatedFile(directory, suffix, false);
+        return generateDatedFile(directory, suffix, false, false);
     }
 
     /**
@@ -486,6 +486,19 @@ public class IoUtils {
      */
     @NonNull
     public static File generateDatedFile(File directory, String suffix, boolean twoStage) {
+        return generateDatedFile(directory, suffix, twoStage, false);
+    }
+
+    /**
+     * 以当前时间为名称, 生成文件
+     * @param directory 目录
+     * @param suffix 后缀名
+     * @param twoStage 是否生成二级文件, 即存放在当前月的文件夹下
+     * @param createNewFile 是否需要创建新文件
+     * @return 生成的文件
+     */
+    @NonNull
+    public static File generateDatedFile(File directory, String suffix, boolean twoStage, boolean createNewFile) {
         boolean dirOk = ensureDirsExist(directory);
         if (!dirOk) {
             Timber.v("Fail to create directory: " + directory);
@@ -496,6 +509,10 @@ public class IoUtils {
             return generateDatedFile(new File(directory, month), suffix, false);
         }
         File result = new File(directory, filename + suffix);
+
+        if (!createNewFile) {
+            return result;
+        }
 
         int i = -1;
         try {
