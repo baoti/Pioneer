@@ -27,8 +27,8 @@ import com.github.baoti.android.presenter.FragmentView;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.ui.Navigator;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by liuyedong on 14-12-18.
@@ -39,7 +39,7 @@ public class LoginFragment extends FragmentView<ILoginView, LoginPresenter>
         return new LoginFragment();
     }
 
-    @InjectView(R.id.app_toolbar)
+    @Bind(R.id.app_toolbar)
     Toolbar appBar;
 
     @Override
@@ -54,7 +54,7 @@ public class LoginFragment extends FragmentView<ILoginView, LoginPresenter>
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         Navigator.setupToolbarNavigation(this, appBar);
         super.onViewCreated(view, savedInstanceState);
     }

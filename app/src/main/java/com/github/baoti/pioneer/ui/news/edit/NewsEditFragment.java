@@ -37,8 +37,8 @@ import com.github.baoti.pioneer.ui.news.NewsActivity;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by liuyedong on 15-1-6.
@@ -54,10 +54,10 @@ public class NewsEditFragment extends FragmentView<IView, Presenter<IView>> impl
     @Inject
     Toaster toaster;
 
-    @InjectView(R.id.app_toolbar)
+    @Bind(R.id.app_toolbar)
     Toolbar toolbar;
 
-    @InjectView(R.id.et_news_content)
+    @Bind(R.id.et_news_content)
     EditText contentInput;
 
     @Override
@@ -73,7 +73,7 @@ public class NewsEditFragment extends FragmentView<IView, Presenter<IView>> impl
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         Navigator.setupToolbarNavigation(this, toolbar);
         toolbar.inflateMenu(R.menu.save);
         toolbar.setOnMenuItemClickListener(this);

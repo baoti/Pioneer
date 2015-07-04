@@ -18,6 +18,8 @@ package com.github.baoti.pioneer;
 
 import android.app.Application;
 
+import com.squareup.leakcanary.LeakCanary;
+
 import timber.log.Timber;
 
 /**
@@ -44,6 +46,8 @@ public class AppMain extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
+
+        LeakCanary.install(this);
     }
 
     public static AppMainComponent component() {

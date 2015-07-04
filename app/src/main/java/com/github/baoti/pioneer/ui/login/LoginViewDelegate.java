@@ -31,8 +31,8 @@ import com.github.baoti.pioneer.misc.util.Texts;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 /**
@@ -40,16 +40,16 @@ import butterknife.OnClick;
  */
 public class LoginViewDelegate implements ILoginView, IViewDelegate<LoginViewDelegate.Delegator> {
 
-    @InjectView(R.id.et_login)
+    @Bind(R.id.et_login)
     EditText login;
 
-    @InjectView(R.id.et_password)
+    @Bind(R.id.et_password)
     EditText password;
 
-    @InjectView(R.id.btn_sign_in)
+    @Bind(R.id.btn_sign_in)
     Button signIn;
 
-    @InjectView(android.R.id.progress)
+    @Bind(android.R.id.progress)
     ContentLoadingProgressBar progressBar;
 
     @Inject
@@ -59,7 +59,7 @@ public class LoginViewDelegate implements ILoginView, IViewDelegate<LoginViewDel
 
     LoginViewDelegate(View view, Delegator delegator) {
         this.delegator = delegator;
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         AppMain.component().ui().injectLoginViewDelegate(this);
     }
 

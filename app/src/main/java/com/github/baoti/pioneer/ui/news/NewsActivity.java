@@ -34,8 +34,8 @@ import com.github.baoti.pioneer.ui.news.edit.NewsEditFragment;
 import com.github.baoti.pioneer.ui.news.list.NewsListFragment;
 import com.github.baoti.pioneer.ui.news.list.NewsListPresenter;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by liuyedong on 2015/1/2.
@@ -88,7 +88,7 @@ public class NewsActivity extends BaseSearchActivity implements OnViewHolderClic
         return (News) data.getSerializableExtra(EXTRA_NEWS);
     }
 
-    @InjectView(R.id.app_toolbar)
+    @Bind(R.id.app_toolbar)
     Toolbar toolbar;
 
     private boolean inPickMode;
@@ -99,7 +99,7 @@ public class NewsActivity extends BaseSearchActivity implements OnViewHolderClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 

@@ -68,7 +68,7 @@ public class DataInitializer {
                 return;
             }
             if (IoUtils.ensureDirsExist(dbInCache.getParentFile())) {
-                IoUtils.copyAssets(Assets.STORE_DB, dbInCache);
+                IoUtils.copyAssets(AppMain.app().getAssets(), Assets.STORE_DB, dbInCache);
             } else {
                 Timber.w("Can't ensure cache dir");
             }
