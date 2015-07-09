@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -35,9 +36,6 @@ import android.view.WindowManager;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.misc.util.ActivityRequestState;
 import com.github.baoti.pioneer.misc.util.ImageActions;
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.SnackbarManager;
-import com.nispok.snackbar.enums.SnackbarType;
 
 import java.io.IOException;
 
@@ -250,10 +248,12 @@ public class ImageChooserFragment extends DialogFragment {
     }
 
     private void verbose(String msg, Object... args) {
+        if (getView() == null) {
+            return;
+        }
         String text = String.format(msg, args);
-        SnackbarManager.show(Snackbar.with(getActivity())
-                .type(SnackbarType.MULTI_LINE)
-                .text(text));
+        Snackbar.make(getActivity().findViewById(android.R.id.content), text, Snackbar.LENGTH_LONG)
+                .show();
     }
 
     public interface OnImageChooserListener {

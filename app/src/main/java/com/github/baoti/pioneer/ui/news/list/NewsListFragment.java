@@ -19,9 +19,9 @@ package com.github.baoti.pioneer.ui.news.list;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.github.baoti.android.presenter.Presenter;
@@ -34,9 +34,6 @@ import com.github.baoti.pioneer.ui.common.page.PageAdapter;
 import com.github.baoti.pioneer.ui.common.page.PageFragment;
 import com.github.baoti.pioneer.ui.common.page.PagePresenter;
 import com.github.baoti.pioneer.ui.news.NewsModule;
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.SnackbarManager;
-import com.nispok.snackbar.listeners.ActionClickListener;
 
 import javax.inject.Inject;
 
@@ -71,25 +68,12 @@ public class NewsListFragment extends PageFragment<News> implements INewsListVie
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         AppMain.globalGraph().plus(new NewsModule()).inject(this);
-        swipeRefreshLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                SnackbarManager.dismiss();
-                return false;
-            }
-        });
         super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
     protected PageAdapter<News> createPageAdapter(LayoutInflater layoutInflater, PagePresenter<News> presenter) {
         return new NewsListAdapter(layoutInflater, presenter, this);
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        SnackbarManager.dismiss();
-        super.onHiddenChanged(hidden);
     }
 
     @Override
@@ -108,19 +92,14 @@ public class NewsListFragment extends PageFragment<News> implements INewsListVie
     }
 
     @Override
-    protected void onRecyclerViewScrollStateChanged(int newState) {
-        SnackbarManager.dismiss();
-    }
-
-    @Override
-    public void showSnackBar(String text, String actionLabel, ActionClickListener actionListener) {
-        if (isHidden()) {
+    public void showSnackBar(String text, String actionLabel, View.OnClickListener actionListener) {
+        if (!isVisible()) {
             return;
         }
-        SnackbarManager.show(Snackbar.with(getActivity())
-                .text(text).textColor(Color.RED)
-                .actionLabel(actionLabel).actionColor(Color.YELLOW)
-                .actionListener(actionListener));
+        Snackbar.make(getView(), text, Snackbar.LENGTH_LONG)
+                .setActionTextColor(Color.YELLOW)
+                .setAction(actionLabel, actionListener)
+                .show();
     }
 
     public NewsListFragment setOnItemClickedListener(OnViewHolderClickListener<News> listener) {

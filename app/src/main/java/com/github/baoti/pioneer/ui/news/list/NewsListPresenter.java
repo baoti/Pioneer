@@ -16,13 +16,13 @@
 
 package com.github.baoti.pioneer.ui.news.list;
 
+import android.view.View;
+
 import com.github.baoti.pioneer.app.task.PageTask;
 import com.github.baoti.pioneer.app.task.Tasks;
 import com.github.baoti.pioneer.biz.interactor.NewsInteractor;
 import com.github.baoti.pioneer.entity.News;
 import com.github.baoti.pioneer.ui.common.page.PagePresenter;
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.listeners.ActionClickListener;
 
 import javax.inject.Inject;
 
@@ -61,9 +61,9 @@ public class NewsListPresenter extends PagePresenter<News> {
         if (task.hasResultOrException() && task.getResult() == null) {
             final PageTask pageTask = (PageTask) task;
             String text = "Fail to load " + (pageTask.isFirstPage() ? "first" : "next");
-            ((INewsListView) getView()).showSnackBar(text, "Retry", new ActionClickListener() {
+            ((INewsListView) getView()).showSnackBar(text, "Retry", new View.OnClickListener() {
                 @Override
-                public void onActionClicked(Snackbar snackbar) {
+                public void onClick(View v) {
                     pageTask.retry();
                 }
             });
