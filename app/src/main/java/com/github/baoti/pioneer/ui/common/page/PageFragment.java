@@ -37,7 +37,7 @@ import static butterknife.ButterKnife.findById;
 /**
  * Created by liuyedong on 2015/1/2.
  */
-public abstract class PageFragment<E> extends FragmentView<IPageView<E>, PagePresenter<E>> implements IPageView<E> {
+public abstract class PageFragment<V extends IPageView<E>, E> extends FragmentView<V, PagePresenter<V, E>> implements IPageView<E> {
 
     protected SwipeRefreshLayout swipeRefreshLayout;
     protected RecyclerView recyclerView;
@@ -119,7 +119,7 @@ public abstract class PageFragment<E> extends FragmentView<IPageView<E>, PagePre
         recyclerView.setAdapter(adapter);
     }
 
-    protected abstract PageAdapter<E> createPageAdapter(LayoutInflater layoutInflater, PagePresenter<E> presenter);
+    protected abstract PageAdapter<E> createPageAdapter(LayoutInflater layoutInflater, PagePresenter<V, E> presenter);
 
     @Override
     public void showResources(Collection<E> resources, int start, int before, int count) {

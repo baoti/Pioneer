@@ -30,7 +30,7 @@ import java.util.Collection;
 /**
  * Created by liuyedong on 2015/1/2.
  */
-public class PagePresenter<E> extends Presenter<IPageView<E>>
+public class PagePresenter<V extends IPageView<E>, E> extends Presenter<V>
         implements PageTask.LifecycleListener<E>, SwipeRefreshLayout.OnRefreshListener {
 
     private final PageTask<E> pageTask = new PageTask<>();
@@ -43,7 +43,7 @@ public class PagePresenter<E> extends Presenter<IPageView<E>>
     }
 
     @Override
-    protected void onTakeView(IPageView<E> view) {
+    protected void onTakeView(V view) {
         super.onTakeView(view);
         pageTask.setLifecycleListener(this);
     }
@@ -58,7 +58,7 @@ public class PagePresenter<E> extends Presenter<IPageView<E>>
     }
 
     @Override
-    protected void onDropView(IPageView<E> view) {
+    protected void onDropView(V view) {
         super.onDropView(view);
         pageTask.setLifecycleListener(null);
     }

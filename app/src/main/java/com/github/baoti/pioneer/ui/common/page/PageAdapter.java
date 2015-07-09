@@ -33,10 +33,10 @@ import java.util.List;
 public abstract class PageAdapter<E> extends RecyclerView.Adapter {
 
     protected final LayoutInflater inflater;
-    protected final PagePresenter<E> presenter;
+    protected final PagePresenter<?, E> presenter;
     protected final List<E> items = new ArrayList<>();
 
-    public PageAdapter(LayoutInflater inflater, PagePresenter<E> presenter) {
+    public PageAdapter(LayoutInflater inflater, PagePresenter<?, E> presenter) {
         this.inflater = inflater;
         this.presenter = presenter;
     }

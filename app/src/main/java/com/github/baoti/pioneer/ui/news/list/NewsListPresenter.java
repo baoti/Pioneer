@@ -29,7 +29,7 @@ import javax.inject.Inject;
 /**
  * Created by liuyedong on 2015/1/2.
  */
-public class NewsListPresenter extends PagePresenter<News> {
+public class NewsListPresenter extends PagePresenter<INewsListView, News> {
     private static final String CHANNEL = "channel1";
     private static final int FIRST_PAGE = 1;
     private static final int PAGE_SIZE = 50;
@@ -61,7 +61,7 @@ public class NewsListPresenter extends PagePresenter<News> {
         if (task.hasResultOrException() && task.getResult() == null) {
             final PageTask pageTask = (PageTask) task;
             String text = "Fail to load " + (pageTask.isFirstPage() ? "first" : "next");
-            ((INewsListView) getView()).showSnackBar(text, "Retry", new View.OnClickListener() {
+            getView().showSnackBar(text, "Retry", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     pageTask.retry();

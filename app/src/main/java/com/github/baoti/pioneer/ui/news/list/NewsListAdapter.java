@@ -39,7 +39,7 @@ public class NewsListAdapter extends PageAdapter<News> {
 
     private final OnViewHolderClickListener<News> listener;
 
-    public NewsListAdapter(LayoutInflater inflater, PagePresenter<News> presenter,
+    public NewsListAdapter(LayoutInflater inflater, PagePresenter<?, News> presenter,
                            OnViewHolderClickListener<News> listener) {
         super(inflater, presenter);
         this.listener = listener;

@@ -29,7 +29,6 @@ import com.github.baoti.pioneer.AppMain;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.entity.News;
 import com.github.baoti.pioneer.ui.common.holder.OnViewHolderClickListener;
-import com.github.baoti.pioneer.ui.common.page.IPageView;
 import com.github.baoti.pioneer.ui.common.page.PageAdapter;
 import com.github.baoti.pioneer.ui.common.page.PageFragment;
 import com.github.baoti.pioneer.ui.common.page.PagePresenter;
@@ -42,7 +41,7 @@ import dagger.Lazy;
 /**
  * Created by liuyedong on 2015/1/2.
  */
-public class NewsListFragment extends PageFragment<News> implements INewsListView, OnViewHolderClickListener<News> {
+public class NewsListFragment extends PageFragment<INewsListView, News> implements INewsListView, OnViewHolderClickListener<News> {
 
     private OnViewHolderClickListener<News> onItemClickListener;
 
@@ -56,7 +55,7 @@ public class NewsListFragment extends PageFragment<News> implements INewsListVie
     private boolean enableInitialResources;
 
     @Override
-    protected PagePresenter<News> createPresenter(IPageView<News> view) {
+    protected PagePresenter<INewsListView, News> createPresenter(INewsListView view) {
         return presenterLazy.get();
     }
 
@@ -72,7 +71,7 @@ public class NewsListFragment extends PageFragment<News> implements INewsListVie
     }
 
     @Override
-    protected PageAdapter<News> createPageAdapter(LayoutInflater layoutInflater, PagePresenter<News> presenter) {
+    protected PageAdapter<News> createPageAdapter(LayoutInflater layoutInflater, PagePresenter<INewsListView, News> presenter) {
         return new NewsListAdapter(layoutInflater, presenter, this);
     }
 
