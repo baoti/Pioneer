@@ -18,6 +18,7 @@ package com.github.baoti.pioneer.data.api;
 
 import com.github.baoti.pioneer.entity.Account;
 
+import retrofit.Call;
 import retrofit.http.POST;
 import retrofit.http.Query;
 
@@ -26,6 +27,7 @@ import retrofit.http.Query;
  */
 public interface AccountApi {
     @POST("/account/login")
-    ApiResponse<Account> login(@Query("account") String accountId, @Query("pwd") String password)
-            throws ApiException;
+    Call<ApiResponse<Account>> login(
+            @Query("account") String accountId,
+            @Query("pwd") String password);
 }
