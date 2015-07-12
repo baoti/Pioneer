@@ -130,7 +130,7 @@ public class MainPresenter extends Presenter<IMainView> {
     }
 
     public void onSignInClicked() {
-        getView().navigateToLogin();
+        getView().getFlow().navigateToLogin();
     }
 
     public void onSignOutClicked() {

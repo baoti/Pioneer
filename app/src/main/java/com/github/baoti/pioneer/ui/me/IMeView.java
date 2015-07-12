@@ -16,6 +16,7 @@
 
 package com.github.baoti.pioneer.ui.me;
 
+import com.github.baoti.android.presenter.IFlow;
 import com.github.baoti.android.presenter.IView;
 import com.github.baoti.pioneer.entity.ImageBean;
 
@@ -41,5 +42,11 @@ public interface IMeView extends IView {
 
     void hideAccountInfo();
 
-    void navigateToLogin();
+    @Override
+    Flow getFlow();
+
+    interface Flow extends IFlow {
+
+        void navigateToLogin();
+    }
 }

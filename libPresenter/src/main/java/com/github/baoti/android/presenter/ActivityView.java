@@ -174,4 +174,9 @@ public abstract class ActivityView<V extends IView, P extends Presenter<V>>
 
         super.onDestroy();
     }
+
+    @Override
+    public IFlow getFlow() {
+        return null;
+    }
 }

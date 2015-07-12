@@ -116,4 +116,9 @@ public abstract class FragmentView<V extends IView, P extends Presenter<V>>
 
         super.onDestroy();
     }
+
+    @Override
+    public IFlow getFlow() {
+        return null;
+    }
 }

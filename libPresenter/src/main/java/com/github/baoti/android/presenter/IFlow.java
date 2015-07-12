@@ -14,25 +14,10 @@
  * limitations under the License.
  */
 
-package com.github.baoti.pioneer.ui.splash;
-
-import com.github.baoti.android.presenter.IFlow;
-import com.github.baoti.android.presenter.IView;
+package com.github.baoti.android.presenter;
 
 /**
- * Created by liuyedong on 14-12-19.
+ * Created by sean on 2015/7/12.
  */
-public interface ISplashView extends IView {
-    void showStatus(String status);
-
-    void hideRetainInPresenter();
-
-    void hideRetainInBundle();
-
-    @Override
-    Flow getFlow();
-
-    interface Flow extends IFlow {
-        void navigateToMain(boolean byUser);
-    }
+public interface IFlow {
 }

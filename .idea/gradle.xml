@@ -13,8 +13,15 @@
             <option value="$PROJECT_DIR$/libPresenter" />
           </set>
         </option>
+        <option name="myModules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/authProvider" />
+            <option value="$PROJECT_DIR$/libPresenter" />
+          </set>
+        </option>
       </GradleProjectSettings>
     </option>
   </component>
 </project>
-
