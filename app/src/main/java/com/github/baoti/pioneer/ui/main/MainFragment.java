@@ -149,15 +149,21 @@ public class MainFragment extends FragmentView<IMainView, MainPresenter> impleme
         return this;
     }
 
-    @OnClick(R.id.btn_news) void navigateToNews() {
+    @OnClick(R.id.btn_news)
+    @Override
+    public void navigateToNews() {
         startActivity(NewsActivity.actionView(getActivity()));
     }
 
-    @OnClick(R.id.btn_one_news) void navigateToOneNews() {
+    @OnClick(R.id.btn_one_news)
+    @Override
+    public void navigateToOneNews() {
         startActivity(NewsActivity.actionView(getActivity(), new News(1000, "One", "One content")));
     }
 
-    @OnClick(R.id.btn_me) void navigateToMe() {
+    @OnClick(R.id.btn_me)
+    @Override
+    public void navigateToMe() {
         MeFragment fragment = MeFragment.newInstance();
         fragment.setAllowEnterTransitionOverlap(true);
         getFragmentManager().beginTransaction()

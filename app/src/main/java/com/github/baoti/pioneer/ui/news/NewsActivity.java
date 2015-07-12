@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
 /**
  * Created by liuyedong on 2015/1/2.
  */
-public class NewsActivity extends BaseSearchActivity implements OnViewHolderClickListener<News> {
+public class NewsActivity extends BaseSearchActivity implements OnViewHolderClickListener<News>, NewsListFlow {
     public static final String EXTRA_NEWS = "news";     // type: News
     public static final String EXTRA_EDITABLE = "editable";     // type: boolean
 
@@ -187,7 +187,8 @@ public class NewsActivity extends BaseSearchActivity implements OnViewHolderClic
         }
     }
 
-    private void navigateToDetail(News item) {
+    @Override
+    public void navigateToDetail(News item) {
         Bundle args = new Bundle(2);
         args.putSerializable(EXTRA_NEWS, item);
         if (getIntent().hasExtra(EXTRA_EDITABLE)) {

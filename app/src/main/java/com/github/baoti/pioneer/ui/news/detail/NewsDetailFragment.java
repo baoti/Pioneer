@@ -30,6 +30,7 @@ import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.entity.News;
 import com.github.baoti.pioneer.ui.Navigator;
 import com.github.baoti.pioneer.ui.news.NewsActivity;
+import com.github.baoti.pioneer.ui.news.NewsDetailFlow;
 import com.github.baoti.pioneer.ui.news.edit.NewsEditFragment;
 
 import butterknife.Bind;
@@ -38,7 +39,7 @@ import butterknife.ButterKnife;
 /**
  * Created by liuyedong on 15-1-6.
  */
-public class NewsDetailFragment extends FragmentView implements Toolbar.OnMenuItemClickListener {
+public class NewsDetailFragment extends FragmentView implements Toolbar.OnMenuItemClickListener, NewsDetailFlow {
 
     public static NewsDetailFragment newInstance(Bundle args) {
         NewsDetailFragment fragment = new NewsDetailFragment();
@@ -87,7 +88,8 @@ public class NewsDetailFragment extends FragmentView implements Toolbar.OnMenuIt
         return false;
     }
 
-    private void navigateToEdit() {
+    @Override
+    public void navigateToEdit() {
         String tag = null;
         getFragmentManager().beginTransaction()
                 .replace(getId(), NewsEditFragment.newInstance(getArguments()), tag)

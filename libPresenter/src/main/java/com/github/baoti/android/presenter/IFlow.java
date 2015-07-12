@@ -16,8 +16,27 @@
 
 package com.github.baoti.android.presenter;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
+
 /**
  * Created by sean on 2015/7/12.
  */
 public interface IFlow {
+
+    @Target(ElementType.METHOD)
+    @interface FlowTo {
+        Class<? extends IFlow> value();
+    }
+
+    @Target(ElementType.METHOD)
+    @interface FlowName {
+        String value();
+    }
+
+    IFlow EMPTY = new Empty();
+
+    final class Empty implements IFlow {
+
+    }
 }

@@ -119,6 +119,6 @@ public abstract class DialogFragmentView<V extends IView, P extends Presenter<V>
 
     @Override
     public IFlow getFlow() {
-        return null;
+        return IFlow.EMPTY;
     }
 }
