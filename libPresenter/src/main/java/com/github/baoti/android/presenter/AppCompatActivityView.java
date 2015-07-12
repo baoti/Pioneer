@@ -178,6 +178,6 @@ public abstract class AppCompatActivityView<V extends IView, P extends Presenter
 
     @Override
     public IFlow getFlow() {
-        return null;
+        return IFlow.EMPTY;
     }
 }

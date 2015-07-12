@@ -189,12 +189,14 @@ public class MeFragment extends FragmentView<IMeView, MePresenter> implements IM
     }
 
     @OnClick(R.id.btn_go_home)
-    void onGoHomeClicked() {
+    @Override
+    public void navigateUpToHome() {
         Navigator.upToMain(getActivity());
     }
 
     @OnClick(R.id.btn_close_app)
-    void onCloseAppClicked() {
+    @Override
+    public void navigateExit() {
         Navigator.closeApp(getActivity());
     }
 

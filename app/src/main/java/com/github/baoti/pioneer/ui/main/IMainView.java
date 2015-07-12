@@ -20,11 +20,15 @@ import android.app.Activity;
 
 import com.github.baoti.android.presenter.IFlow;
 import com.github.baoti.android.presenter.IView;
+import com.github.baoti.pioneer.ui.me.IMeView;
+import com.github.baoti.pioneer.ui.news.NewsDetailFlow;
+import com.github.baoti.pioneer.ui.news.NewsListFlow;
 
 /**
  * Created by liuyedong on 14-12-22.
  */
 public interface IMainView extends IView {
+
     void showAccount(String accountId);
 
     void hideSignIn();
@@ -46,6 +50,16 @@ public interface IMainView extends IView {
 
     interface Flow extends IFlow {
 
+        @FlowName("Login")
         void navigateToLogin();
+
+        @FlowTo(NewsListFlow.class)
+        void navigateToNews();
+
+        @FlowTo(NewsDetailFlow.class)
+        void navigateToOneNews();
+
+        @FlowTo(IMeView.Flow.class)
+        void navigateToMe();
     }
 }
