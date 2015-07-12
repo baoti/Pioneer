@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.github.baoti.android.presenter.IFlow;
 import com.github.baoti.android.presenter.IView;
 import com.github.baoti.android.presenter.IViewDelegate;
 import com.github.baoti.android.presenter.Presenter;
@@ -79,6 +80,11 @@ public class LoginViewDelegate implements ILoginView, IViewDelegate<LoginViewDel
 
     @Override
     public void onPresenterTaken(Presenter presenter) {}
+
+    @Override
+    public IFlow getFlow() {
+        return null;
+    }
 
     @OnClick(R.id.btn_sign_in) void onSignInClicked() {
         getPresenter().onSignInClicked();

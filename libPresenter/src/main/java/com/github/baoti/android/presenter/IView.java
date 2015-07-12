@@ -30,4 +30,6 @@ public interface IView {
      * @param presenter
      */
     void onPresenterTaken(Presenter presenter);
+
+    IFlow getFlow();
 }

@@ -16,6 +16,7 @@
 
 package com.github.baoti.pioneer.ui.splash;
 
+import com.github.baoti.android.presenter.IFlow;
 import com.github.baoti.android.presenter.IView;
 
 /**
@@ -24,9 +25,14 @@ import com.github.baoti.android.presenter.IView;
 public interface ISplashView extends IView {
     void showStatus(String status);
 
-    void navigateToMain(boolean byUser);
-
     void hideRetainInPresenter();
 
     void hideRetainInBundle();
+
+    @Override
+    Flow getFlow();
+
+    interface Flow extends IFlow {
+        void navigateToMain(boolean byUser);
+    }
 }

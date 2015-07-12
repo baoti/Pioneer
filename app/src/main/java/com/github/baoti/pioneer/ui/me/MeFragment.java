@@ -53,7 +53,7 @@ import dagger.Module;
  * Created by liuyedong on 14-12-26.
  */
 public class MeFragment extends FragmentView<IMeView, MePresenter> implements IMeView,
-        ImageChooserFragment.OnImageChooserListener {
+        ImageChooserFragment.OnImageChooserListener, IMeView.Flow {
 
     public static MeFragment newInstance() {
         return new MeFragment();
@@ -176,6 +176,11 @@ public class MeFragment extends FragmentView<IMeView, MePresenter> implements IM
     public void hideAccountInfo() {
         accountInfo.setVisibility(View.GONE);
         signOut.setVisibility(View.GONE);
+    }
+
+    @Override
+    public Flow getFlow() {
+        return this;
     }
 
     @Override

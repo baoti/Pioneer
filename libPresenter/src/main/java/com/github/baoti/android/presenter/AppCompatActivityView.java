@@ -175,4 +175,9 @@ public abstract class AppCompatActivityView<V extends IView, P extends Presenter
 
         super.onDestroy();
     }
+
+    @Override
+    public IFlow getFlow() {
+        return null;
+    }
 }

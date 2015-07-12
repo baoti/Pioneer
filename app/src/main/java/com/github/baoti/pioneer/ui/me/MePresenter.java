@@ -82,7 +82,7 @@ public class MePresenter extends Presenter<IMeView> {
     }
 
     public void onSignInClicked() {
-        getView().navigateToLogin();
+        getView().getFlow().navigateToLogin();
     }
 
     public void onSignOutClicked() {

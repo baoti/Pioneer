@@ -18,6 +18,7 @@ package com.github.baoti.pioneer.ui.main;
 
 import android.app.Activity;
 
+import com.github.baoti.android.presenter.IFlow;
 import com.github.baoti.android.presenter.IView;
 
 /**
@@ -36,9 +37,15 @@ public interface IMainView extends IView {
 
     void hideSignOut();
 
-    void navigateToLogin();
-
     void hideStopReport();
 
     Activity getActivity();
+
+    @Override
+    Flow getFlow();
+
+    interface Flow extends IFlow {
+
+        void navigateToLogin();
+    }
 }

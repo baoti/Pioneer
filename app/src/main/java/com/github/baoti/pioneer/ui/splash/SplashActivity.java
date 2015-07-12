@@ -38,7 +38,7 @@ import timber.log.Timber;
 /**
  * Created by liuyedong on 14-12-18.
  */
-public class SplashActivity extends ActivityView<ISplashView, SplashPresenter> implements ISplashView {
+public class SplashActivity extends ActivityView<ISplashView, SplashPresenter> implements ISplashView, ISplashView.Flow {
 
     @Bind(R.id.tv_status)
     TextView statusText;
@@ -95,6 +95,11 @@ public class SplashActivity extends ActivityView<ISplashView, SplashPresenter> i
     @Override
     public void hideRetainInBundle() {
         retainInBundle.setVisibility(View.GONE);
+    }
+
+    @Override
+    public Flow getFlow() {
+        return this;
     }
 
     @OnClick(R.id.btn_retain_in_presenter)

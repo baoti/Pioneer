@@ -146,7 +146,7 @@ public class SplashPresenter extends Presenter<ISplashView> {
         }
         hasNavigated = true;
         cancelAutoLaunchMain();
-        getView().navigateToMain(false);
+        getView().getFlow().navigateToMain(false);
     }
 
     private void showStatus(String status, boolean update) {

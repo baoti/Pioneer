@@ -16,14 +16,8 @@
 
 package com.github.baoti.android.presenter;
 
-import android.app.Application;
-import android.test.ApplicationTestCase;
-
 /**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
+ * Created by sean on 2015/7/12.
  */
-public class ApplicationTest extends ApplicationTestCase<Application> {
-    public ApplicationTest() {
-        super(Application.class);
-    }
+public interface IFlow {
 }

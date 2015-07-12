@@ -45,7 +45,7 @@ import timber.log.Timber;
 /**
  * Created by liuyedong on 14-12-22.
  */
-public class MainFragment extends FragmentView<IMainView, MainPresenter> implements IMainView {
+public class MainFragment extends FragmentView<IMainView, MainPresenter> implements IMainView, IMainView.Flow {
 
     @Inject
     Lazy<MainPresenter> presenterLazy;
@@ -139,8 +139,14 @@ public class MainFragment extends FragmentView<IMainView, MainPresenter> impleme
         getPresenter().onStopReportClicked();
     }
 
+    @Override
     public void hideStopReport() {
         btnStopReport.setVisibility(View.GONE);
+    }
+
+    @Override
+    public Flow getFlow() {
+        return this;
     }
 
     @OnClick(R.id.btn_news) void navigateToNews() {
