@@ -97,6 +97,11 @@ public class ImageChooserFragment extends DialogFragment {
         }
     }
 
+    public <T extends Fragment & OnImageChooserListener> void setOnChooseListener(
+            T listener, int requestCode) {
+        setTargetFragment(listener, requestCode);
+    }
+
     protected OnImageChooserListener getListener() {
         return (OnImageChooserListener) getTargetFragment();
     }

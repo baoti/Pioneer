@@ -206,7 +206,7 @@ public class MeFragment extends FragmentView<IMeView, MePresenter> implements IM
     @OnClick(R.id.tr_avatar)
     void onAvatarClicked() {
         ImageChooserFragment.showDialog(getFragmentManager(), true)
-                .setTargetFragment(this, CHOOSE_AVATAR);
+                .setOnChooseListener(this, CHOOSE_AVATAR);
     }
 
     @Override
