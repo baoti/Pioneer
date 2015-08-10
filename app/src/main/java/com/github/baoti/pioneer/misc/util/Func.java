@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package com.github.baoti.pioneer.biz;
+package com.github.baoti.pioneer.misc.util;
 
-import com.github.baoti.pioneer.misc.util.Texts;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by liuyedong on 14-12-25.
- */
-public class Passwords {
-    /** 生成账号的最终密码 */
-    public static String forAccount(String account, String password) {
-        return Texts.md5(false, "pioneer:" + account + ":" + password);
+public class Func {
+    public static <Src, Dst> List<Dst> map(List<Src> src, Transformer<Src, Dst> transformer) {
+        if (src == null) {
+            return null;
+        }
+        List<Dst> dst = new ArrayList<Dst>(src.size());
+        for (Src item : src) {
+            dst.add(transformer.transform(item));
+        }
+        return dst;
+    }
+
+    public interface Transformer<Src, Dst> {
+        Dst transform(Src src);
     }
 }

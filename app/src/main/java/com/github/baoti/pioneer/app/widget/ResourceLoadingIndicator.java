@@ -16,12 +16,16 @@
 package com.github.baoti.pioneer.app.widget;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.baoti.pioneer.R;
+import com.github.baoti.pioneer.ui.common.page.PagePresenter;
 
 /**
  * Helper for showing more items are being loaded at the bottom of a list via a
@@ -40,13 +44,30 @@ public class ResourceLoadingIndicator {
 
     /**
      * Create indicator using given inflater
-     *  @param context
      *
+     * @param context
      */
     public ResourceLoadingIndicator(final Context context) {
-        view = LayoutInflater.from(context).inflate(R.layout.loading_item, null);
+        this(LayoutInflater.from(context), null);
+    }
+
+    public ResourceLoadingIndicator(LayoutInflater inflater, ViewGroup parent) {
+        this(inflater.inflate(R.layout.loading_item, parent, false));
+    }
+
+    public ResourceLoadingIndicator(View loadingView) {
+        view = loadingView;
         progressBar = (ContentLoadingProgressBar) view.findViewById(android.R.id.progress);
         textView = (TextView) view.findViewById(android.R.id.text1);
+    }
+
+    public ResourceLoadingIndicator(Context context, int loadingMessage) {
+        this(context);
+        textView.setText(loadingMessage);
+    }
+
+    public View getView() {
+        return view;
     }
 
     /**
@@ -57,10 +78,13 @@ public class ResourceLoadingIndicator {
      */
     public ResourceLoadingIndicator setList(
             final HeaderFooterListAdapter<?> adapter) {
+        return setList(adapter, true);
+    }
+
+    public ResourceLoadingIndicator setList(
+            final HeaderFooterListAdapter<?> adapter, boolean visible) {
         this.adapter = adapter;
-        adapter.addFooter(view);
-        showing = true;
-        return this;
+        return setVisible(visible);
     }
 
     /**
@@ -81,15 +105,71 @@ public class ResourceLoadingIndicator {
 
     public ResourceLoadingIndicator setProgressVisible(boolean visible) {
         if (visible) {
-            progressBar.show();
+//            progressBar.show();
+            progressBar.setVisibility(View.VISIBLE);
         } else {
-            progressBar.hide();
+//            progressBar.hide();
+            progressBar.setVisibility(View.GONE);
         }
         return this;
     }
 
+    public ResourceLoadingIndicator setText(int textResId) {
+        textView.setVisibility(View.VISIBLE);
+        textView.setText(textResId);
+        return this;
+    }
+
     public ResourceLoadingIndicator setText(CharSequence text) {
+        textView.setVisibility(TextUtils.isEmpty(text) ? View.INVISIBLE : View.INVISIBLE);
         textView.setText(text);
         return this;
+    }
+
+    public void hide() {
+        setVisible(false);
+        setProgressVisible(false);
+        setText(null);
+    }
+
+    public void showLoading() {
+        setVisible(true);
+        setProgressVisible(true);
+        setText(R.string.loading);
+    }
+
+    public void showResult(boolean hasMore) {
+        setVisible(true);
+        setProgressVisible(false);
+        if (hasMore) {
+            setText(null);
+        } else {
+            setText(R.string.no_more);
+        }
+    }
+
+    public void showError(@Nullable Exception error) {
+        setVisible(true);
+        setProgressVisible(false);
+        setText(R.string.failed_to_load);
+    }
+
+    public <E> void updateStatus(PagePresenter<?, E> presenter) {
+        if (presenter.isLoadingNextPage()) {
+            progressBar.setVisibility(View.VISIBLE);
+            textView.setVisibility(View.VISIBLE);
+            textView.setText(R.string.loading);
+        } else if (!presenter.hasNextPage()) {
+            progressBar.setVisibility(View.GONE);
+            textView.setVisibility(View.VISIBLE);
+            textView.setText(R.string.no_more);
+        } else if (presenter.isFailedToLoadNextPage()) {
+            progressBar.setVisibility(View.GONE);
+            textView.setVisibility(View.VISIBLE);
+            textView.setText(R.string.failed_to_load);
+        } else {
+            progressBar.setVisibility(View.INVISIBLE);
+            textView.setVisibility(View.INVISIBLE);
+        }
     }
 }
