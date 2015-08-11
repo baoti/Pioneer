@@ -15,6 +15,8 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'checkstyle'
+apply from: rootProject.file('gradle/android-findbugs.gradle')
 
 android {
     compileSdkVersion androidCompileSdkVersion
