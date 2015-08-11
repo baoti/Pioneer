@@ -55,4 +55,7 @@ ext {
     mockito = 'org.mockito:mockito-core:1.10.8'
     assertj = 'org.assertj:assertj-core:3.1.0'
     robolectric = 'org.robolectric:robolectric:3.0'
+
+    findbugsJsr305 = 'com.google.code.findbugs:jsr305:3.0.0'
+    findbugsAnnotations = 'com.google.code.findbugs:annotations:3.0.0'
 }

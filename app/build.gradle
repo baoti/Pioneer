@@ -15,6 +15,7 @@
  */
 
 apply plugin: 'com.android.application'
+apply from: rootProject.file('gradle/android-findbugs.gradle')
 
 android {
     compileSdkVersion androidCompileSdkVersion
@@ -89,4 +90,7 @@ dependencies {
     // Robolectric
     testCompile rootProject.ext.junit
     testCompile rootProject.ext.robolectric
+
+    provided rootProject.ext.findbugsJsr305
+    provided rootProject.ext.findbugsAnnotations
 }
