@@ -19,6 +19,7 @@ package com.github.baoti.pioneer.ui.news;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -56,31 +57,37 @@ public class NewsActivity extends BaseSearchActivity implements OnViewHolderClic
         return intent;
     }
 
+    @CheckResult
     public static Intent actionView(Context context) {
         return withAction(context, Intent.ACTION_VIEW);
     }
 
+    @CheckResult
     public static Intent actionView(Context context, News news) {
         return withAction(context, Intent.ACTION_VIEW)
                 .putExtra(EXTRA_EDITABLE, true)
                 .putExtra(EXTRA_NEWS, news);
     }
 
+    @CheckResult
     public static Intent actionEdit(Context context) {
         return withAction(context, Intent.ACTION_EDIT)
                 .putExtra(EXTRA_EDITABLE, true);
     }
 
+    @CheckResult
     public static Intent actionEdit(Context context, News news) {
         return withAction(context, Intent.ACTION_EDIT)
                 .putExtra(EXTRA_EDITABLE, true)
                 .putExtra(EXTRA_NEWS, news);
     }
 
+    @CheckResult
     public static Intent actionPick(Context context) {
         return withAction(context, Intent.ACTION_PICK);
     }
 
+    @CheckResult
     public static News pickedNews(int resultCode, Intent data) {
         if (resultCode != RESULT_PICKED) {
             return null;

@@ -16,6 +16,8 @@
 
 package com.github.baoti.pioneer.biz.interactor;
 
+import android.support.annotation.WorkerThread;
+
 import com.github.baoti.pioneer.biz.ResourcePage;
 import com.github.baoti.pioneer.biz.exception.BizException;
 
@@ -131,6 +133,7 @@ public abstract class ResourcePager<E> {
      * @return true if more pages
      * @throws BizException
      */
+    @WorkerThread
     public synchronized boolean next() throws BizException {
         boolean emptyPage = false;
         ResourcePage<E> it = current;

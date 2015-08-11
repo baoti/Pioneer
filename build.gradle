@@ -41,6 +41,7 @@ ext {
     androidCompileSdkVersion = 22
 
     androidSupportLib = 'com.android.support:support-v4:22.2.1'
+    annotationsSupportLib = 'com.android.support:support-annotations:22.2.1'
     appcompatSupportLib = 'com.android.support:appcompat-v7:22.2.1'
     cardviewSupportLib = 'com.android.support:cardview-v7:22.2.1'
     designSupportLib = 'com.android.support:design:22.2.1'
@@ -50,7 +51,7 @@ ext {
     testingSupportLib = 'com.android.support.test:testing-support-lib:0.1'
     espressoCoreSupportLib = 'com.android.support.test.espresso:espresso-core:2.0'
     junit = 'junit:junit:4.12'
-    truth = 'com.google.truth:truth:0.25'
+    truth = 'com.google.truth:truth:0.27'
     mockito = 'org.mockito:mockito-core:1.10.8'
     assertj = 'org.assertj:assertj-core:3.1.0'
     robolectric = 'org.robolectric:robolectric:3.0'

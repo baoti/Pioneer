@@ -18,6 +18,7 @@ package com.github.baoti.pioneer.ui.me;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
 
 import com.github.baoti.android.presenter.Presenter;
@@ -52,7 +53,7 @@ public class MePresenter extends Presenter<IMeView> {
         uiBus.unregister(this);
     }
 
-    @Subscribe
+    @Subscribe @Keep
     public void onAccountChanged(AccountChangedEvent event) {
         if (isLoaded()) {
             updateAccountView();

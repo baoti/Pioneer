@@ -37,6 +37,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-//    compile rootProject.ext.appcompatSupportLib
+    compile rootProject.ext.annotationsSupportLib
     compile 'com.jakewharton.timber:timber:3.0.2'
 }

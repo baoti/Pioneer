@@ -22,6 +22,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 
 import com.github.baoti.authprovider.LoginActivity;
 
@@ -35,6 +36,7 @@ import timber.log.Timber;
 public class AuthenticatorActivity extends LoginActivity {
     public static final String KEY_AUTH_TOKEN_TYPE = "app:authTokenType";
 
+    @CheckResult
     public static Intent actionAuthenticate(Context context, AccountAuthenticatorResponse response, String authTokenType) {
         return new Intent(context, AuthenticatorActivity.class)
                 .putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response)

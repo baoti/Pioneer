@@ -21,6 +21,7 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
 
 import com.github.baoti.android.presenter.Presenter;
@@ -151,7 +152,7 @@ public class MainPresenter extends Presenter<IMainView> {
         stopReportTask();
     }
 
-    @Subscribe
+    @Subscribe @Keep
     public void onAccountChanged(AccountChangedEvent event) {
         updateViewByAccount();
     }

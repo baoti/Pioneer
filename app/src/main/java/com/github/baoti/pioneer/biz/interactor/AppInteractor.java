@@ -16,6 +16,8 @@
 
 package com.github.baoti.pioneer.biz.interactor;
 
+import android.support.annotation.WorkerThread;
+
 import com.github.baoti.pioneer.biz.exception.BizException;
 
 /**
@@ -24,5 +26,6 @@ import com.github.baoti.pioneer.biz.exception.BizException;
 public interface AppInteractor {
     boolean isFirstLaunching();
 
+    @WorkerThread
     void initialize() throws BizException;
 }
