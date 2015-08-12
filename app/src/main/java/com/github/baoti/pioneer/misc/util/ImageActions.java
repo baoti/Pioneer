@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.CheckResult;
 
 import com.github.baoti.pioneer.data.DataConstants;
 
@@ -39,14 +40,17 @@ import timber.log.Timber;
  */
 public class ImageActions {
 
+    @CheckResult
     public static Intent actionPickImage() {
         return new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
     }
 
+    @CheckResult
     public static Intent actionPickImageFromInternal() {
         return new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
     }
 
+    @CheckResult
     public static Uri pickedImage(int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK || data == null) {
             return null;
@@ -68,29 +72,35 @@ public class ImageActions {
         return hasResolvedActivity(context, Crop.baseAction());
     }
 
+    @CheckResult
     public static File generateImageFile(Context context, String suffix) {
         File imagesDir = IoUtils.fromPublicPath(context, DataConstants.Files.IMAGES);
         return IoUtils.generateDatedFile(imagesDir, suffix, true);
     }
 
+    @CheckResult
     public static Intent actionCapture(Context context) throws IOException {
         File outputImage = generateImageFile(context, ".jpg");
         return CaptureCompat.actionCaptureImage(Uri.fromFile(outputImage));
     }
 
+    @CheckResult
     public static Uri capturedImage(Context context, ActivityRequestState requestState, int resultCode, Intent data) {
         return CaptureCompat.getCapturedImage(context, requestState.getRequestIntent(), resultCode, data);
     }
 
+    @CheckResult
     public static Intent actionCrop(Context context, Uri image, int size) {
         return actionCrop(context, image, 1, 1, size, size);
     }
 
+    @CheckResult
     public static Intent actionCrop(Context context, Uri image,
                                     int aspectX, int aspectY, int outputX, int outputY) {
         return Crop.actionCropImage(context, image, aspectX, aspectY, outputX, outputY);
     }
 
+    @CheckResult
     public static Uri croppedImage(Context context, ActivityRequestState requestState, int resultCode, Intent data) {
         return Crop.getCroppedImage(context, requestState.getRequestIntent(), resultCode, data);
     }
@@ -154,7 +164,7 @@ public class ImageActions {
             }
             try {
                 File dst = generateImageFile(context, ".jpg");
-                if (!IoUtils.saveBitmap(dst, bm, Bitmap.CompressFormat.JPEG, 50)) {
+                if (!IoUtils.saveBitmap(dst, bm, Bitmap.CompressFormat.JPEG, 80)) {
                     return null;
                 }
                 return Uri.fromFile(dst);
@@ -207,6 +217,7 @@ public class ImageActions {
         private static Uri insertToMediaImages(Context context, File file) {
             Bitmap bm = null;
             try {
+                // FIXME: process exif
                 bm = BitmapFactory.decodeFile(file.getAbsolutePath());
                 if (bm == null) {
                     Timber.w("Could not decode image: %s", file);
