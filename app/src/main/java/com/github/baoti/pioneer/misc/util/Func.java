@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-package com.github.baoti.pioneer.ui.me;
+package com.github.baoti.pioneer.misc.util;
 
-import android.content.Context;
-import android.content.Intent;
-import android.support.annotation.CheckResult;
-import android.support.v4.app.Fragment;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.github.baoti.pioneer.ui.common.base.BaseContainerActivity;
-
-/**
- * Created by liuyedong on 14-12-26.
- */
-public class MeActivity extends BaseContainerActivity {
-    @CheckResult
-    public static Intent actionLaunch(Context context) {
-        return new Intent(context, MeActivity.class);
+public class Func {
+    public static <Src, Dst> List<Dst> map(List<Src> src, Transformer<Src, Dst> transformer) {
+        if (src == null) {
+            return null;
+        }
+        List<Dst> dst = new ArrayList<Dst>(src.size());
+        for (Src item : src) {
+            dst.add(transformer.transform(item));
+        }
+        return dst;
     }
 
-    @Override
-    protected Fragment createContentFragment() {
-        return MeFragment.newInstance();
+    public interface Transformer<Src, Dst> {
+        Dst transform(Src src);
     }
 }

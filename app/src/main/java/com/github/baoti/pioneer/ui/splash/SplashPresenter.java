@@ -19,6 +19,7 @@ package com.github.baoti.pioneer.ui.splash;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -237,7 +238,7 @@ public class SplashPresenter extends Presenter<ISplashView> {
             showStatus(values[0], true);
         }
 
-        @Subscribe
+        @Subscribe @Keep
         public void onAppInitialize(AppInitializeReportEvent event) {
             publishProgress(event.progress);
         }

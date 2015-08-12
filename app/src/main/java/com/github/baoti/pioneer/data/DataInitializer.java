@@ -16,6 +16,8 @@
 
 package com.github.baoti.pioneer.data;
 
+import android.support.annotation.Keep;
+
 import com.github.baoti.pioneer.AppMain;
 import com.github.baoti.pioneer.event.app.AppInitializeReportEvent;
 import com.github.baoti.pioneer.event.app.AppInitializeRequestEvent;
@@ -54,7 +56,7 @@ public class DataInitializer {
         }
     }
 
-    @Subscribe
+    @Subscribe @Keep
     public void onAppInitializeRequest(AppInitializeRequestEvent event) {
         // 构造的时候无法执行注入, 推迟到需要的时候再注入
         initialize();

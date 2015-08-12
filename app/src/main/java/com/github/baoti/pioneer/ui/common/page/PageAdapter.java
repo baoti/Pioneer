@@ -73,21 +73,6 @@ public abstract class PageAdapter<E> extends RecyclerView.Adapter {
     }
 
     protected void bindLoadingViewHolder(LoadingViewHolder viewHolder) {
-        if (presenter.isLoadingNextPage()) {
-            viewHolder.progressBar.setVisibility(View.VISIBLE);
-            viewHolder.textView.setVisibility(View.VISIBLE);
-            viewHolder.textView.setText("Loading");
-        } else if (!presenter.hasNextPage()) {
-            viewHolder.progressBar.setVisibility(View.GONE);
-            viewHolder.textView.setVisibility(View.VISIBLE);
-            viewHolder.textView.setText("No more");
-        } else if (presenter.isFailedToLoadNextPage()) {
-            viewHolder.progressBar.setVisibility(View.GONE);
-            viewHolder.textView.setVisibility(View.VISIBLE);
-            viewHolder.textView.setText("Failed to load");
-        } else {
-            viewHolder.progressBar.setVisibility(View.INVISIBLE);
-            viewHolder.textView.setVisibility(View.INVISIBLE);
-        }
+        viewHolder.indicator.updateStatus(presenter);
     }
 }

@@ -37,6 +37,7 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.CheckResult;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -60,6 +61,7 @@ import java.util.List;
  */
 public class LoginActivity extends AccountAuthenticatorActivity {
 
+    @CheckResult
     public static Intent actionAuthenticate(Context context, AccountAuthenticatorResponse response, String authTokenType) {
         return new Intent(context, LoginActivity.class)
                 .putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response)

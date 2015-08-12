@@ -27,7 +27,7 @@ import org.robolectric.annotation.Config;
 import java.io.File;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(emulateSdk = 18)
+@Config(sdk = 18)
 public class IoUtilsTest {
 
     @Test

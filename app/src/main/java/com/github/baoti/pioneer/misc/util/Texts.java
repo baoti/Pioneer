@@ -21,34 +21,65 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Base64;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 /**
- * 文本相关处理
- *
+ * 文本工具类, 补充 android.text.TextUtils
+ * <p/>
  * Created by liuyedong on 14-12-19.
  */
 public class Texts {
-    public static final String CHARSET = "UTF-8";
+    public static final Charset UTF_8 = Charset.forName("UTF-8");
 
     private Texts() {
     }
 
-    /** null 安全版的 toString() */
+    /**
+     * null 安全版的 toString()
+     */
     public static String str(CharSequence s) {
         return str(s, "");
     }
 
-    /** null 安全 的 toString() */
-    public static String str(Object o, String defVal) {
-        return o == null ? defVal : o.toString();
+    /**
+     * null 安全 的 toString()
+     */
+    public static String str(Object o, String ifNull) {
+        return o == null ? ifNull : o.toString();
     }
 
-    /** null 安全版的 移除首尾空白 */
+    public static String strNotEmpty(CharSequence s, String ifEmpty) {
+        return TextUtils.isEmpty(s) ? ifEmpty : s.toString();
+    }
+
+    public static <T> Func.Transformer<T, String> strTransformer(final String ifNull) {
+        return new Func.Transformer<T, String>() {
+            @Override
+            public String transform(T t) {
+                return t == null ? ifNull : t.toString();
+            }
+        };
+    }
+
+    public static <T> Func.Transformer<T, CharSequence> textTransformer(final String ifNull) {
+        return new Func.Transformer<T, CharSequence>() {
+            @Override
+            public CharSequence transform(T t) {
+                if (t == null)
+                    return ifNull;
+                if (t instanceof CharSequence)
+                    return (CharSequence) t;
+                return t.toString();
+            }
+        };
+    }
+
+    /**
+     * null 安全版的 移除首尾空白
+     */
     public static String trim(CharSequence s) {
         if (s == null) {
             return "";
@@ -56,12 +87,16 @@ public class Texts {
         return s.toString().trim();
     }
 
-    /** 移除首尾空白后是否为空串 */
+    /**
+     * 移除首尾空白后是否为空串
+     */
     public static boolean isTrimmedEmpty(CharSequence s) {
         return trimmedLength(s) <= 0;
     }
 
-    /** null 安全版的 TextUtils.getTrimmedLength */
+    /**
+     * null 安全版的 TextUtils.getTrimmedLength
+     */
     public static int trimmedLength(CharSequence s) {
         if (s == null) {
             return 0;
@@ -69,7 +104,9 @@ public class Texts {
         return TextUtils.getTrimmedLength(s);
     }
 
-    /** null 安全版的 String.length */
+    /**
+     * null 安全版的 String.length
+     */
     public static int length(CharSequence s) {
         if (s == null) {
             return 0;
@@ -81,7 +118,7 @@ public class Texts {
      * Return a copy of the string S with leading and trailing
      * whitespace removed.
      */
-    public static CharSequence trip(CharSequence s, String chars) {
+    public static String trip(CharSequence s, String chars) {
         if (s == null) {
             return "";
         }
@@ -94,43 +131,102 @@ public class Texts {
         while (end > start && chars.contains(s.subSequence(end - 1, end))) {
             end--;
         }
-        return s.subSequence(start, end);
+        return s.subSequence(start, end).toString();
     }
 
-    /** 使用指定字符填充字符串 */
+    /**
+     * 使用指定字符填充字符串
+     */
     public static String filledStr(int length, char filledChar) {
         char[] array = new char[length];
         Arrays.fill(array, filledChar);
         return new String(array);
     }
 
+    /**
+     * 首字符组合
+     */
+    public static String initials(String[] words) {
+        StringBuilder builder = new StringBuilder(words.length);
+        for (String word : words) {
+            if (word.length() > 0) {
+                builder.append(word.charAt(0));
+            }
+        }
+        return builder.toString();
+    }
+
+    public static <T> String join(CharSequence sep, T[] tokens,
+                                  boolean skipNull, Func.Transformer<T, String> transformer) {
+        if (tokens == null) {
+            return "";
+        }
+        if (transformer == null) {
+            transformer = strTransformer(null);
+        }
+        StringBuilder result = new StringBuilder();
+        for (T item : tokens) {
+            if (skipNull && item == null) {
+                continue;
+            }
+            String strToken = transformer.transform(item);
+            if (skipNull && strToken == null) {
+                continue;
+            }
+            if (result.length() > 0) {
+                result.append(sep);
+            }
+            result.append(strToken);
+        }
+        return result.toString();
+    }
+
+    public static <T> String join(CharSequence sep, Iterable<T> tokens,
+                                  boolean skipNull, Func.Transformer<T, String> transformer) {
+        if (tokens == null) {
+            return "";
+        }
+        if (transformer == null) {
+            transformer = strTransformer(null);
+        }
+        StringBuilder result = new StringBuilder();
+        for (T item : tokens) {
+            if (skipNull && item == null) {
+                continue;
+            }
+            String strToken = transformer.transform(item);
+            if (skipNull && strToken == null) {
+                continue;
+            }
+            if (result.length() > 0) {
+                result.append(sep);
+            }
+            result.append(strToken);
+        }
+        return result.toString();
+    }
+
     public static String base64(String s) {
-        byte[] sourceBytes = s.getBytes(Charset.forName(CHARSET));
-        return Base64.encodeToString(sourceBytes, Base64.DEFAULT);
+        return Base64.encodeToString(s.getBytes(UTF_8), Base64.DEFAULT);
     }
 
-    public static String md5Hex(boolean upperCase, String... strings) {
-        return bytesToHexString(md5Bytes(strings), upperCase);
+    public static String md5(boolean upperCase, String s) {
+        return bytesToHexString(md5(s.getBytes(UTF_8)), upperCase);
     }
 
-    public static byte[] md5Bytes(String... strings) {
+    public static byte[] md5(byte[]... bytes) {
+        return digest("MD5", bytes);
+    }
+
+    public static byte[] digest(String algorithm, byte[]... bytes) {
         try {
-            boolean hasData = false;
-            final MessageDigest md5Digest = MessageDigest.getInstance("MD5");
-            for (String s : strings) {
-                if (!TextUtils.isEmpty(s)) {
-                    md5Digest.update(s.getBytes(CHARSET));
-                    hasData = true;
-                }
+            final MessageDigest messageDigest = MessageDigest.getInstance(algorithm);
+            for (byte[] item : bytes) {
+                messageDigest.update(item);
             }
-            if (!hasData) {
-                return new byte[0];
-            }
-            return md5Digest.digest();
+            return messageDigest.digest();
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("NO MD5");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("NO UTF-8");
+            throw new IllegalArgumentException("No such algorithm: " + algorithm);
         }
     }
 
@@ -153,7 +249,7 @@ public class Texts {
 
     /**
      * 字节数组转十六进制字符串
-     *
+     * <p/>
      * Copy from java.lang.IntegralToString.
      */
     public static String bytesToHexString(byte[] bytes, boolean upperCase) {

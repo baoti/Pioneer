@@ -24,4 +24,10 @@
 
     <string name="title_me">我的</string>
     <string name="title_login">登录</string>
+
+    <string name="empty">空空如也</string>
+    <string name="loading">努力加载中…</string>
+    <string name="no_more">没有更多数据</string>
+    <string name="failed_to_load">加载失败</string>
+
 </resources>
