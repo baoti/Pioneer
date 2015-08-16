@@ -32,6 +32,7 @@ import com.github.baoti.pioneer.entity.News;
 import com.github.baoti.pioneer.ui.login.LoginDialogFragment;
 import com.github.baoti.pioneer.ui.me.MeFragment;
 import com.github.baoti.pioneer.ui.news.NewsActivity;
+import com.github.baoti.pioneer.ui.web.WebActivity;
 
 import javax.inject.Inject;
 
@@ -160,5 +161,10 @@ public class MainFragment extends FragmentView<IMainView, MainPresenter> impleme
                 .addToBackStack(null)
                 .commit();
 //        startActivity(MeActivity.actionLaunch(getActivity()));
+    }
+
+    @OnClick(R.id.btn_hello_reactjs) void navigateToHelloReactJS() {
+        startActivity(WebActivity.actionView(getActivity(),
+                "file:///android_asset/hello-react/hello.html"));
     }
 }
