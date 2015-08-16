@@ -83,8 +83,8 @@ public class ImageChooserFragment extends DialogFragment {
     @Override
     public void setTargetFragment(Fragment fragment, int requestCode) {
         if (!(fragment instanceof OnImageChooserListener)) {
-            throw new IllegalArgumentException("targetFragment must " +
-                    "implements OnImageChooserListener");
+            throw new IllegalArgumentException("targetFragment must "
+                    + "implements OnImageChooserListener");
         }
         super.setTargetFragment(fragment, requestCode);
     }
@@ -115,6 +115,9 @@ public class ImageChooserFragment extends DialogFragment {
                     if (cropImage(image)) {
                         return;
                     }
+                    break;
+                default:
+                    break;
             }
         }
         close();

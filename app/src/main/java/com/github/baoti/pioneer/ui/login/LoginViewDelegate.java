@@ -78,7 +78,8 @@ public class LoginViewDelegate implements ILoginView, IViewDelegate<LoginViewDel
     }
 
     @Override
-    public void onPresenterTaken(Presenter presenter) {}
+    public void onPresenterTaken(Presenter presenter) {
+    }
 
     @OnClick(R.id.btn_sign_in) void onSignInClicked() {
         getPresenter().onSignInClicked();

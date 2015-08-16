@@ -129,7 +129,7 @@ public abstract class SafeAsyncTask<Params, Progress, Result>
                     appBus.unregister(this);
                 }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             return new Tasks.ResultOrException(null, e);
         }
     }

@@ -450,7 +450,7 @@ public class ArrayAdapter<T> extends BaseBindAdapter<T> implements Filterable {
         }
 
         if (item instanceof CharSequence) {
-            text.setText((CharSequence)item);
+            text.setText((CharSequence) item);
         } else {
             text.setText(item.toString());
         }

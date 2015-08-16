@@ -197,7 +197,7 @@ public class IoUtils {
     }
 
     public static void copyStream(InputStream src, OutputStream dst) throws IOException {
-        byte buffer[] = new byte[1024];
+        byte[] buffer = new byte[1024];
         int len;
         while ((len = src.read(buffer)) != -1) {
             dst.write(buffer, 0, len);
