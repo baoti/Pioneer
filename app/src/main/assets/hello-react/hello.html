@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="build/react.js"></script>
+    <script src="build/JSXTransformer.js"></script>
+  </head>
+  <body>
+    <div id="example"></div>
+    <script type="text/jsx">
+      var examples = [
+          'basic', 'basic-commonjs', 'basic-jsx', 'basic-jsx-external', 'basic-jsx-harmony',
+          'basic-jsx-precompile', 'jquery-bootstrap', 'jquery-mobile', 'quadratic', 'transitions'
+      ]
+      React.render(
+        <ul>
+          {
+            examples.map(function (name) {
+              return <li><a href={'examples/' + name + '/index.html'}>{name}</a></li>
+            })
+          }
+        </ul>
+        ,
+        document.getElementById('example')
+      );
+    </script>
+  </body>
+</html>

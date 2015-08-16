@@ -54,6 +54,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.news.NewsActivity" />
+        <activity android:name=".ui.web.WebActivity"/>
 
     </application>
 
