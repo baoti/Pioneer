@@ -37,8 +37,8 @@ allprojects {
 
 ext {
     androidBuildToolsVersion = "23.0.0"
-    androidTargetSdkVersion = 22
-    androidCompileSdkVersion = 22
+    androidTargetSdkVersion = 23
+    androidCompileSdkVersion = 23
 
     androidSupportLib = 'com.android.support:support-v4:23.0.0'
     annotationsSupportLib = 'com.android.support:support-annotations:23.0.0'
