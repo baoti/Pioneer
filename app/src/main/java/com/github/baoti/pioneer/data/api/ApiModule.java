@@ -42,7 +42,7 @@ public class ApiModule {
         return new Retrofit.Builder() //
                 .client(client) //
                 .baseUrl(PRODUCTION_API_URL) //
-                .converterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
 
