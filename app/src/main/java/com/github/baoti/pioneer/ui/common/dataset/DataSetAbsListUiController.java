@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.baoti.pioneer.ui.common.dataset.dataset;
+package com.github.baoti.pioneer.ui.common.dataset;
 
 import android.content.res.Resources;
 import android.os.Build;
@@ -89,6 +89,11 @@ public abstract class DataSetAbsListUiController<E, V extends AbsListView>
         }
     }
 
+    @Nullable
+    public final V getListView() {
+        return listView;
+    }
+
     protected void configureList(@NonNull V listView) {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -133,7 +138,6 @@ public abstract class DataSetAbsListUiController<E, V extends AbsListView>
     }
 
     protected void configureSwipe(@NonNull SwipeRefreshLayout swipe) {
-        Resources resources = swipe.getResources();
         swipe.setOnRefreshListener(this);
     }
 

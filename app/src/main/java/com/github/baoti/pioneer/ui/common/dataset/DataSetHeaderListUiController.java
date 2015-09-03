@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.baoti.pioneer.ui.common.dataset.dataset;
+package com.github.baoti.pioneer.ui.common.dataset;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -42,13 +42,30 @@ public abstract class DataSetHeaderListUiController<E>
         super(view);
     }
 
+    @Override
+    public void destroy() {
+        HeaderFooterListAdapter<ArrayAdapter<E>> listAdapter = getListAdapter();
+        if (listAdapter != null) {
+            listAdapter.clearHeaders(true);
+            listAdapter.clearFooters(true);
+        }
+        super.destroy();
+    }
+
     @NonNull
     @Override
-    protected ListAdapter createListAdapter(@NonNull ListView listView) {
+    protected HeaderFooterListAdapter<ArrayAdapter<E>> createListAdapter(@NonNull ListView listView) {
         HeaderFooterListAdapter<ArrayAdapter<E>> listAdapter = createHeaderListAdapter(listView);
         loadingIndicator = createLoadingIndicator(listView.getContext());
         loadingIndicator.setList(listAdapter);
         return listAdapter;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    @Override
+    protected HeaderFooterListAdapter<ArrayAdapter<E>> getListAdapter() {
+        return (HeaderFooterListAdapter<ArrayAdapter<E>>) super.getListAdapter();
     }
 
     protected HeaderFooterListAdapter<ArrayAdapter<E>> createHeaderListAdapter(ListView listView) {
@@ -78,7 +95,11 @@ public abstract class DataSetHeaderListUiController<E>
     @Override
     protected void updateLoadMoreIndicator(@NonNull DataSet<E> result) {
         if (loadingIndicator != null) {
-            loadingIndicator.showResult(result.currentPage().hasNext());
+            if (result.loadedResources().isEmpty()) {
+                loadingIndicator.hide();
+            } else {
+                loadingIndicator.showResult(result.currentPage().hasNext());
+            }
         }
     }
 

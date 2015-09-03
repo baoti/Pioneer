@@ -14,23 +14,37 @@
  * limitations under the License.
  */
 
-package com.github.baoti.pioneer.ui.common.dataset.dataset;
+package com.github.baoti.pioneer.ui.common.dataset;
+
+import android.support.annotation.NonNull;
+
+import com.github.baoti.pioneer.biz.interactor.PageInteractor;
 
 /**
- * data set 的基本操作
- * Created by sean on 2015/8/1.
+ * 负责 UI 层 对 data set 的基本操作，如 加载／重载／加载更多。
+ * 它不包含对 UI 的控制，也不包含 UI 的强引用。
+ * Created by sean on 2015/7/12.
  */
-public enum DataSetLoadAction {
+public interface DataSetPresenter<E> {
+
     /**
-     * 加载，或重新筛选
+     * 重置
      */
-    LOAD,
+    void reset();
+
     /**
-     * 重新加载（刷新）
+     * 加载新的数据源
+     * @param dataSource 数据源
      */
-    RELOAD,
+    void load(@NonNull PageInteractor<E> dataSource);
+
+    /**
+     * 重新加载
+     */
+    void reload();
+
     /**
      * 加载更多
      */
-    LOAD_MORE
+    void loadMore();
 }

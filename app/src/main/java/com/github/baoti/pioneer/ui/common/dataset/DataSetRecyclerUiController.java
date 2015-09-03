@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.baoti.pioneer.ui.common.dataset.dataset;
+package com.github.baoti.pioneer.ui.common.dataset;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -85,6 +85,11 @@ public abstract class DataSetRecyclerUiController<E> extends AbsDataSetUiControl
         }
     }
 
+    @Nullable
+    public final RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
     protected void configureRecycler(@NonNull RecyclerView recyclerView) {
         layoutManager = createLinearLayoutManager(recyclerView);
         recyclerView.setLayoutManager(layoutManager);
@@ -110,7 +115,6 @@ public abstract class DataSetRecyclerUiController<E> extends AbsDataSetUiControl
     }
 
     protected void configureSwipe(@NonNull SwipeRefreshLayout swipe) {
-        Resources resources = swipe.getResources();
         swipe.setOnRefreshListener(this);
     }
 
@@ -206,7 +210,11 @@ public abstract class DataSetRecyclerUiController<E> extends AbsDataSetUiControl
     @Override
     protected void updateLoadMoreIndicator(@NonNull DataSet<E> result) {
         if (loadingIndicator != null) {
-            loadingIndicator.showResult(result.currentPage().hasNext());
+            if (result.loadedResources().isEmpty()) {
+                loadingIndicator.hide();
+            } else {
+                loadingIndicator.showResult(result.currentPage().hasNext());
+            }
         }
     }
 

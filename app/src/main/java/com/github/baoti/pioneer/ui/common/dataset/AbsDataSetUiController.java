@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.baoti.pioneer.ui.common.dataset.dataset;
+package com.github.baoti.pioneer.ui.common.dataset;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -89,6 +89,13 @@ public abstract class AbsDataSetUiController<E> implements DataSetUiController<E
      * 配置所有视图
      */
     public void configure() {
+
+    }
+
+    /**
+     * 销毁所有视图
+     */
+    public void destroy() {
 
     }
 
