@@ -136,13 +136,17 @@ public class HeaderFooterListAdapter<E extends BaseAdapter> extends
      *
      * @return true if headers were removed, false otherwise
      */
-    public boolean clearHeaders() {
+    public boolean clearHeaders(boolean dispatchDetach) {
         boolean removed = false;
         if (!headers.isEmpty()) {
             FixedViewInfo[] infos = headers.toArray(new FixedViewInfo[headers
                     .size()]);
-            for (FixedViewInfo info : infos)
+            for (FixedViewInfo info : infos) {
                 removed = super.removeHeader(info.view) || removed;
+                if (dispatchDetach && ViewUtils.isAttachedToWindow(info.view)) {
+                    ViewUtils.callDispatchDetachedFromWindow(info.view);
+                }
+            }
         }
         if (removed)
             wrapped.notifyDataSetChanged();
@@ -154,13 +158,17 @@ public class HeaderFooterListAdapter<E extends BaseAdapter> extends
      *
      * @return true if headers were removed, false otherwise
      */
-    public boolean clearFooters() {
+    public boolean clearFooters(boolean dispatchDetach) {
         boolean removed = false;
         if (!footers.isEmpty()) {
             FixedViewInfo[] infos = footers.toArray(new FixedViewInfo[footers
                     .size()]);
-            for (FixedViewInfo info : infos)
+            for (FixedViewInfo info : infos) {
                 removed = super.removeFooter(info.view) || removed;
+                if (dispatchDetach && ViewUtils.isAttachedToWindow(info.view)) {
+                    ViewUtils.callDispatchDetachedFromWindow(info.view);
+                }
+            }
         }
         if (removed)
             wrapped.notifyDataSetChanged();

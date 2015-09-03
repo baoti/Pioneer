@@ -17,6 +17,7 @@
 package com.github.baoti.pioneer.app.widget;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -139,5 +140,19 @@ public abstract class BaseBindAdapter<T> extends BaseAdapter {
 
     protected void onPostBindDropDownView(View view, int position, boolean created) {
         onPostBindView(view, position, created);
+    }
+
+    @Override
+    public void unregisterDataSetObserver(DataSetObserver observer) {
+        if (observer == null) {
+            /*
+             * http://stackoverflow.com/questions/7290841/java-lang-illegalargumentexception-the-observer-is-null
+             * ListView / GridView #onDetachedFromWindow 方法被重复执行时，
+             * SDK在 14-17 之间的系统此处 observer 为 null，若不拦截将产生 IllegalArgumentException，
+             * SDK 18 修复了此问题
+             */
+            return;
+        }
+        super.unregisterDataSetObserver(observer);
     }
 }

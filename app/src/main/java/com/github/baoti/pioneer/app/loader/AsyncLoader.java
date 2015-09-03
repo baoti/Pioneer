@@ -1,11 +1,12 @@
 /*
+ * Copyright (C) 2011 Alexander Blom
  * Copyright (c) 2014-2015 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,56 +26,74 @@ import android.support.v4.content.AsyncTaskLoader;
  * <p/>
  * Based on CursorLoader.java in the Fragment compatibility package
  *
- * @param <D>
- *          data type
+ * @param <D> data type
  * @author Alexander Blom (me@alexanderblom.se)
  */
 public abstract class AsyncLoader<D> extends AsyncTaskLoader<D> {
 
-  private D data;
+    private D data;
 
-  /**
-   * Create async loader
-   *
-   * @param context
-   */
-  public AsyncLoader(final Context context) {
-    super(context);
-  }
+    private boolean hasData;
 
-  @Override
-  public void deliverResult(final D data) {
-    if (isReset())
-      // An async query came in while the loader is stopped
-      return;
+    /**
+     * Create async loader
+     *
+     * @param context
+     */
+    public AsyncLoader(final Context context) {
+        super(context);
+    }
 
-    this.data = data;
+    @Override
+    public void deliverResult(final D data) {
+        if (isReset()) {
+            // An async query came in while the loader is stopped
+            return;
+        }
 
-    super.deliverResult(data);
-  }
+        saveData(data);
 
-  @Override
-  protected void onStartLoading() {
-    if (data != null)
-      deliverResult(data);
+        super.deliverResult(data);
+    }
 
-    if (takeContentChanged() || data == null)
-      forceLoad();
-  }
+    @Override
+    protected void onStartLoading() {
+        if (hasData()) {
+            deliverResult(data);
+        }
 
-  @Override
-  protected void onStopLoading() {
-    // Attempt to cancel the current load task if possible.
-    cancelLoad();
-  }
+        if (takeContentChanged() || !hasData()) {
+            forceLoad();
+        }
+    }
 
-  @Override
-  protected void onReset() {
-    super.onReset();
+    @Override
+    protected void onStopLoading() {
+        // Attempt to cancel the current load task if possible.
+        cancelLoad();
+    }
 
-    // Ensure the loader is stopped
-    onStopLoading();
+    @Override
+    protected void onReset() {
+        super.onReset();
 
-    data = null;
-  }
+        // Ensure the loader is stopped
+        onStopLoading();
+
+        resetData();
+    }
+
+    private boolean hasData() {
+        return hasData;
+    }
+
+    private void saveData(D data) {
+        this.data = data;
+        hasData = true;
+    }
+
+    private void resetData() {
+        this.data = null;
+        hasData = false;
+    }
 }
