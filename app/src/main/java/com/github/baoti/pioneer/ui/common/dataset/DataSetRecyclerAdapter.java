@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.baoti.pioneer.ui.common.dataset.dataset;
+package com.github.baoti.pioneer.ui.common.dataset;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

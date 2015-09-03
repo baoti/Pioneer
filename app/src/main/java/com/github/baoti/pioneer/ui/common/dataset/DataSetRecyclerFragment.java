@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.baoti.pioneer.ui.common.dataset.dataset;
+package com.github.baoti.pioneer.ui.common.dataset;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -69,13 +69,16 @@ public abstract class DataSetRecyclerFragment<E> extends Fragment {
     @Override
     public void onDestroyView() {
         presenter().onDropUi();
-        uiController = null;
+        if (uiController != null) {
+            uiController.destroy();
+            uiController = null;
+        }
         super.onDestroyView();
     }
 
     public RecyclerView recyclerView() {
         if (uiController != null) {
-            return uiController.recyclerView;
+            return uiController.getRecyclerView();
         }
         return null;
     }

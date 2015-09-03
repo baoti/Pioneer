@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.baoti.pioneer.ui.common.dataset.dataset;
+package com.github.baoti.pioneer.ui.common.dataset;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -53,33 +53,33 @@ public class DataSetLoaderPresenter<E> implements DataSetPresenter<E>,
     @Nullable
     private DataSetPager<E> pager;
 
-    protected DataSetLoaderPresenter(int loaderId) {
+    public DataSetLoaderPresenter(int loaderId) {
         this.loaderId = loaderId;
     }
 
     /**
      * 关联 UI
      */
-    protected void onTakeUi(Context context,
-                            LoaderManager loaderManager,
-                            DataSetUiController<E> uiController) {
+    public void onTakeUi(Context context,
+                         LoaderManager loaderManager,
+                         DataSetUiController<E> uiController) {
         this.context = context;
         this.loaderManager = loaderManager;
         this.uiController = uiController;
     }
 
-    protected void onResume() {
+    public void onResume() {
 
     }
 
-    protected void onPause() {
+    public void onPause() {
 
     }
 
     /**
      *
      */
-    protected void onDropUi() {
+    public void onDropUi() {
         this.context = null;
         this.loaderManager = null;
         this.uiController = null;
@@ -130,9 +130,6 @@ public class DataSetLoaderPresenter<E> implements DataSetPresenter<E>,
     @Override
     public void load(@NonNull PageInteractor<E> dataSource) {
         Timber.v("load");
-        if (pager != null) {
-            pager.reset();
-        }
         changeDataSource(dataSource);
         if (loaderManager != null) {
             Bundle args = new Bundle();

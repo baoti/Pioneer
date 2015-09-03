@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.baoti.pioneer.ui.common.dataset.dataset;
+package com.github.baoti.pioneer.ui.common.dataset;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,7 +27,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.github.baoti.pioneer.R;
-import com.github.baoti.pioneer.app.notification.Toaster;
 import com.github.baoti.pioneer.app.widget.compat.ArrayAdapter;
 
 /**
@@ -70,19 +69,22 @@ public abstract class DataSetListFragment<E> extends Fragment {
     @Override
     public void onDestroyView() {
         presenter().onDropUi();
-        uiController = null;
+        if (uiController != null) {
+            uiController.destroy();
+            uiController = null;
+        }
         super.onDestroyView();
     }
 
     public ListView listView() {
         if (uiController != null) {
-            return uiController.listView;
+            return uiController.getListView();
         }
         return null;
     }
 
     @NonNull
-    public DataSetLoaderPresenter<E> createPresenter() {
+    protected DataSetLoaderPresenter<E> createPresenter() {
         return new DataSetLoaderPresenter<>(LOAD_ITEMS);
     }
 
