@@ -26,7 +26,7 @@ import retrofit.http.Query;
  * Created by liuyedong on 14-12-18.
  */
 public interface AccountApi {
-    @POST("/account/login")
+    @POST("account/login")
     Call<ApiResponse<Account>> login(
             @Query("account") String accountId,
             @Query("pwd") String password);
