@@ -52,6 +52,19 @@ public abstract class DataSetHeaderListUiController<E>
         super.destroy();
     }
 
+    @Override
+    protected void setListAdapter(@NonNull ListView listView, ListAdapter adapter) {
+        HeaderFooterListAdapter<ArrayAdapter<E>> listAdapter = getListAdapter();
+        if (listAdapter != null) {
+            // ListView.setAdapter 将触发 resetList，清除 headers/footers 中的回收状态
+            // 但由于受到 HeaderFooterListAdapter 的实现方式影响，
+            // adapter 中的 headers/footers 状态没有被照顾到。
+            // 此处手动清除回收状态。
+            listAdapter.clearRecycledStates();
+        }
+        super.setListAdapter(listView, adapter);
+    }
+
     @NonNull
     @Override
     protected HeaderFooterListAdapter<ArrayAdapter<E>> createListAdapter(@NonNull ListView listView) {
