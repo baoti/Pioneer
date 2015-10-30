@@ -16,7 +16,6 @@
 
 package com.github.baoti.pioneer.ui.common.dataset;
 
-import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -213,6 +212,14 @@ public abstract class DataSetAbsListUiController<E, V extends AbsListView>
         ArrayAdapter<E> adapter = getDataSetAdapter();
         if (adapter != null) {
             adapter.clear();
+        }
+        resetDataSetUi();
+    }
+
+    protected void resetDataSetUi() {
+        // Reset list view
+        if (getListView() != null && getListAdapter() != null) {
+            setListAdapter(getListView(), getListAdapter());
         }
     }
 

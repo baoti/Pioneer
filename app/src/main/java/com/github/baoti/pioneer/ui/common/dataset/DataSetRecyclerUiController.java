@@ -17,7 +17,6 @@
 package com.github.baoti.pioneer.ui.common.dataset;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -230,6 +229,14 @@ public abstract class DataSetRecyclerUiController<E> extends AbsDataSetUiControl
         DataSetRecyclerAdapter<E> adapter = getDataSetAdapter();
         if (adapter != null) {
             adapter.clear();
+        }
+        resetDataSetUi();
+    }
+
+    protected void resetDataSetUi() {
+        // Reset recycler view
+        if (getRecyclerView() != null && getRecyclerAdapter() != null) {
+            getRecyclerView().setAdapter(getRecyclerAdapter());
         }
     }
 

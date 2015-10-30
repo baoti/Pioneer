@@ -17,12 +17,17 @@
 package com.github.baoti.pioneer.app.widget;
 
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 import android.widget.ListView.FixedViewInfo;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 /**
  * Utility adapter that supports adding headers and footers
@@ -131,6 +136,14 @@ public class HeaderFooterListAdapter<E extends BaseAdapter> extends
         return removed;
     }
 
+    @Override
+    public boolean removeFooter(View v) {
+        boolean removed = super.removeFooter(v);
+        if (removed)
+            wrapped.notifyDataSetChanged();
+        return removed;
+    }
+
     /**
      * Remove all headers
      *
@@ -176,14 +189,6 @@ public class HeaderFooterListAdapter<E extends BaseAdapter> extends
     }
 
     @Override
-    public boolean removeFooter(View v) {
-        boolean removed = super.removeFooter(v);
-        if (removed)
-            wrapped.notifyDataSetChanged();
-        return removed;
-    }
-
-    @Override
     public E getWrappedAdapter() {
         return wrapped;
     }
@@ -201,5 +206,70 @@ public class HeaderFooterListAdapter<E extends BaseAdapter> extends
     @Override
     public boolean isEnabled(int position) {
         return position < getCount() && super.isEnabled(position);
+    }
+
+    public void clearRecycledStates() {
+        /*
+        ListView 只清理 mHeaderViewInfos 和 mFooterViewInfos 中的状态。
+        而不法清除此类中的 headers/footers 状态，导致 headers/footers 中的控件 onAttached 不再被调用。
+         */
+        clearRecycledState(list, headers);
+        clearRecycledState(list, footers);
+    }
+
+    private static void clearRecycledState(ListView listView, ArrayList<FixedViewInfo> infos) {
+        if (infos == null) {
+            return;
+        }
+        if (ListView_clearRecycledState != null) {
+            try {
+                ListView_clearRecycledState.invoke(listView, infos);
+                return;
+            } catch (Exception e) {
+                Timber.w(e, "Fail to invoke clearRecycledState");
+            }
+        }
+
+        final int count = infos.size();
+
+        for (int i = 0; i < count; i++) {
+            final View child = infos.get(i).view;
+            clearRecycledState((AbsListView.LayoutParams) child.getLayoutParams());
+        }
+    }
+
+    private static void clearRecycledState(AbsListView.LayoutParams params) {
+        if (params == null) {
+            return;
+        }
+        // params.recycledHeaderFooter = false;
+        if (AbsListView_LayoutParams_recycledHeaderFooter != null) {
+            try {
+                AbsListView_LayoutParams_recycledHeaderFooter.setBoolean(params, false);
+            } catch (Exception e) {
+                Timber.w(e, "Fail to set recycledHeaderFooter");
+            }
+        }
+    }
+
+    private static Method ListView_clearRecycledState;
+
+    static {
+        try {
+            ListView_clearRecycledState = ListView.class.getDeclaredMethod("clearRecycledState");
+            ListView_clearRecycledState.setAccessible(true);
+        } catch (NoSuchMethodException ignored) {
+        }
+    }
+
+    private static Field AbsListView_LayoutParams_recycledHeaderFooter;
+
+    static {
+        try {
+            AbsListView_LayoutParams_recycledHeaderFooter =
+                    AbsListView.LayoutParams.class.getDeclaredField("recycledHeaderFooter");
+            AbsListView_LayoutParams_recycledHeaderFooter.setAccessible(true);
+        } catch (NoSuchFieldException ignored) {
+        }
     }
 }
