@@ -16,6 +16,7 @@
 
 package com.github.baoti.pioneer.ui.news.detail;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -23,17 +24,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.github.baoti.android.presenter.FragmentView;
 import com.github.baoti.pioneer.R;
+import com.github.baoti.pioneer.databinding.FragmentNewsDetailBinding;
 import com.github.baoti.pioneer.entity.News;
 import com.github.baoti.pioneer.ui.Navigator;
 import com.github.baoti.pioneer.ui.news.NewsActivity;
 import com.github.baoti.pioneer.ui.news.edit.NewsEditFragment;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * Created by liuyedong on 15-1-6.
@@ -46,22 +44,18 @@ public class NewsDetailFragment extends FragmentView implements Toolbar.OnMenuIt
         return fragment;
     }
 
-    @Bind(R.id.app_toolbar)
-    Toolbar toolbar;
-
-    @Bind(R.id.tv_news_content)
-    TextView newsContent;
+    private FragmentNewsDetailBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_news_detail, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_news_detail, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ButterKnife.bind(this, view);
-        Navigator.setupToolbarNavigation(this, toolbar);
-        toolbar.setOnMenuItemClickListener(this);
+        Navigator.setupToolbarNavigation(this, binding.appToolbar);
+        binding.appToolbar.setOnMenuItemClickListener(this);
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -69,11 +63,10 @@ public class NewsDetailFragment extends FragmentView implements Toolbar.OnMenuIt
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         News news = (News) getArguments().getSerializable(NewsActivity.EXTRA_NEWS);
         boolean editable = getArguments().getBoolean(NewsActivity.EXTRA_EDITABLE);
-        toolbar.setTitle(news.getTitle());
         if (editable) {
-            toolbar.inflateMenu(R.menu.edit);
+            binding.appToolbar.inflateMenu(R.menu.edit);
         }
-        newsContent.setText(news.getContent());
+        binding.setNews(news);
         super.onActivityCreated(savedInstanceState);
     }
 

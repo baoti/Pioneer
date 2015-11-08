@@ -14,23 +14,30 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/app_toolbar"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="news"
+            type="com.github.baoti.pioneer.entity.News" />
+    </data>
+    <LinearLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="@string/app_name"
-        style="@style/AppBar.Toolbar" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_news_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/app_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@{news.title}"
+            style="@style/AppBar.Toolbar" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/tv_news_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{news.content}"/>
+
+    </LinearLayout>
+</layout>
