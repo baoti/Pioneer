@@ -18,9 +18,9 @@ package com.github.baoti.pioneer.data.api;
 
 import com.github.baoti.pioneer.entity.Account;
 
-import retrofit.Call;
-import retrofit.http.POST;
-import retrofit.http.Query;
+import retrofit2.Call;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 /**
  * Created by liuyedong on 14-12-18.
