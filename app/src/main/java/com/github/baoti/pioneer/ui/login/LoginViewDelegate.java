@@ -87,11 +87,6 @@ public class LoginViewDelegate implements ILoginView, IViewDelegate<LoginViewDel
         return IFlow.EMPTY;
     }
 
-    @Override
-    public IFlow getFlow() {
-        return IFlow.EMPTY;
-    }
-
     @OnClick(R.id.btn_sign_in) void onSignInClicked() {
         getPresenter().onSignInClicked();
     }
