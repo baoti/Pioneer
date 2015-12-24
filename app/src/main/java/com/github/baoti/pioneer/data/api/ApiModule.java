@@ -17,12 +17,12 @@
 package com.github.baoti.pioneer.data.api;
 
 import com.github.baoti.pioneer.data.api.internal.FakeNewsApiImpl;
-import com.squareup.okhttp.OkHttpClient;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 

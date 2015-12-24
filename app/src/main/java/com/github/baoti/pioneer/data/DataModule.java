@@ -24,9 +24,7 @@ import com.github.baoti.pioneer.BusProvider;
 import com.github.baoti.pioneer.app.ForApp;
 import com.github.baoti.pioneer.data.api.ApiModule;
 import com.github.baoti.pioneer.data.prefs.AccountPrefs;
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -36,6 +34,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
 /**
@@ -81,7 +81,7 @@ public class DataModule {
     @Singleton
     Picasso providePicasso(Application app, OkHttpClient client) {
         return new Picasso.Builder(app)
-                .downloader(new OkHttpDownloader(client))
+                .downloader(new OkHttp3Downloader(client))
                 .listener(new Picasso.Listener() {
                     @Override public void onImageLoadFailed(Picasso picasso, Uri uri, Exception e) {
                         Timber.e(e, "Failed to load image: %s", uri);
