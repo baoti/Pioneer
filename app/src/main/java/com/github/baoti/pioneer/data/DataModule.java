@@ -24,7 +24,7 @@ import com.github.baoti.pioneer.BusProvider;
 import com.github.baoti.pioneer.app.ForApp;
 import com.github.baoti.pioneer.data.api.ApiModule;
 import com.github.baoti.pioneer.data.prefs.AccountPrefs;
-import com.squareup.picasso.OkHttp3Downloader;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -35,6 +35,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
 
@@ -73,15 +74,15 @@ public class DataModule {
 
     @Provides
     @Singleton
-    OkHttpClient provideOkHttpClient(Application app) {
+    Call.Factory provideCallFactory(Application app) {
         return createOkHttpClient(app);
     }
 
     @Provides
     @Singleton
-    Picasso providePicasso(Application app, OkHttpClient client) {
+    Picasso providePicasso(Application app, Call.Factory callFactory) {
         return new Picasso.Builder(app)
-                .downloader(new OkHttp3Downloader(client))
+                .downloader(new OkHttp3Downloader(callFactory))
                 .listener(new Picasso.Listener() {
                     @Override public void onImageLoadFailed(Picasso picasso, Uri uri, Exception e) {
                         Timber.e(e, "Failed to load image: %s", uri);
@@ -91,13 +92,10 @@ public class DataModule {
     }
 
     static OkHttpClient createOkHttpClient(Application app) {
-        OkHttpClient client = new OkHttpClient();
-
         // Install an HTTP cache in the application cache directory.
         File cacheDir = new File(app.getCacheDir(), "http");
         Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
-        client.setCache(cache);
 
-        return client;
+        return new OkHttpClient.Builder().cache(cache).build();
     }
 }
