@@ -50,7 +50,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.github.baoti.authprovider.accounts.AccountConstants;
-import com.github.baoti.authprovider.accounts.AuthenticatorActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,11 +60,13 @@ import java.util.List;
  */
 public class LoginActivity extends AccountAuthenticatorActivity {
 
+    public static final String KEY_AUTH_TOKEN_TYPE = "app:authTokenType";
+
     @CheckResult
     public static Intent actionAuthenticate(Context context, AccountAuthenticatorResponse response, String authTokenType) {
         return new Intent(context, LoginActivity.class)
                 .putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response)
-                .putExtra(AuthenticatorActivity.KEY_AUTH_TOKEN_TYPE, authTokenType);
+                .putExtra(KEY_AUTH_TOKEN_TYPE, authTokenType);
     }
 
     /**
@@ -354,8 +355,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         result.putString(AccountManager.KEY_ACCOUNT_NAME, email);
         result.putString(AccountManager.KEY_ACCOUNT_TYPE, AccountConstants.ACCOUNT_TYPE);
 
-        String authTokenType = getIntent().getStringExtra(
-                AuthenticatorActivity.KEY_AUTH_TOKEN_TYPE);
+        String authTokenType = getIntent().getStringExtra(KEY_AUTH_TOKEN_TYPE);
         if (AccountConstants.AUTH_TOKEN_TYPE_PIONEER.equals(authTokenType)) {
             String authToken = getAuthToken(email, password);
             am.setAuthToken(currentAccount, authTokenType, authToken);
