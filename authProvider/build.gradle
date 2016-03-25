@@ -15,6 +15,7 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'checkstyle'
 apply from: rootProject.file('gradle/android-findbugs.gradle')
 
@@ -35,10 +36,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile rootProject.ext.annotationsSupportLib
     compile 'com.jakewharton.timber:timber:4.3.1'
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
