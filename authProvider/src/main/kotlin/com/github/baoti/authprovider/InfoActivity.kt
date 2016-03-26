@@ -33,7 +33,7 @@ import java.io.IOException
 /**
  * Created by liuyedong on 15-1-19.
  */
-class InfoActivity : Activity(), AccountConstants, View.OnClickListener {
+class InfoActivity : Activity(), View.OnClickListener {
 
     private lateinit var accountNameShow: TextView
     private lateinit var authTokenShow: TextView

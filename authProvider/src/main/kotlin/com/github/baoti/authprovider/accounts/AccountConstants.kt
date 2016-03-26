@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Sean Liu.
+ * Copyright (c) 2014-2016 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.github.baoti.authprovider.accounts;
+package com.github.baoti.authprovider.accounts
 
 /**
  * Created by liuyedong on 15-1-19.
  */
-public interface AccountConstants {
-    String ACCOUNT_TYPE = "com.github.baoti";
-    String AUTH_TOKEN_TYPE_PIONEER = "pioneer";
+object AccountConstants {
+    const val ACCOUNT_TYPE = "com.github.baoti"
+    const val AUTH_TOKEN_TYPE_PIONEER = "pioneer"
 
-    String FEATURE_READ_NEWS = "read-news";
+    const val FEATURE_READ_NEWS = "read-news"
 }
