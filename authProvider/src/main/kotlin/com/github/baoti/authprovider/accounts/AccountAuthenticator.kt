@@ -27,12 +27,8 @@ import timber.log.Timber
 /**
  * Created by liuyedong on 15-1-19.
  */
-internal class AccountAuthenticator(context: Context) : AbstractAccountAuthenticator(context), AccountConstants {
-    private val context: Context
-
-    init {
-        this.context = context
-    }
+internal class AccountAuthenticator(context: Context) : AbstractAccountAuthenticator(context) {
+    private val context: Context = context
 
     override fun editProperties(response: AccountAuthenticatorResponse, accountType: String): Bundle? {
         // 用于显示设置界面
