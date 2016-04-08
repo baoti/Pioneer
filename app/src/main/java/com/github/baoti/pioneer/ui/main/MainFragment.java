@@ -163,8 +163,13 @@ public class MainFragment extends FragmentView<IMainView, MainPresenter> impleme
 //        startActivity(MeActivity.actionLaunch(getActivity()));
     }
 
-    @OnClick(R.id.btn_hello_reactjs) void navigateToHelloReactJS() {
+    @OnClick(R.id.btn_hello_reactjs_v13_3) void navigateToHelloReactJS() {
         startActivity(WebActivity.actionView(getActivity(),
-                "file:///android_asset/hello-react/hello.html"));
+                "file:///android_asset/hello-react-v13.3/hello.html"));
+    }
+
+    @OnClick(R.id.btn_hello_reactjs_v15) void navigateToHelloReactJSV15() {
+        startActivity(WebActivity.actionView(getActivity(),
+                "file:///android_asset/hello-react-v15/hello.html"));
     }
 }

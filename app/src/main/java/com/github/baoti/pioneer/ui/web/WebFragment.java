@@ -55,7 +55,7 @@ public class WebFragment extends Fragment {
         ButterKnife.bind(this, view);
         Navigator.setupToolbarNavigation(this, toolbar);
         configureWebView();
-        String url = "file:///android_asset/hello-react/hello.html";
+        String url = "file:///android_asset/hello-react-v13.3/hello.html";
         if (getArguments() != null) {
             url = getArguments().getString(WebActivity.EXTRA_URL);
         }

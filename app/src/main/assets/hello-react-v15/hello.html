@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="build/react.js"></script>
+    <script src="build/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+  </head>
+  <body>
+    <div id="example"></div>
+    <script type="text/babel">
+      var examples = [
+          'basic', 'basic-click-counter', 'basic-commonjs', 'basic-jsx', 'basic-jsx-external',
+          'basic-jsx-harmony', 'basic-jsx-precompile', 'jquery-bootstrap', 'jquery-mobile',
+          'quadratic', 'transitions', 'webcomponents'
+      ]
+      ReactDOM.render(
+        <ul>
+          {
+            examples.map(function (name) {
+              return <li><a href={'examples/' + name + '/index.html'}>{name}</a></li>
+            })
+          }
+        </ul>
+        ,
+        document.getElementById('example')
+      );
+    </script>
+  </body>
+</html>
