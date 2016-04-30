@@ -19,7 +19,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.1.0'
     }
 }
 
@@ -30,10 +30,10 @@ allprojects {
 }
 
 ext {
-    androidBuildToolsVersion = '23.0.2'
+    androidBuildToolsVersion = '23.0.3'
     androidTargetSdkVersion = 23
     androidCompileSdkVersion = 23
-    androidSupportLibVersion = '23.2.0'
+    androidSupportLibVersion = '23.3.0'
 
     androidSupportLib = "com.android.support:support-v4:$androidSupportLibVersion"
     annotationsSupportLib = "com.android.support:support-annotations:$androidSupportLibVersion"
@@ -44,7 +44,7 @@ ext {
     recyclerviewSupportLib = "com.android.support:recyclerview-v7:$androidSupportLibVersion"
 
     testingSupportLib = 'com.android.support.test:testing-support-lib:0.1'
-    espressoCoreSupportLib = 'com.android.support.test.espresso:espresso-core:2.2'
+    espressoCoreSupportLib = 'com.android.support.test.espresso:espresso-core:2.2.2'
     junit = 'junit:junit:4.12'
     truth = 'com.google.truth:truth:0.27'
     mockito = 'org.mockito:mockito-core:1.10.8'
