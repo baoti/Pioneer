@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Sean Liu.
+ * Copyright (c) 2014-2016 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import com.github.baoti.pioneer.ui.news.NewsActivity;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
@@ -50,16 +50,16 @@ public class MainFragment extends FragmentView<IMainView, MainPresenter> impleme
     @Inject
     Lazy<MainPresenter> presenterLazy;
 
-    @Bind(R.id.tv_account)
+    @BindView(R.id.tv_account)
     TextView account;
 
-    @Bind(R.id.btn_sign_in)
+    @BindView(R.id.btn_sign_in)
     TextView signIn;
 
-    @Bind(R.id.btn_sign_out)
+    @BindView(R.id.btn_sign_out)
     TextView signOut;
 
-    @Bind(R.id.btn_stop_report)
+    @BindView(R.id.btn_stop_report)
     Button btnStopReport;
 
     public static Fragment newInstance() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Sean Liu.
+ * Copyright (c) 2014-2016 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import com.github.baoti.android.presenter.DialogFragmentView;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.ui.Navigator;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -39,7 +39,7 @@ public class LoginDialogFragment extends DialogFragmentView<ILoginView, LoginPre
         return new LoginDialogFragment();
     }
 
-    @Bind(R.id.app_toolbar)
+    @BindView(R.id.app_toolbar)
     Toolbar appBar;
 
     @Override
