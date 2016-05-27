@@ -30,4 +30,6 @@
     <string name="no_more">没有更多数据</string>
     <string name="failed_to_load">加载失败</string>
 
+    <string name="camera_permission_needed">需要开启“相机”权限才能使用此功能</string>
+
 </resources>

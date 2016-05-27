@@ -16,17 +16,22 @@
 
 package com.github.baoti.pioneer.ui.common.image.chooser;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +41,7 @@ import android.view.WindowManager;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.misc.util.ActivityRequestState;
 import com.github.baoti.pioneer.misc.util.ImageActions;
+import com.github.baoti.pioneer.misc.util.Intents;
 
 import java.io.IOException;
 
@@ -215,6 +221,20 @@ public class ImageChooserFragment extends DialogFragment {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CAPTURE_IMAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    onPickImageClicked();  // GOING ON picking image
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                break;
+        }
+    }
+
     private void alert(CharSequence msg) {
         new AlertDialog.Builder(getActivity())
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -228,6 +248,26 @@ public class ImageChooserFragment extends DialogFragment {
             alert("您的手机不支持拍照功能");
             return;
         }
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                new AlertDialog.Builder(getActivity())
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .setMessage(R.string.camera_permission_needed)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(Intents.appDetailsSettings(getActivity()));
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
+            } else {
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAPTURE_IMAGE);
+            }
+            return;
+        }
+
         Intent intent;
         try {
             intent = ImageActions.actionCapture(getActivity());

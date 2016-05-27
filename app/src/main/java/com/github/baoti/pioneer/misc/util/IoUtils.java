@@ -48,6 +48,8 @@ import timber.log.Timber;
  * IO相关
  * <p/>
  * Created by sean on 2014/10/12.
+ *
+ * TODO support Android 6.0 (*_EXTERNAL_STORAGE permissions).
  */
 public class IoUtils {
 

@@ -19,6 +19,8 @@ package com.github.baoti.pioneer.misc.util;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.provider.Settings;
 
 /**
  * Created by liuyedong on 15-1-6.
@@ -34,4 +36,9 @@ public class Intents {
         return intent.resolveActivity(packageManager) != null;
     }
 
+    public static Intent appDetailsSettings(Context context) {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(Uri.parse("package:" + context.getPackageName()));
+        return intent;
+    }
 }
