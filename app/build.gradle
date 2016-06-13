@@ -56,6 +56,9 @@ android {
     packagingOptions {
         exclude 'LICENSE.txt'
     }
+//    testOptions {
+//        unitTests.returnDefaultValues = true
+//    }
 }
 
 task checkstyle(type: Checkstyle) {
