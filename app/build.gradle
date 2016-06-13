@@ -56,6 +56,9 @@ android {
     packagingOptions {
         exclude 'LICENSE.txt'
     }
+//    testOptions {
+//        unitTests.returnDefaultValues = true
+//    }
 }
 
 //apply plugin: 'android-unit-test'
