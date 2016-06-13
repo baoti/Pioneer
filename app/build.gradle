@@ -15,6 +15,7 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'checkstyle'
 apply from: rootProject.file('gradle/android-findbugs.gradle')
 
@@ -42,7 +43,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    sourceSets {
+        test.java.srcDirs += 'src/test/kotlin'
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
@@ -104,6 +107,11 @@ dependencies {
     androidTestCompile(rootProject.ext.espressoCoreSupportLib) {
         exclude group: 'javax.inject'
     }
+
+    testCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+
+    testCompile "org.mockito:mockito-core:1.9.5"
 
     // Robolectric
     testCompile rootProject.ext.junit
