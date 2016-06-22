@@ -16,6 +16,7 @@
 
 package com.github.baoti.pioneer.data.api;
 
+import com.github.baoti.pioneer.BuildConfig;
 import com.github.baoti.pioneer.data.api.internal.FakeNewsApiImpl;
 
 import javax.inject.Singleton;
@@ -43,6 +44,7 @@ public class ApiModule {
                 .callFactory(callFactory) //
                 .baseUrl(PRODUCTION_API_URL) //
                 .addConverterFactory(GsonConverterFactory.create())
+                .validateEagerly(BuildConfig.DEBUG)
                 .build();
     }
 
