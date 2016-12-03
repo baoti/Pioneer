@@ -17,13 +17,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.github.baoti.pioneer">
 
-    <!--
-     Ignore minSdkVersion=15 from timber.log
-     TODO: remove eventually with Timber 4.1.3 release
-     -->
-    <uses-sdk xmlns:tools="http://schemas.android.com/tools"
-        tools:overrideLibrary="timber.log" />
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
