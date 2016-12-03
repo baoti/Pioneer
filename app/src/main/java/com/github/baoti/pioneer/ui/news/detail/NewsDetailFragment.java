@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Sean Liu.
+ * Copyright (c) 2014-2016 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import com.github.baoti.pioneer.ui.Navigator;
 import com.github.baoti.pioneer.ui.news.NewsActivity;
 import com.github.baoti.pioneer.ui.news.edit.NewsEditFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -46,10 +46,10 @@ public class NewsDetailFragment extends FragmentView implements Toolbar.OnMenuIt
         return fragment;
     }
 
-    @Bind(R.id.app_toolbar)
+    @BindView(R.id.app_toolbar)
     Toolbar toolbar;
 
-    @Bind(R.id.tv_news_content)
+    @BindView(R.id.tv_news_content)
     TextView newsContent;
 
     @Override

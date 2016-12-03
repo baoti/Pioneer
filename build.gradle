@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Sean Liu.
+ * Copyright (c) 2014-2016 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,51 +14,42 @@
  * limitations under the License.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
-//        classpath 'com.github.jcandksolutions.gradle:android-unit-test:2.1.1'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:2.2.2'
     }
 }
 
 allprojects {
     repositories {
         jcenter()
-
-//        maven {
-//            url 'https://oss.sonatype.org/content/repositories/snapshots/'
-//        }
     }
 }
 
 ext {
-    androidBuildToolsVersion = "23.0.2"
-    androidTargetSdkVersion = 23
-    androidCompileSdkVersion = 23
+    androidBuildToolsVersion = '25.0.1'
+    androidTargetSdkVersion = 24
+    androidCompileSdkVersion = 24
+    androidSupportLibVersion = '25.0.1'
 
-    androidSupportLib = 'com.android.support:support-v4:23.1.1'
-    annotationsSupportLib = 'com.android.support:support-annotations:23.1.1'
-    appcompatSupportLib = 'com.android.support:appcompat-v7:23.1.1'
-    cardviewSupportLib = 'com.android.support:cardview-v7:23.1.1'
-    designSupportLib = 'com.android.support:design:23.1.1'
-    gridlayoutSupportLib = 'com.android.support:gridlayout-v7:23.1.1'
-    recyclerviewSupportLib = 'com.android.support:recyclerview-v7:23.1.1'
+    androidSupportLib = "com.android.support:support-v4:$androidSupportLibVersion"
+    annotationsSupportLib = "com.android.support:support-annotations:$androidSupportLibVersion"
+    appcompatSupportLib = "com.android.support:appcompat-v7:$androidSupportLibVersion"
+    cardviewSupportLib = "com.android.support:cardview-v7:$androidSupportLibVersion"
+    designSupportLib = "com.android.support:design:$androidSupportLibVersion"
+    gridlayoutSupportLib = "com.android.support:gridlayout-v7:$androidSupportLibVersion"
+    recyclerviewSupportLib = "com.android.support:recyclerview-v7:$androidSupportLibVersion"
 
     testingSupportLib = 'com.android.support.test:testing-support-lib:0.1'
-    espressoCoreSupportLib = 'com.android.support.test.espresso:espresso-core:2.2'
+    espressoCoreSupportLib = 'com.android.support.test.espresso:espresso-core:2.2.2'
     junit = 'junit:junit:4.12'
-    truth = 'com.google.truth:truth:0.27'
+    truth = 'com.google.truth:truth:0.28'
     mockito = 'org.mockito:mockito-core:1.10.8'
     assertj = 'org.assertj:assertj-core:3.1.0'
-    robolectric = 'org.robolectric:robolectric:3.0'
+    robolectric = 'org.robolectric:robolectric:3.1.2'
 
     findbugsJsr305 = 'com.google.code.findbugs:jsr305:3.0.0'
     findbugsAnnotations = 'com.google.code.findbugs:annotations:3.0.0'
