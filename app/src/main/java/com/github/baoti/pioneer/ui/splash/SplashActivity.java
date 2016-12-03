@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.baoti.android.presenter.ActivityView;
+import com.github.baoti.hellojni.HelloJni;
 import com.github.baoti.pioneer.AppMain;
 import com.github.baoti.pioneer.R;
 import com.github.baoti.pioneer.ui.Navigator;
@@ -49,6 +50,9 @@ public class SplashActivity extends ActivityView<ISplashView, SplashPresenter> i
     @BindView(R.id.btn_retain_in_presenter)
     Button retainInPresenter;
 
+    @BindView(R.id.tv_hello_jni)
+    TextView helloJni;
+
     @Inject
     Lazy<SplashPresenter> presenterLazy;
 
@@ -64,6 +68,8 @@ public class SplashActivity extends ActivityView<ISplashView, SplashPresenter> i
         ButterKnife.bind(this);
 
         AppMain.globalGraph().plus(new SplashModule()).inject(this);
+
+        helloJni.setText(HelloJni.stringFromJNI());
     }
 
     @OnCheckedChanged(R.id.cb_retain)

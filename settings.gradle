@@ -1,1 +1,2 @@
 include ':app', ':libPresenter', ':authProvider'
+include ':libhellojni'
