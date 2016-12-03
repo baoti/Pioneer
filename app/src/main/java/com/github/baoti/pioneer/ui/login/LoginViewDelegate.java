@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Sean Liu.
+ * Copyright (c) 2014-2016 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import com.github.baoti.pioneer.misc.util.Texts;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -40,16 +40,16 @@ import butterknife.OnClick;
  */
 public class LoginViewDelegate implements ILoginView, IViewDelegate<LoginViewDelegate.Delegator> {
 
-    @Bind(R.id.et_login)
+    @BindView(R.id.et_login)
     EditText login;
 
-    @Bind(R.id.et_password)
+    @BindView(R.id.et_password)
     EditText password;
 
-    @Bind(R.id.btn_sign_in)
+    @BindView(R.id.btn_sign_in)
     Button signIn;
 
-    @Bind(android.R.id.progress)
+    @BindView(android.R.id.progress)
     ContentLoadingProgressBar progressBar;
 
     @Inject

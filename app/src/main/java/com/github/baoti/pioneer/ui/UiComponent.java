@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Sean Liu.
+ * Copyright (c) 2014-2016 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,11 @@ import com.github.baoti.pioneer.ui.news.edit.NewsEditFragment;
 import com.github.baoti.pioneer.ui.news.list.NewsListFragment;
 import com.github.baoti.pioneer.ui.splash.SplashActivity;
 
-import javax.inject.Singleton;
-
 import dagger.Subcomponent;
 
 /**
  * Created by liuyedong on 15-5-15.
  */
-@Singleton
 @Subcomponent
 public interface UiComponent {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Sean Liu.
+ * Copyright (c) 2014-2016 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import dagger.Lazy;
@@ -65,31 +65,31 @@ public class MeFragment extends FragmentView<IMeView, MePresenter> implements IM
     @Inject
     Picasso picasso;
 
-    @Bind(R.id.app_toolbar)
+    @BindView(R.id.app_toolbar)
     Toolbar toolbar;
 
-    @Bind(R.id.cv_account_info)
+    @BindView(R.id.cv_account_info)
     CardView accountInfo;
 
-    @Bind(R.id.iv_avatar)
+    @BindView(R.id.iv_avatar)
     ImageView avatar;
 
-    @Bind(R.id.tv_account)
+    @BindView(R.id.tv_account)
     TextView accountId;
 
-    @Bind(R.id.tv_name)
+    @BindView(R.id.tv_name)
     TextView name;
 
-    @Bind(R.id.tv_following)
+    @BindView(R.id.tv_following)
     TextView following;
 
-    @Bind(R.id.tv_followers)
+    @BindView(R.id.tv_followers)
     TextView followers;
 
-    @Bind(R.id.btn_sign_in)
+    @BindView(R.id.btn_sign_in)
     Button signIn;
 
-    @Bind(R.id.btn_sign_out)
+    @BindView(R.id.btn_sign_out)
     Button signOut;
 
     @Override
