@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Sean Liu.
+ * Copyright (c) 2014-2016 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import com.github.baoti.pioneer.ui.Navigator;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
@@ -40,13 +40,13 @@ import timber.log.Timber;
  */
 public class SplashActivity extends ActivityView<ISplashView, SplashPresenter> implements ISplashView {
 
-    @Bind(R.id.tv_status)
+    @BindView(R.id.tv_status)
     TextView statusText;
 
-    @Bind(R.id.btn_retain_in_bundle)
+    @BindView(R.id.btn_retain_in_bundle)
     Button retainInBundle;
 
-    @Bind(R.id.btn_retain_in_presenter)
+    @BindView(R.id.btn_retain_in_presenter)
     Button retainInPresenter;
 
     @Inject

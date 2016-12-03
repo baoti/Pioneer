@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Sean Liu.
+ * Copyright (c) 2014-2016 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import com.github.baoti.pioneer.ui.news.edit.NewsEditFragment;
 import com.github.baoti.pioneer.ui.news.list.NewsListFragment;
 import com.github.baoti.pioneer.ui.news.list.NewsListPresenter;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -95,7 +95,7 @@ public class NewsActivity extends BaseSearchActivity implements OnViewHolderClic
         return (News) data.getSerializableExtra(EXTRA_NEWS);
     }
 
-    @Bind(R.id.app_toolbar)
+    @BindView(R.id.app_toolbar)
     Toolbar toolbar;
 
     private boolean inPickMode;

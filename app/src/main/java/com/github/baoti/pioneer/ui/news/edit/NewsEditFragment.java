@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Sean Liu.
+ * Copyright (c) 2014-2016 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import com.github.baoti.pioneer.ui.news.NewsModule;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -53,10 +53,10 @@ public class NewsEditFragment extends FragmentView implements Toolbar.OnMenuItem
     @Inject
     Toaster toaster;
 
-    @Bind(R.id.app_toolbar)
+    @BindView(R.id.app_toolbar)
     Toolbar toolbar;
 
-    @Bind(R.id.et_news_content)
+    @BindView(R.id.et_news_content)
     EditText contentInput;
 
     @Override
