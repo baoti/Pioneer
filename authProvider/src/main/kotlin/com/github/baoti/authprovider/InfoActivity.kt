@@ -42,8 +42,8 @@ class InfoActivity : Activity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_info)
 
-        findViewById(R.id.sign_in_button).setOnClickListener(this)
-        findViewById(R.id.auth_button).setOnClickListener(this)
+        sign_in_button.setOnClickListener(this)
+        auth_button.setOnClickListener(this)
 
         Timber.uprootAll()
         Timber.plant(Timber.DebugTree())
