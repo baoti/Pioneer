@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Sean Liu.
+ * Copyright (c) 2014-2017 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,8 @@ class AuthenticatorActivity : LoginActivity() {
 
     override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
-        val componentName = getCallingActivity()
-        val packageName = getCallingPackage()
+        val componentName = callingActivity
+        val packageName = callingPackage
         Timber.v("Calling package: %s, activity: %s", packageName, componentName)
     }
 }

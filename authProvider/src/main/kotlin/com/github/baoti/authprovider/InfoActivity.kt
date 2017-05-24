@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Sean Liu.
+ * Copyright (c) 2014-2017 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,19 +24,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import com.github.baoti.authprovider.accounts.AccountConstants
 import timber.log.Timber
 import java.io.IOException
+import kotlinx.android.synthetic.main.activity_info.*
 
 /**
  * Created by liuyedong on 15-1-19.
  */
 class InfoActivity : Activity(), View.OnClickListener {
 
-    private lateinit var accountNameShow: TextView
-    private lateinit var authTokenShow: TextView
     private lateinit var accountName: String
     private lateinit var authToken: String
 
@@ -44,8 +42,6 @@ class InfoActivity : Activity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_info)
 
-        accountNameShow = findViewById(R.id.account_name) as TextView
-        authTokenShow = findViewById(R.id.auth_token) as TextView
         findViewById(R.id.sign_in_button).setOnClickListener(this)
         findViewById(R.id.auth_button).setOnClickListener(this)
 
@@ -60,8 +56,8 @@ class InfoActivity : Activity(), View.OnClickListener {
         }
         accountName = name
         authToken = token
-        accountNameShow.text = name
-        authTokenShow.text = token
+        account_name.text = name
+        auth_token.text = token
         Toast.makeText(this@InfoActivity, "认证成功", Toast.LENGTH_SHORT).show()
     }
 
@@ -74,7 +70,7 @@ class InfoActivity : Activity(), View.OnClickListener {
         // }
         accountManager.getAuthTokenByFeatures(AccountConstants.ACCOUNT_TYPE,
                 AccountConstants.AUTH_TOKEN_TYPE_PIONEER,
-                arrayOf<String>(AccountConstants.FEATURE_READ_NEWS), this, null, null,
+                arrayOf(AccountConstants.FEATURE_READ_NEWS), this, null, null,
                 { future ->
                     try {
                         val result: Bundle = future.result
@@ -94,10 +90,10 @@ class InfoActivity : Activity(), View.OnClickListener {
             return
         }
         val accounts = accountManager.getAccountsByType(AccountConstants.ACCOUNT_TYPE)
-        if (accounts.size == 0) {
+        if (accounts.isEmpty()) {
             accountManager.addAccount(AccountConstants.ACCOUNT_TYPE,
                     AccountConstants.AUTH_TOKEN_TYPE_PIONEER,
-                    arrayOf<String>(AccountConstants.FEATURE_READ_NEWS), null, this, { future ->
+                    arrayOf(AccountConstants.FEATURE_READ_NEWS), null, this, { future ->
                 try {
                     val result: Bundle = future.result
                     val name = result.getString(AccountManager.KEY_ACCOUNT_NAME)

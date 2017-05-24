@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Sean Liu.
+ * Copyright (c) 2014-2017 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ class AccountAuthenticatorService:Service() {
         Timber.uprootAll()
         Timber.plant(Timber.DebugTree())
         Timber.v("onBind: %s", intent)
-        if (intent.getAction().equals(ACTION_AUTHENTICATOR_INTENT)) {
-            return authenticator.getIBinder()
+        if (intent.action == ACTION_AUTHENTICATOR_INTENT) {
+            return authenticator.iBinder
         } else {
             return null
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Sean Liu.
+ * Copyright (c) 2014-2017 Sean Liu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,7 @@ import timber.log.Timber
 /**
  * Created by liuyedong on 15-1-19.
  */
-internal class AccountAuthenticator(context: Context) : AbstractAccountAuthenticator(context) {
-    private val context: Context = context
+internal class AccountAuthenticator(private val context: Context) : AbstractAccountAuthenticator(context) {
 
     override fun editProperties(response: AccountAuthenticatorResponse, accountType: String): Bundle? {
         // 用于显示设置界面
@@ -83,7 +82,7 @@ internal class AccountAuthenticator(context: Context) : AbstractAccountAuthentic
     }
 
     override fun getAuthTokenLabel(authTokenType: String): String? {
-        if (AccountConstants.AUTH_TOKEN_TYPE_PIONEER.equals(authTokenType)) {
+        if (AccountConstants.AUTH_TOKEN_TYPE_PIONEER == authTokenType) {
             return "Pioneer"
         }
         return null
@@ -101,7 +100,7 @@ internal class AccountAuthenticator(context: Context) : AbstractAccountAuthentic
         var pass = true
         if (features != null) {
             for (feature in features) {
-                if (!AccountConstants.FEATURE_READ_NEWS.equals(feature)) {
+                if (AccountConstants.FEATURE_READ_NEWS != feature) {
                     pass = false
                     break
                 }
