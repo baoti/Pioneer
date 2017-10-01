@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2014-2015 Sean Liu.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2014-2017 Sean Liu.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -17,54 +16,70 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.splash.SplashActivity"
-    android:layout_gravity="center"
-    android:orientation="vertical"
-    android:gravity="bottom|center_horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="bottom|center_horizontal"
+    android:orientation="vertical"
+    tools:context=".ui.splash.SplashActivity">
 
     <Button
         android:id="@+id/btn_retain_in_bundle"
-        android:text="Hide [Retain in Bundle]"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Hide [Retain in Bundle]" />
 
     <Button
         android:id="@+id/btn_retain_in_presenter"
-        android:text="Hide [Retain in Presenter]"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Hide [Retain in Presenter]" />
 
     <CheckBox
         android:id="@+id/cb_retain"
-        android:text="Retain by activity"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Retain by activity"
+        android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/btn_go_to_main"
-        android:text="Go to main"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Go to main" />
+
+    <TextView
+        android:id="@+id/tv_styled_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/white" />
 
     <android.support.v4.widget.ContentLoadingProgressBar
         android:id="@android:id/progress"
         style="@android:style/Widget.ProgressBar.Small.Inverse"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
     <!--<ProgressBar-->
-        <!--android:id="@android:id/progress"-->
-        <!--style="@android:style/Widget.ProgressBar.Small.Inverse"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"/>-->
+    <!--android:id="@android:id/progress"-->
+    <!--style="@android:style/Widget.ProgressBar.Small.Inverse"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"/>-->
 
     <TextView
         android:id="@+id/tv_status"
-        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
         android:paddingLeft="50dp"
         android:paddingRight="50dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:textColor="@android:color/white" />
+
 </LinearLayout>
