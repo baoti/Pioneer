@@ -33,6 +33,7 @@ import android.text.TextPaint;
 import android.text.style.CharacterStyle;
 import android.text.style.MetricAffectingSpan;
 import android.text.style.ReplacementSpan;
+import android.text.style.UnderlineSpan;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,13 +42,21 @@ import java.util.List;
 /**
  * text span 工具类，提供可组合使用的 ReplacementSpan 实例。
  * <br>可用于实现 绘制带圆角矩形背景的文字，甚至是绘制镂空的文字
+ * <br>NOTE:
+ * 按照 {@link android.text.BoringLayout} 与 {@literal android.text.TextLine} 的设计，
+ * {@literal <ReplacementSpan>1+2=<u>3</u></ReplacementSpan>} 中的{@literal <u>3</u>} 对应的{@link UnderlineSpan}是不生效的。
+ *
  * Created by sean on 2017/10/1.
  */
 public class Spans {
 
+    /**
+     * 自定义 ReplacementSpan 基类，回调方法新增 outRect 参数，接收外层 span 的尺寸
+     */
     public static class SupportSpan extends ReplacementSpan {
         protected final Paint.FontMetricsInt fontMetricsInt = new Paint.FontMetricsInt();
         protected final Rect frame = new Rect();
+        private int fixedWidth = -1;
 
         @Override
         public final int getSize(@NonNull Paint paint, CharSequence text, @IntRange(from = 0) int start, @IntRange(from = 0) int end, @Nullable Paint.FontMetricsInt fm) {
@@ -67,7 +76,7 @@ public class Spans {
             if (fm != null) {
                 paint.getFontMetricsInt(fm);
             }
-            int width = (int) Math.ceil(paint.measureText(text, start, end));
+            int width = fixedWidth >= 0 ? fixedWidth : (int) Math.ceil(paint.measureText(text, start, end));
             paint.getFontMetricsInt(fontMetricsInt);
             frame.right = width;
             frame.top = fontMetricsInt.top;
@@ -77,10 +86,18 @@ public class Spans {
 
         public void draw(@NonNull Rect outRect, @NonNull Canvas canvas, CharSequence text, @IntRange(from = 0) int start, @IntRange(from = 0) int end, float x, int top, int y, int bottom, @NonNull Paint paint) {
         }
+
+        public int getFixedWidth() {
+            return fixedWidth;
+        }
+
+        public void setFixedWidth(int fixedWidth) {
+            this.fixedWidth = fixedWidth;
+        }
     }
 
     /**
-     * 可嵌套使用的 ReplacementSpan
+     * 可嵌套使用的 ReplacementSpan，支持接收其他 CharacterStyle 作为内层 span 并产生对应效果
      */
     public static class SpanGroup extends SupportSpan {
         private final List<CharacterStyle> styles;
@@ -179,6 +196,9 @@ public class Spans {
 
     /**
      * 镂空绘制样式
+     * <br>注意：不支持在该文本内再进行span分块，
+     * 如：{@literal <Hollow>ABC<fgcolor>DE</fgcolor></Hollow>}，
+     * 可改为：{@literal <Hollow>ABC</Hollow><Hollow><fgcolor>DE</fgcolor></Hollow>}
      */
     public static class HollowSpan extends SpanGroup {
         private final SpanGroup srcGroup;
@@ -286,20 +306,25 @@ public class Spans {
         private final int strokeWidth;
         @ColorInt
         private final int color;
+        private final boolean includePad;  // true：高度为 bottom - top，false：高度为 descent - ascent
 
-        public ShapeSpan(Shape shape, Paint.Style style, int strokeWidth, @ColorInt int color, CharacterStyle... styles) {
+        public ShapeSpan(Shape shape, Paint.Style style, int strokeWidth, @ColorInt int color, boolean includePad, CharacterStyle... styles) {
             super(styles);
             this.shape = shape;
             this.style = style;
             this.strokeWidth = strokeWidth;
             this.color = color;
+            this.includePad = includePad;
         }
 
         @Override
         public int getSize(@NonNull Rect outRect, @NonNull Paint paint, CharSequence text, @IntRange(from = 0) int start, @IntRange(from = 0) int end, @Nullable Paint.FontMetricsInt fm) {
             int width = super.getSize(outRect, paint, text, start, end, fm);
-//            shape.resize(frame.right - strokeWidth, fontMetricsInt.bottom - fontMetricsInt.top - strokeWidth);
-            shape.resize(frame.right - strokeWidth, fontMetricsInt.descent - fontMetricsInt.ascent - strokeWidth);
+            if (includePad) {
+                shape.resize(frame.right - strokeWidth, fontMetricsInt.bottom - fontMetricsInt.top - strokeWidth);
+            } else {
+                shape.resize(frame.right - strokeWidth, fontMetricsInt.descent - fontMetricsInt.ascent - strokeWidth);
+            }
             return width;
         }
 
@@ -312,7 +337,11 @@ public class Spans {
             paint.setStyle(style);
             paint.setColor(color);
             canvas.save();
-            canvas.translate(x + strokeWidth / 2, fontMetricsInt.ascent - fontMetricsInt.top + strokeWidth / 2);
+            if (includePad) {
+                canvas.translate(x + strokeWidth / 2, strokeWidth / 2);
+            } else {
+                canvas.translate(x + strokeWidth / 2, fontMetricsInt.ascent - fontMetricsInt.top + strokeWidth / 2);
+            }
             shape.draw(canvas, paint);
             canvas.restore();
             paint.setColor(oldColor);
