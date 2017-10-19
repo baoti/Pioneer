@@ -104,7 +104,7 @@ public class SplashActivity extends ActivityView<ISplashView, SplashPresenter> i
         Spans.TextSpan lloText = new Spans.TextSpan(Paint.Align.CENTER, Paint.Style.FILL_AND_STROKE, 4);
         // 黄色圆角空心矩形边框，上面绘字
         Spans.ShapeSpan lloStrokeShape = new Spans.ShapeSpan(
-                new RoundRectShape(outerR, null, null), Paint.Style.STROKE, 8, Color.YELLOW, lloText);
+                new RoundRectShape(outerR, null, null), Paint.Style.STROKE, 8, Color.YELLOW, false, lloText);
         truss.append(new Truss()
                 .pushSpan(lloStrokeShape)
                 .append("l l o")
@@ -115,7 +115,7 @@ public class SplashActivity extends ActivityView<ISplashView, SplashPresenter> i
         // 灰色圆角实心矩形边框，上面绘字
         Spans.TextSpan woTextSpan = new Spans.TextSpan(Paint.Align.CENTER, Paint.Style.FILL_AND_STROKE, 4);
         Spans.ShapeSpan woFillShape = new Spans.ShapeSpan(
-                new RoundRectShape(outerR, null, null), Paint.Style.FILL_AND_STROKE, 18, Color.LTGRAY, woTextSpan);
+                new RoundRectShape(outerR, null, null), Paint.Style.FILL_AND_STROKE, 18, Color.LTGRAY, false, woTextSpan);
         truss.append(new Truss()
                 .pushSpan(woFillShape)
                 .append("我'")
@@ -124,7 +124,7 @@ public class SplashActivity extends ActivityView<ISplashView, SplashPresenter> i
 
         // 灰色圆角实心矩形边框，上面镂空绘字
         Spans.ShapeSpan swoFillShape = new Spans.ShapeSpan(
-                new RoundRectShape(outerR, null, null), Paint.Style.FILL_AND_STROKE, 18, Color.LTGRAY);
+                new RoundRectShape(outerR, null, null), Paint.Style.FILL_AND_STROKE, 18, Color.LTGRAY, false);
         Spans.TextSpan swoTextSpan = new Spans.TextSpan(Paint.Align.CENTER, Paint.Style.FILL_AND_STROKE, 4);
         CharacterStyle[] bg = new CharacterStyle[]{swoFillShape};
         truss.append(new Truss()
