@@ -30,10 +30,10 @@ allprojects {
 }
 
 ext {
-    androidBuildToolsVersion = '26.0.1'
+    androidBuildToolsVersion = '26.0.2'
     androidTargetSdkVersion = 24
-    androidCompileSdkVersion = 24
-    androidSupportLibVersion = '25.0.1'
+    androidCompileSdkVersion = 25
+    androidSupportLibVersion = '25.3.1'
 
     androidSupportLib = "com.android.support:support-v4:$androidSupportLibVersion"
     annotationsSupportLib = "com.android.support:support-annotations:$androidSupportLibVersion"

@@ -17,8 +17,8 @@
 package com.github.baoti.pioneer.ui.common.search;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -29,7 +29,7 @@ import com.github.baoti.pioneer.ui.Navigator;
 /**
  * Created by liuyedong on 2015/1/2.
  */
-public abstract class BaseSearchActivity extends FragmentActivity implements FragmentManager.OnBackStackChangedListener, SearchView.OnQueryTextListener {
+public abstract class BaseSearchActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener, SearchView.OnQueryTextListener {
     private static final String TAG_FRAG_SEARCH = "frag_search";
 
     private Toolbar toolbar;

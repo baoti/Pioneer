@@ -18,14 +18,14 @@ package com.github.baoti.pioneer.ui.common.base;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * Created by liuyedong on 14-12-18.
  */
-public abstract class BaseContainerActivity<F extends Fragment> extends FragmentActivity {
+public abstract class BaseContainerActivity<F extends Fragment> extends AppCompatActivity {
     public static final int TRANSITION_INIT_FRAGMENT = FragmentTransaction.TRANSIT_NONE;
 
     public static final String TAG_CONTENT_FRAGMENT = "app:content_fragment";
